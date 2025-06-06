@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler } from 'lucide-react';
+import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, Suitcase } from 'lucide-react';
 
 function App() {
   const [email, setEmail] = useState('');
@@ -8,7 +8,10 @@ function App() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     setSubmitted(true);
-    setEmail('');
+    setTimeout(() => {
+      setSubmitted(false);
+      setEmail('');
+    }, 3000);
   };
 
   return (
@@ -26,18 +29,25 @@ function App() {
         
         <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center mb-8">
-            <h1 className="text-7xl md:text-9xl font-bold mb-4 tracking-tight knitted-text">Travel</h1>
-            <h1 className="text-6xl md:text-8xl font-bold mb-2 tracking-tight knitted-text">Clothing</h1>
-            <h1 className="text-6xl md:text-8xl font-bold mb-2 tracking-tight knitted-text">Club</h1>
+            {/* Logo */}
+            <div className="mb-8">
+              <div className="w-24 h-24 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg flex items-center justify-center mb-4">
+                <Suitcase className="w-12 h-12 text-white" strokeWidth={1.5} />
+              </div>
+            </div>
+            
+            <h1 className="text-6xl md:text-8xl lg:text-9xl font-light mb-4 tracking-wide modern-title">Travel</h1>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-light mb-2 tracking-wide modern-title">Clothing</h1>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-light mb-2 tracking-wide modern-title">Club</h1>
           </div>
-          <p className="text-xl text-gray-200 text-center max-w-3xl mx-auto mb-8">
+          <p className="text-xl text-gray-200 text-center max-w-3xl mx-auto mb-8 font-light">
             Connect with local lenders and rent stylish clothes for your trip. Perfect for business meetings, unexpected weather, or lost luggage situations.
           </p>
           <div className="flex justify-center gap-4">
-            <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+            <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
               Rent Now
             </button>
-            <button className="bg-white text-gray-900 px-8 py-3 rounded-lg font-semibold hover:bg-gray-100 transition">
+            <button className="bg-white text-gray-900 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition">
               Become a Lender
             </button>
           </div>
@@ -47,27 +57,27 @@ function App() {
       {/* How It Works */}
       <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-12">How It Works</h2>
+          <h2 className="text-3xl font-light text-center mb-12">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-8">
             <div className="text-center p-6">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MapPin className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Select Your Location</h3>
+              <h3 className="text-xl font-medium mb-2">Select Your Location</h3>
               <p className="text-gray-600">Choose your hotel or vacation rental and browse available clothes</p>
             </div>
             <div className="text-center p-6">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <ShoppingBag className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Pick Your Clothes</h3>
+              <h3 className="text-xl font-medium mb-2">Pick Your Clothes</h3>
               <p className="text-gray-600">Browse verified lenders and select your outfits</p>
             </div>
             <div className="text-center p-6">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <Clock className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-semibold mb-2">Meet & Rent</h3>
+              <h3 className="text-xl font-medium mb-2">Meet & Rent</h3>
               <p className="text-gray-600">Meet your lender at your location and get your clothes</p>
             </div>
           </div>
@@ -77,14 +87,14 @@ function App() {
       {/* Available Clothing Section */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-4">Available Clothing</h2>
+          <h2 className="text-3xl font-light text-center mb-4">Available Clothing</h2>
           <p className="text-gray-600 text-center mb-12">Find the perfect outfit for your needs with our AI-powered size matching</p>
           
           <div className="mb-12">
-            <h3 className="text-2xl font-semibold mb-8">Size Customization</h3>
+            <h3 className="text-2xl font-light mb-8">Size Customization</h3>
             <div className="grid md:grid-cols-2 gap-8 items-center bg-gray-50 p-8 rounded-xl">
               <div>
-                <h4 className="text-xl font-semibold mb-4">Perfect Fit with AI</h4>
+                <h4 className="text-xl font-medium mb-4">Perfect Fit with AI</h4>
                 <div className="space-y-4">
                   <div className="flex items-center gap-3">
                     <Ruler className="w-6 h-6 text-blue-600" />
@@ -109,7 +119,7 @@ function App() {
 
           {/* Men's Collection */}
           <div className="mb-16">
-            <h3 className="text-2xl font-semibold mb-8">Men's Collection</h3>
+            <h3 className="text-2xl font-light mb-8">Men's Collection</h3>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                 <img 
@@ -118,7 +128,7 @@ function App() {
                   className="w-full h-64 object-cover"
                 />
                 <div className="p-6">
-                  <h4 className="font-semibold mb-2">Business Suit</h4>
+                  <h4 className="font-medium mb-2">Business Suit</h4>
                   <p className="text-gray-600 mb-4">Classic navy suit with modern fit</p>
                   <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
                 </div>
@@ -130,7 +140,7 @@ function App() {
                   className="w-full h-64 object-cover"
                 />
                 <div className="p-6">
-                  <h4 className="font-semibold mb-2">Casual Blazer</h4>
+                  <h4 className="font-medium mb-2">Casual Blazer</h4>
                   <p className="text-gray-600 mb-4">Versatile blazer for any occasion</p>
                   <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
                 </div>
@@ -142,7 +152,7 @@ function App() {
                   className="w-full h-64 object-cover"
                 />
                 <div className="p-6">
-                  <h4 className="font-semibold mb-2">Summer Collection</h4>
+                  <h4 className="font-medium mb-2">Summer Collection</h4>
                   <p className="text-gray-600 mb-4">Light and breathable summer wear</p>
                   <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
                 </div>
@@ -152,7 +162,7 @@ function App() {
 
           {/* Women's Collection */}
           <div className="mb-16">
-            <h3 className="text-2xl font-semibold mb-8">Women's Collection</h3>
+            <h3 className="text-2xl font-light mb-8">Women's Collection</h3>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                 <img 
@@ -161,19 +171,19 @@ function App() {
                   className="w-full h-64 object-cover"
                 />
                 <div className="p-6">
-                  <h4 className="font-semibold mb-2">Evening Dress</h4>
+                  <h4 className="font-medium mb-2">Evening Dress</h4>
                   <p className="text-gray-600 mb-4">Elegant black evening dress</p>
                   <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
                 </div>
               </div>
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                 <img 
-                  src="https://images.unsplash.com/photo-1548624149-f9b1859aa7d0?auto=format&fit=crop&q=80"
+                  src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&q=80"
                   alt="Business Attire"
                   className="w-full h-64 object-cover"
                 />
                 <div className="p-6">
-                  <h4 className="font-semibold mb-2">Business Attire</h4>
+                  <h4 className="font-medium mb-2">Business Attire</h4>
                   <p className="text-gray-600 mb-4">Professional business ensemble</p>
                   <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
                 </div>
@@ -185,7 +195,7 @@ function App() {
                   className="w-full h-64 object-cover"
                 />
                 <div className="p-6">
-                  <h4 className="font-semibold mb-2">Casual Chic</h4>
+                  <h4 className="font-medium mb-2">Casual Chic</h4>
                   <p className="text-gray-600 mb-4">Stylish everyday wear</p>
                   <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
                 </div>
@@ -195,7 +205,7 @@ function App() {
 
           {/* Kids' Collection */}
           <div>
-            <h3 className="text-2xl font-semibold mb-8">Kids' Collection</h3>
+            <h3 className="text-2xl font-light mb-8">Kids' Collection</h3>
             <div className="grid md:grid-cols-3 gap-8">
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
                 <img 
@@ -204,7 +214,7 @@ function App() {
                   className="w-full h-64 object-cover"
                 />
                 <div className="p-6">
-                  <h4 className="font-semibold mb-2">Party Wear</h4>
+                  <h4 className="font-medium mb-2">Party Wear</h4>
                   <p className="text-gray-600 mb-4">Adorable party outfits</p>
                   <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
                 </div>
@@ -216,7 +226,7 @@ function App() {
                   className="w-full h-64 object-cover"
                 />
                 <div className="p-6">
-                  <h4 className="font-semibold mb-2">Casual Play</h4>
+                  <h4 className="font-medium mb-2">Casual Play</h4>
                   <p className="text-gray-600 mb-4">Comfortable play clothes</p>
                   <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
                 </div>
@@ -228,7 +238,7 @@ function App() {
                   className="w-full h-64 object-cover"
                 />
                 <div className="p-6">
-                  <h4 className="font-semibold mb-2">Special Occasion</h4>
+                  <h4 className="font-medium mb-2">Special Occasion</h4>
                   <p className="text-gray-600 mb-4">Formal wear for special events</p>
                   <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
                 </div>
@@ -241,13 +251,13 @@ function App() {
       {/* Subscription Tiers */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-bold text-center mb-4">Choose Your Style Package</h2>
+          <h2 className="text-3xl font-light text-center mb-4">Choose Your Style Package</h2>
           <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">Select from our curated clothing packages designed for every occasion and style preference</p>
           
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
             {/* Basic Tier */}
             <div className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Basic</h3>
+              <h3 className="text-2xl font-light text-gray-900 mb-4">Basic</h3>
               <p className="text-gray-600 mb-6">Essential clothing for comfortable travel</p>
               <div className="space-y-3 mb-8">
                 <div className="flex items-center gap-2">
@@ -263,14 +273,14 @@ function App() {
                   <span>Basic accessories</span>
                 </div>
               </div>
-              <button className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-semibold hover:bg-gray-200 transition">
+              <button className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-medium hover:bg-gray-200 transition">
                 Select Basic
               </button>
             </div>
 
             {/* Vaca Mode Tier */}
             <div className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Vaca Mode</h3>
+              <h3 className="text-2xl font-light text-gray-900 mb-4">Vaca Mode</h3>
               <p className="text-gray-600 mb-6">Perfect for casual vacation style</p>
               <div className="space-y-3 mb-8">
                 <div className="flex items-center gap-2">
@@ -286,14 +296,14 @@ function App() {
                   <span>Vacation accessories</span>
                 </div>
               </div>
-              <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+              <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition">
                 Select Vaca Mode
               </button>
             </div>
 
             {/* Upscale Tier */}
             <div className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition p-8">
-              <h3 className="text-2xl font-bold text-gray-900 mb-4">Upscale</h3>
+              <h3 className="text-2xl font-light text-gray-900 mb-4">Upscale</h3>
               <p className="text-gray-600 mb-6">Professional business attire</p>
               <div className="space-y-3 mb-8">
                 <div className="flex items-center gap-2">
@@ -309,14 +319,14 @@ function App() {
                   <span>Business accessories</span>
                 </div>
               </div>
-              <button className="w-full bg-gray-900 text-white py-3 rounded-lg font-semibold hover:bg-gray-800 transition">
+              <button className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition">
                 Select Upscale
               </button>
             </div>
 
             {/* Award Tier */}
             <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-lg p-8 text-white">
-              <h3 className="text-2xl font-bold mb-4">Award</h3>
+              <h3 className="text-2xl font-light mb-4">Award</h3>
               <p className="text-gray-300 mb-6">Premium fashion brands and styles</p>
               <div className="space-y-3 mb-8">
                 <div className="flex items-center gap-2">
@@ -332,7 +342,7 @@ function App() {
                   <span>Kids designer wear</span>
                 </div>
               </div>
-              <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-semibold hover:bg-blue-700 transition">
+              <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition">
                 Select Award
               </button>
             </div>
@@ -345,14 +355,14 @@ function App() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
-              <h2 className="text-3xl font-bold mb-6">Why Choose Travel Clothing Club?</h2>
+              <h2 className="text-3xl font-light mb-6">Why Choose Travel Clothing Club?</h2>
               <div className="space-y-4">
                 <div className="flex items-start gap-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
                     <Users className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Verified Lenders</h3>
+                    <h3 className="text-xl font-medium mb-2">Verified Lenders</h3>
                     <p className="text-gray-600">All lenders are verified and rated by our community</p>
                   </div>
                 </div>
@@ -361,7 +371,7 @@ function App() {
                     <DollarSign className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Flexible Pricing</h3>
+                    <h3 className="text-xl font-medium mb-2">Flexible Pricing</h3>
                     <p className="text-gray-600">Rent by the day with transparent pricing</p>
                   </div>
                 </div>
@@ -370,7 +380,7 @@ function App() {
                     <Plane className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="text-xl font-semibold mb-2">Convenient Delivery</h3>
+                    <h3 className="text-xl font-medium mb-2">Convenient Delivery</h3>
                     <p className="text-gray-600">Meet directly at your location - no extra trips needed</p>
                   </div>
                 </div>
@@ -387,16 +397,64 @@ function App() {
         </div>
       </section>
 
+      {/* Waitlist Section */}
+      <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h2 className="text-4xl font-light text-gray-900 mb-4">Join the Waitlist</h2>
+          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
+            Be the first to know when Travel Clothing Club launches in your city. Get exclusive early access and special pricing.
+          </p>
+          
+          {submitted ? (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-6 max-w-md mx-auto">
+              <div className="flex items-center justify-center gap-2 text-green-700">
+                <Check className="w-6 h-6" />
+                <span className="font-medium">Thank you for joining our waitlist!</span>
+              </div>
+              <p className="text-green-600 mt-2">We'll notify you as soon as we launch.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+              <div className="flex gap-3">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email address"
+                  required
+                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                />
+                <button
+                  type="submit"
+                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2"
+                >
+                  <Send className="w-5 h-5" />
+                  Join
+                </button>
+              </div>
+              <p className="text-sm text-gray-500 mt-3">
+                No spam, unsubscribe at any time.
+              </p>
+            </form>
+          )}
+        </div>
+      </section>
+
       {/* Footer */}
       <footer className="bg-gray-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
-              <h3 className="text-lg font-semibold mb-4">Travel Clothing Club</h3>
+              <div className="flex items-center gap-3 mb-4">
+                <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center">
+                  <Suitcase className="w-5 h-5 text-white" />
+                </div>
+                <h3 className="text-lg font-medium">Travel Clothing Club</h3>
+              </div>
               <p className="text-gray-400">Connecting travelers with local clothing lenders worldwide.</p>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-4">Quick Links</h4>
+              <h4 className="text-lg font-medium mb-4">Quick Links</h4>
               <ul className="space-y-2">
                 <li><a href="#" className="text-gray-400 hover:text-white transition">How It Works</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-white transition">Become a Lender</a></li>
@@ -404,7 +462,7 @@ function App() {
               </ul>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-4">Support</h4>
+              <h4 className="text-lg font-medium mb-4">Support</h4>
               <ul className="space-y-2">
                 <li><a href="#" className="text-gray-400 hover:text-white transition">FAQ</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-white transition">Contact Us</a></li>
@@ -412,7 +470,7 @@ function App() {
               </ul>
             </div>
             <div>
-              <h4 className="text-lg font-semibold mb-4">Connect</h4>
+              <h4 className="text-lg font-medium mb-4">Connect</h4>
               <ul className="space-y-2">
                 <li><a href="#" className="text-gray-400 hover:text-white transition">Twitter</a></li>
                 <li><a href="#" className="text-gray-400 hover:text-white transition">Instagram</a></li>
