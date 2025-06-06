@@ -38,18 +38,50 @@ function App() {
             
             <h1 className="text-6xl md:text-8xl lg:text-9xl font-light mb-4 tracking-wide modern-title">Travel</h1>
             <h1 className="text-5xl md:text-7xl lg:text-8xl font-light mb-2 tracking-wide modern-title">Clothing</h1>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-light mb-2 tracking-wide modern-title">Club</h1>
-          </div>
-          <p className="text-xl text-gray-200 text-center max-w-3xl mx-auto mb-8 font-light">
-            Connect with local lenders and rent stylish clothes for your trip. Perfect for business meetings, unexpected weather, or lost luggage situations.
-          </p>
-          <div className="flex justify-center gap-4">
-            <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
-              Rent Now
-            </button>
-            <button className="bg-white text-gray-900 px-8 py-3 rounded-lg font-medium hover:bg-gray-100 transition">
-              Become a Lender
-            </button>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-light mb-8 tracking-wide modern-title">Club</h1>
+            
+            {/* New Hero Copy */}
+            <div className="text-center max-w-4xl mx-auto mb-8">
+              <h2 className="text-4xl md:text-5xl font-light text-white mb-6 leading-tight">
+                Travel Lighter. Stress Less.
+              </h2>
+              <p className="text-xl md:text-2xl text-gray-200 font-light leading-relaxed">
+                Rent stylish, weather-ready clothes at your destination—skip the suitcase, not the style.
+              </p>
+            </div>
+            
+            {/* Waitlist Form */}
+            {submitted ? (
+              <div className="bg-green-50/90 backdrop-blur-sm border border-green-200 rounded-lg p-6 max-w-md mx-auto">
+                <div className="flex items-center justify-center gap-2 text-green-700">
+                  <Check className="w-6 h-6" />
+                  <span className="font-medium">Thank you for joining our waitlist!</span>
+                </div>
+                <p className="text-green-600 mt-2 text-center">We'll notify you as soon as we launch.</p>
+              </div>
+            ) : (
+              <div className="w-full max-w-md mx-auto">
+                <form onSubmit={handleSubmit} className="flex gap-3 mb-3">
+                  <input
+                    type="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    placeholder="Enter your email"
+                    required
+                    className="flex-1 px-4 py-3 border border-white/20 bg-white/10 backdrop-blur-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-white placeholder-gray-300"
+                  />
+                  <button
+                    type="submit"
+                    className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2"
+                  >
+                    Join the Waitlist
+                  </button>
+                </form>
+                <p className="text-sm text-gray-300 text-center">
+                  Join 100+ travelers simplifying their trips.
+                </p>
+              </div>
+            )}
           </div>
         </div>
       </header>
@@ -63,22 +95,22 @@ function App() {
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <MapPin className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-medium mb-2">Select Your Location</h3>
-              <p className="text-gray-600">Choose your hotel or vacation rental and browse available clothes</p>
+              <h3 className="text-xl font-medium mb-2">1. Choose Your Trip</h3>
+              <p className="text-gray-600">Select your destination and travel dates</p>
             </div>
             <div className="text-center p-6">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
                 <ShoppingBag className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-medium mb-2">Pick Your Clothes</h3>
-              <p className="text-gray-600">Browse verified lenders and select your outfits</p>
+              <h3 className="text-xl font-medium mb-2">2. Pick Your Styles</h3>
+              <p className="text-gray-600">Choose from curated businesswear, casual outfits, and family options</p>
             </div>
             <div className="text-center p-6">
               <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Clock className="w-8 h-8 text-blue-600" />
+                <Plane className="w-8 h-8 text-blue-600" />
               </div>
-              <h3 className="text-xl font-medium mb-2">Meet & Rent</h3>
-              <p className="text-gray-600">Meet your lender at your location and get your clothes</p>
+              <h3 className="text-xl font-medium mb-2">3. Get It Delivered</h3>
+              <p className="text-gray-600">Receive your wardrobe at the airport or hotel when you land</p>
             </div>
           </div>
         </div>
@@ -394,49 +426,6 @@ function App() {
               />
             </div>
           </div>
-        </div>
-      </section>
-
-      {/* Waitlist Section */}
-      <section className="py-20 bg-gradient-to-br from-blue-50 to-indigo-100">
-        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <h2 className="text-4xl font-light text-gray-900 mb-4">Join the Waitlist</h2>
-          <p className="text-xl text-gray-600 mb-8 max-w-2xl mx-auto">
-            Be the first to know when Travel Clothing Club launches in your city. Get exclusive early access and special pricing.
-          </p>
-          
-          {submitted ? (
-            <div className="bg-green-50 border border-green-200 rounded-lg p-6 max-w-md mx-auto">
-              <div className="flex items-center justify-center gap-2 text-green-700">
-                <Check className="w-6 h-6" />
-                <span className="font-medium">Thank you for joining our waitlist!</span>
-              </div>
-              <p className="text-green-600 mt-2">We'll notify you as soon as we launch.</p>
-            </div>
-          ) : (
-            <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-              <div className="flex gap-3">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
-                  required
-                  className="flex-1 px-4 py-3 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                />
-                <button
-                  type="submit"
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2"
-                >
-                  <Send className="w-5 h-5" />
-                  Join
-                </button>
-              </div>
-              <p className="text-sm text-gray-500 mt-3">
-                No spam, unsubscribe at any time.
-              </p>
-            </form>
-          )}
         </div>
       </section>
 
