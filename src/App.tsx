@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, Suitcase } from 'lucide-react';
+import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, Briefcase as Suitcase } from 'lucide-react';
 
 function App() {
   const [email, setEmail] = useState('');
