@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, Briefcase as Suitcase } from 'lucide-react';
+import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler } from 'lucide-react';
 
 function App() {
   const [email, setEmail] = useState('');
@@ -29,16 +29,14 @@ function App() {
         
         <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col items-center mb-8">
-            {/* Logo */}
+            {/* Knitted Logo */}
             <div className="mb-8">
-              <div className="w-24 h-24 bg-white/10 backdrop-blur-sm border-2 border-white/20 rounded-lg flex items-center justify-center mb-4">
-                <Suitcase className="w-12 h-12 text-white" strokeWidth={1.5} />
-              </div>
+              <img 
+                src="/ChatGPT Image Jun 4, 2025, 09_30_18 PM copy.png"
+                alt="Travel Clothing Club Logo"
+                className="w-32 h-32 md:w-40 md:h-40 object-contain"
+              />
             </div>
-            
-            <h1 className="text-6xl md:text-8xl lg:text-9xl font-light mb-4 tracking-wide modern-title">Travel</h1>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-light mb-2 tracking-wide modern-title">Clothing</h1>
-            <h1 className="text-5xl md:text-7xl lg:text-8xl font-light mb-8 tracking-wide modern-title">Club</h1>
             
             {/* New Hero Copy */}
             <div className="text-center max-w-4xl mx-auto mb-8">
@@ -435,9 +433,11 @@ function App() {
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
-                <div className="w-8 h-8 bg-white/10 rounded flex items-center justify-center">
-                  <Suitcase className="w-5 h-5 text-white" />
-                </div>
+                <img 
+                  src="/ChatGPT Image Jun 4, 2025, 09_30_18 PM copy.png"
+                  alt="Travel Clothing Club"
+                  className="w-8 h-8 object-contain"
+                />
                 <h3 className="text-lg font-medium">Travel Clothing Club</h3>
               </div>
               <p className="text-gray-400">Connecting travelers with local clothing lenders worldwide.</p>
