@@ -47,45 +47,53 @@ function App() {
                 Rent stylish, weather-ready clothes at your destination—skip the suitcase, not the style.
               </p>
             </div>
-            
-            {/* Waitlist Form */}
-            {submitted ? (
-              <div className="bg-green-50/90 backdrop-blur-sm border border-green-200 rounded-lg p-6 max-w-md mx-auto">
-                <div className="flex items-center justify-center gap-2 text-green-700">
-                  <Check className="w-6 h-6" />
-                  <span className="font-medium">Thank you for joining our waitlist!</span>
-                </div>
-                <p className="text-green-600 mt-2 text-center">We'll notify you as soon as we launch.</p>
-              </div>
-            ) : (
-              <div className="w-full max-w-md mx-auto">
-                <form onSubmit={handleSubmit} className="flex gap-3 mb-3">
-                  <input
-                    type="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email"
-                    required
-                    className="flex-1 px-4 py-3 border border-white/20 bg-white/10 backdrop-blur-sm rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none text-white placeholder-gray-300"
-                  />
-                  <button
-                    type="submit"
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2"
-                  >
-                    Join the Waitlist
-                  </button>
-                </form>
-                <p className="text-sm text-gray-300 text-center">
-                  Join 100+ travelers simplifying their trips.
-                </p>
-              </div>
-            )}
           </div>
         </div>
       </header>
 
+      {/* Email Form Section */}
+      <section className="py-16 bg-gray-50">
+        <div className="max-w-md mx-auto px-4 text-center">
+          {submitted ? (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+              <div className="flex items-center justify-center gap-2 text-green-700 mb-2">
+                <Check className="w-6 h-6" />
+                <span className="font-medium">Thank you for joining our exclusive clublist!</span>
+              </div>
+              <p className="text-green-600">We'll notify you as soon as we launch.</p>
+            </div>
+          ) : (
+            <form 
+              action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca&f_id=00071ae1f0" 
+              method="post" 
+              target="_blank" 
+              noValidate 
+              className="flex flex-col items-center gap-4"
+            >
+              <input 
+                type="email" 
+                name="EMAIL" 
+                placeholder="Enter your email" 
+                required 
+                className="w-full px-5 py-3 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+              />
+              <button 
+                type="submit" 
+                name="subscribe" 
+                className="w-full bg-black text-white px-6 py-3 text-lg rounded-lg font-medium hover:bg-gray-800 transition"
+              >
+                Join the Exclusive Clublist
+              </button>
+              <p className="text-sm text-gray-600">
+                Join 100+ travelers simplifying their trips.
+              </p>
+            </form>
+          )}
+        </div>
+      </section>
+
       {/* How It Works */}
-      <section className="py-20 bg-gray-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-light text-center mb-12">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -115,14 +123,14 @@ function App() {
       </section>
 
       {/* Available Clothing Section */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-light text-center mb-4">Available Clothing</h2>
           <p className="text-gray-600 text-center mb-12">Find the perfect outfit for your needs with our AI-powered size matching</p>
           
           <div className="mb-12">
             <h3 className="text-2xl font-light mb-8">Size Customization</h3>
-            <div className="grid md:grid-cols-2 gap-8 items-center bg-gray-50 p-8 rounded-xl">
+            <div className="grid md:grid-cols-2 gap-8 items-center bg-white p-8 rounded-xl shadow-sm">
               <div>
                 <h4 className="text-xl font-medium mb-4">Perfect Fit with AI</h4>
                 <div className="space-y-4">
@@ -381,7 +389,7 @@ function App() {
       </section>
 
       {/* Features */}
-      <section className="py-20">
+      <section className="py-20 bg-gray-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-2 gap-12 items-center">
             <div>
@@ -468,7 +476,7 @@ function App() {
             </div>
           </div>
           <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
-            <p>&copy; 2024 Travel Clothing Club. All rights reserved.</p>
+            <p>&copy; 2025 Travel Clothing Club. All rights reserved.</p>
           </div>
         </div>
       </footer>
