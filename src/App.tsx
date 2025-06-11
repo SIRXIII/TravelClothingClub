@@ -3,7 +3,6 @@ import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Uplo
 
 function App() {
   const [email, setEmail] = useState('');
-  const [firstName, setFirstName] = useState('');
   const [submitted, setSubmitted] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
@@ -12,7 +11,6 @@ function App() {
     setTimeout(() => {
       setSubmitted(false);
       setEmail('');
-      setFirstName('');
     }, 3000);
   };
 
@@ -56,7 +54,6 @@ function App() {
       {/* Email Form Section */}
       <section className="py-16 bg-gray-50">
         <div className="max-w-md mx-auto px-4 text-center">
-          <h2 className="text-2xl font-light mb-6">Join the Exclusive Clublist</h2>
           {submitted ? (
             <div className="bg-green-50 border border-green-200 rounded-lg p-6">
               <div className="flex items-center justify-center gap-2 text-green-700 mb-2">
@@ -73,16 +70,6 @@ function App() {
               noValidate 
               className="space-y-4"
             >
-              <div>
-                <input 
-                  type="text" 
-                  name="FNAME" 
-                  placeholder="Alter-ego Name" 
-                  value={firstName}
-                  onChange={(e) => setFirstName(e.target.value)}
-                  className="w-full px-5 py-3 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                />
-              </div>
               <div>
                 <input 
                   type="email" 
