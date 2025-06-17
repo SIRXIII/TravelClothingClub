@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
-import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler } from 'lucide-react';
+import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, UserCheck } from 'lucide-react';
 
 function HomePage() {
   const [email, setEmail] = useState('');
@@ -29,6 +29,17 @@ function HomePage() {
         </div>
         
         <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
+          {/* Navigation */}
+          <nav className="absolute top-6 right-6">
+            <Link 
+              to="/lender-portal"
+              className="bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-lg font-medium hover:bg-white/20 transition flex items-center gap-2"
+            >
+              <UserCheck className="w-4 h-4" />
+              Lender Portal
+            </Link>
+          </nav>
+
           <div className="flex flex-col items-center mb-8">
             {/* Knitted Logo */}
             <div className="mb-8">
@@ -466,7 +477,7 @@ function HomePage() {
               <h4 className="text-lg font-medium mb-4">Quick Links</h4>
               <ul className="space-y-2">
                 <li><a href="#" className="text-gray-400 hover:text-white transition">How It Works</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Become a Lender</a></li>
+                <li><Link to="/lender-portal" className="text-gray-400 hover:text-white transition">Become a Lender</Link></li>
                 <li><a href="#" className="text-gray-400 hover:text-white transition">Pricing</a></li>
               </ul>
             </div>
