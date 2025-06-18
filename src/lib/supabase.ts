@@ -79,6 +79,50 @@ export type Database = {
           updated_at?: string;
         };
       };
+      bookings: {
+        Row: {
+          id: string;
+          item_id: string;
+          customer_email: string | null;
+          customer_name: string | null;
+          customer_phone: string | null;
+          start_date: string;
+          end_date: string;
+          destination: string;
+          total_price: number;
+          status: string;
+          created_at: string;
+          updated_at: string;
+        };
+        Insert: {
+          id?: string;
+          item_id: string;
+          customer_email?: string | null;
+          customer_name?: string | null;
+          customer_phone?: string | null;
+          start_date: string;
+          end_date: string;
+          destination: string;
+          total_price: number;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+        Update: {
+          id?: string;
+          item_id?: string;
+          customer_email?: string | null;
+          customer_name?: string | null;
+          customer_phone?: string | null;
+          start_date?: string;
+          end_date?: string;
+          destination?: string;
+          total_price?: number;
+          status?: string;
+          created_at?: string;
+          updated_at?: string;
+        };
+      };
     };
   };
 };

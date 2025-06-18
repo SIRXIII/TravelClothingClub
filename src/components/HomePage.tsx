@@ -1,10 +1,12 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, UserCheck } from 'lucide-react';
+import RentNowFlow from './RentNowFlow';
 
 function HomePage() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
+  const [showRentFlow, setShowRentFlow] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -13,6 +15,10 @@ function HomePage() {
       setSubmitted(false);
       setEmail('');
     }, 3000);
+  };
+
+  const handleRentNowClick = () => {
+    setShowRentFlow(true);
   };
 
   return (
@@ -191,7 +197,12 @@ function HomePage() {
                 <div className="p-6">
                   <h4 className="font-medium mb-2">Business Suit</h4>
                   <p className="text-gray-600 mb-4">Classic navy suit with modern fit</p>
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
+                  <button 
+                    onClick={handleRentNowClick}
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Rent Now
+                  </button>
                 </div>
               </div>
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -203,7 +214,12 @@ function HomePage() {
                 <div className="p-6">
                   <h4 className="font-medium mb-2">Casual Blazer</h4>
                   <p className="text-gray-600 mb-4">Versatile blazer for any occasion</p>
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
+                  <button 
+                    onClick={handleRentNowClick}
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Rent Now
+                  </button>
                 </div>
               </div>
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -215,7 +231,12 @@ function HomePage() {
                 <div className="p-6">
                   <h4 className="font-medium mb-2">Summer Collection</h4>
                   <p className="text-gray-600 mb-4">Light and breathable summer wear</p>
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
+                  <button 
+                    onClick={handleRentNowClick}
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Rent Now
+                  </button>
                 </div>
               </div>
             </div>
@@ -234,7 +255,12 @@ function HomePage() {
                 <div className="p-6">
                   <h4 className="font-medium mb-2">Evening Dress</h4>
                   <p className="text-gray-600 mb-4">Elegant black evening dress</p>
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
+                  <button 
+                    onClick={handleRentNowClick}
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Rent Now
+                  </button>
                 </div>
               </div>
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -246,7 +272,12 @@ function HomePage() {
                 <div className="p-6">
                   <h4 className="font-medium mb-2">Business Attire</h4>
                   <p className="text-gray-600 mb-4">Professional business ensemble</p>
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
+                  <button 
+                    onClick={handleRentNowClick}
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Rent Now
+                  </button>
                 </div>
               </div>
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -258,7 +289,12 @@ function HomePage() {
                 <div className="p-6">
                   <h4 className="font-medium mb-2">Casual Chic</h4>
                   <p className="text-gray-600 mb-4">Stylish everyday wear</p>
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
+                  <button 
+                    onClick={handleRentNowClick}
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Rent Now
+                  </button>
                 </div>
               </div>
             </div>
@@ -277,7 +313,12 @@ function HomePage() {
                 <div className="p-6">
                   <h4 className="font-medium mb-2">Party Wear</h4>
                   <p className="text-gray-600 mb-4">Adorable party outfits</p>
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
+                  <button 
+                    onClick={handleRentNowClick}
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Rent Now
+                  </button>
                 </div>
               </div>
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -289,7 +330,12 @@ function HomePage() {
                 <div className="p-6">
                   <h4 className="font-medium mb-2">Casual Play</h4>
                   <p className="text-gray-600 mb-4">Comfortable play clothes</p>
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
+                  <button 
+                    onClick={handleRentNowClick}
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Rent Now
+                  </button>
                 </div>
               </div>
               <div className="bg-white rounded-xl shadow-lg overflow-hidden">
@@ -301,7 +347,12 @@ function HomePage() {
                 <div className="p-6">
                   <h4 className="font-medium mb-2">Special Occasion</h4>
                   <p className="text-gray-600 mb-4">Formal wear for special events</p>
-                  <button className="w-full bg-blue-600 text-white py-2 rounded-lg">Rent Now</button>
+                  <button 
+                    onClick={handleRentNowClick}
+                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+                  >
+                    Rent Now
+                  </button>
                 </div>
               </div>
             </div>
@@ -334,7 +385,10 @@ function HomePage() {
                   <span>Basic accessories</span>
                 </div>
               </div>
-              <button className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-medium hover:bg-gray-200 transition">
+              <button 
+                onClick={handleRentNowClick}
+                className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-medium hover:bg-gray-200 transition"
+              >
                 Select Basic
               </button>
             </div>
@@ -357,7 +411,10 @@ function HomePage() {
                   <span>Vacation accessories</span>
                 </div>
               </div>
-              <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition">
+              <button 
+                onClick={handleRentNowClick}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+              >
                 Select Vaca Mode
               </button>
             </div>
@@ -380,7 +437,10 @@ function HomePage() {
                   <span>Business accessories</span>
                 </div>
               </div>
-              <button className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition">
+              <button 
+                onClick={handleRentNowClick}
+                className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition"
+              >
                 Select Upscale
               </button>
             </div>
@@ -403,7 +463,10 @@ function HomePage() {
                   <span>Kids designer wear</span>
                 </div>
               </div>
-              <button className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition">
+              <button 
+                onClick={handleRentNowClick}
+                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+              >
                 Select Award
               </button>
             </div>
@@ -503,6 +566,13 @@ function HomePage() {
           </div>
         </div>
       </footer>
+
+      {/* Rent Now Flow Modal */}
+      {showRentFlow && (
+        <RentNowFlow 
+          onClose={() => setShowRentFlow(false)}
+        />
+      )}
     </div>
   );
 }
