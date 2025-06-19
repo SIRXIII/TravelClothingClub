@@ -1,12 +1,18 @@
 import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, UserCheck } from 'lucide-react';
+import { Link, useNavigate } from 'react-router-dom';
+import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, UserCheck, Calendar, Search } from 'lucide-react';
 import RentNowFlow from './RentNowFlow';
 
 function HomePage() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [showRentFlow, setShowRentFlow] = useState(false);
+  const navigate = useNavigate();
+
+  // Search form state
+  const [searchDates, setSearchDates] = useState({ start: '', end: '' });
+  const [searchDestination, setSearchDestination] = useState('');
+  const [searchSize, setSearchSize] = useState('');
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
@@ -20,6 +26,25 @@ function HomePage() {
   const handleRentNowClick = () => {
     setShowRentFlow(true);
   };
+
+  const handleSearch = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    // Navigate to results page with search parameters
+    navigate('/search-results', {
+      state: {
+        dates: searchDates,
+        destination: searchDestination,
+        size: searchSize
+      }
+    });
+  };
+
+  const sizeOptions = [
+    'XS', 'S', 'M', 'L', 'XL', 'XXL', 
+    '28', '30', '32', '34', '36', '38', '40', '42', '44', '46', '48', '50',
+    '2T', '3T', '4T', '5T', '6', '7', '8', '10', '12', '14', '16'
+  ];
 
   return (
     <div className="min-h-screen bg-white">
@@ -68,6 +93,87 @@ function HomePage() {
           </div>
         </div>
       </header>
+
+      {/* Search Form Section */}
+      <section className="py-16 bg-white">
+        <div className="max-w-4xl mx-auto px-4">
+          <div className="text-center mb-8">
+            <h3 className="text-2xl font-light text-gray-900 mb-2">Find Your Perfect Rental</h3>
+            <p className="text-gray-600">Search available clothing for your travel dates and destination</p>
+          </div>
+          
+          <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-lg border p-8">
+            <div className="grid md:grid-cols-3 gap-6 mb-6">
+              {/* Travel Dates */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <Calendar className="w-4 h-4 inline mr-2" />
+                  Travel Dates
+                </label>
+                <div className="space-y-2">
+                  <input
+                    type="date"
+                    value={searchDates.start}
+                    onChange={(e) => setSearchDates(prev => ({ ...prev, start: e.target.value }))}
+                    min={new Date().toISOString().split('T')[0]}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    placeholder="Check-in"
+                  />
+                  <input
+                    type="date"
+                    value={searchDates.end}
+                    onChange={(e) => setSearchDates(prev => ({ ...prev, end: e.target.value }))}
+                    min={searchDates.start || new Date().toISOString().split('T')[0]}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                    placeholder="Check-out"
+                  />
+                </div>
+              </div>
+
+              {/* Destination */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <MapPin className="w-4 h-4 inline mr-2" />
+                  Destination
+                </label>
+                <input
+                  type="text"
+                  value={searchDestination}
+                  onChange={(e) => setSearchDestination(e.target.value)}
+                  placeholder="City, hotel, or area"
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                />
+              </div>
+
+              {/* Size */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-2">
+                  <Ruler className="w-4 h-4 inline mr-2" />
+                  Size (Optional)
+                </label>
+                <select
+                  value={searchSize}
+                  onChange={(e) => setSearchSize(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                >
+                  <option value="">Any Size</option>
+                  {sizeOptions.map(size => (
+                    <option key={size} value={size}>{size}</option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2"
+            >
+              <Search className="w-5 h-5" />
+              Search Available Items
+            </button>
+          </form>
+        </div>
+      </section>
 
       {/* Email Form Section */}
       <section className="py-16 bg-gray-50">
