@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, UserCheck, Calendar, Search } from 'lucide-react';
+import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, UserCheck, Calendar, Search, Star, Heart, Shield, Leaf, Headphones, ChevronDown, ChevronUp } from 'lucide-react';
 import RentNowFlow from './RentNowFlow';
 
 function HomePage() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [showRentFlow, setShowRentFlow] = useState(false);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const navigate = useNavigate();
 
   // Search form state
@@ -46,137 +47,523 @@ function HomePage() {
     '2T', '3T', '4T', '5T', '6', '7', '8', '10', '12', '14', '16'
   ];
 
+  const testimonials = [
+    {
+      name: "Ava B.",
+      review: "Travel Clothing Club saved me $80 in luggage fees! The clothes were spotless and stylish.",
+      city: "Los Angeles",
+      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&q=80&w=150&h=150"
+    },
+    {
+      name: "Nate D.",
+      review: "Business trip packing is now stress-free. Loved the quality and convenience.",
+      city: "New York",
+      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?auto=format&fit=crop&q=80&w=150&h=150"
+    },
+    {
+      name: "Sara M.",
+      review: "Picked up at my hotel, fit perfectly. Will use for every trip!",
+      city: "Chicago",
+      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?auto=format&fit=crop&q=80&w=150&h=150"
+    }
+  ];
+
+  const faqs = [
+    {
+      question: "What if I damage or lose an item?",
+      answer: "We understand accidents happen during travel. Minor wear is expected and covered. For damages or lost items, we'll work with you on a fair replacement cost that's typically much less than retail price."
+    },
+    {
+      question: "Can I buy what I rent?",
+      answer: "Absolutely! If you fall in love with any item, you can purchase it at a discounted price. Just let us know during your rental period and we'll arrange the purchase."
+    },
+    {
+      question: "How far in advance should I book?",
+      answer: "We recommend booking at least 7 days in advance to ensure availability and proper delivery timing. For popular destinations or peak travel seasons, 2-3 weeks ahead is ideal."
+    },
+    {
+      question: "Are clothes sanitized?",
+      answer: "Yes, every item goes through our professional cleaning and sanitization process. We use eco-friendly, hypoallergenic detergents and follow strict hygiene protocols to ensure freshness and safety."
+    },
+    {
+      question: "What if my hotel loses the package?",
+      answer: "We work with trusted delivery partners and provide tracking for all shipments. If there's ever an issue with delivery, our 24/7 concierge team will immediately arrange a replacement or alternative solution."
+    }
+  ];
+
+  const toggleFaq = (index: number) => {
+    setExpandedFaq(expandedFaq === index ? null : index);
+  };
+
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section */}
-      <header className="relative">
+      {/* Hero Section - Split Layout */}
+      <header className="relative bg-gradient-to-br from-slate-50 to-white">
         <div className="absolute inset-0">
-          <img 
-            src="https://images.unsplash.com/photo-1506012787146-f92b2d7d6d96?auto=format&fit=crop&q=80"
-            alt="Hotel lobby"
-            className="w-full h-full object-cover"
-          />
-          <div className="absolute inset-0 bg-gray-900/80"></div>
+          <div className="absolute inset-0 bg-gradient-to-r from-white/95 to-white/80"></div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto py-24 px-4 sm:px-6 lg:px-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           {/* Navigation */}
-          <nav className="absolute top-6 right-6">
+          <nav className="flex items-center justify-between py-6">
+            <div className="flex items-center gap-3">
+              <img 
+                src="/TCC Cursive.png"
+                alt="Travel Clothing Club"
+                className="w-12 h-12 object-contain"
+              />
+              <span className="text-xl font-medium text-slate-900">Travel Clothing Club</span>
+            </div>
             <Link 
               to="/lender-portal"
-              className="bg-white/10 backdrop-blur-sm text-white px-4 py-2 rounded-lg font-medium hover:bg-white/20 transition flex items-center gap-2"
+              className="bg-slate-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800 transition flex items-center gap-2"
             >
               <UserCheck className="w-4 h-4" />
               Lender Portal
             </Link>
           </nav>
 
-          <div className="flex flex-col items-center mb-8">
-            {/* Knitted Logo */}
-            <div className="mb-8">
-              <img 
-                src="/ChatGPT Image Jun 4, 2025, 09_30_18 PM copy.png"
-                alt="Travel Clothing Club Logo"
-                className="w-32 h-32 md:w-40 md:h-40 object-contain"
-              />
+          {/* Hero Content */}
+          <div className="grid lg:grid-cols-2 gap-12 items-center py-16">
+            {/* Left Side - Text */}
+            <div className="space-y-8">
+              <div className="space-y-4">
+                <p className="text-slate-600 font-medium tracking-wide uppercase text-sm">Travel light. Stress less.</p>
+                <h1 className="text-5xl lg:text-6xl font-light text-slate-900 leading-tight">
+                  Clothing Delivered Straight to Your Stay
+                </h1>
+                <p className="text-xl text-slate-600 leading-relaxed">
+                  Rent stylish, pre-washed outfits at your destination—without lifting a suitcase.
+                </p>
+              </div>
+              
+              <button
+                onClick={handleRentNowClick}
+                className="bg-slate-900 text-white px-8 py-4 rounded-xl font-medium text-lg hover:bg-slate-800 transition shadow-lg hover:shadow-xl"
+              >
+                Get Started →
+              </button>
             </div>
-            
-            {/* New Hero Copy */}
-            <div className="text-center max-w-4xl mx-auto mb-8">
-              <h2 className="text-4xl md:text-5xl font-light text-white mb-6 leading-tight">
-                Travel Lighter. Stress Less.
-              </h2>
-              <p className="text-xl md:text-2xl text-gray-200 font-light leading-relaxed">
-                Rent stylish, weather-ready clothes at your destination—skip the suitcase, not the style.
-              </p>
+
+            {/* Right Side - Image */}
+            <div className="relative">
+              <img 
+                src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80"
+                alt="Hotel room with clothing delivery"
+                className="rounded-2xl shadow-2xl"
+              />
+              <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg">
+                <div className="flex items-center gap-3">
+                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
+                  <span className="text-sm font-medium text-slate-700">Delivered to your room</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </header>
 
-      {/* Search Form Section */}
-      <section className="py-16 bg-white">
-        <div className="max-w-4xl mx-auto px-4">
-          <div className="text-center mb-8">
-            <h3 className="text-2xl font-light text-gray-900 mb-2">Find Your Perfect Rental</h3>
-            <p className="text-gray-600">Search available clothing for your travel dates and destination</p>
-          </div>
-          
-          <form onSubmit={handleSearch} className="bg-white rounded-2xl shadow-lg border p-8">
-            <div className="grid md:grid-cols-3 gap-6 mb-6">
-              {/* Travel Dates */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <Calendar className="w-4 h-4 inline mr-2" />
-                  Travel Dates
-                </label>
-                <div className="space-y-2">
-                  <input
-                    type="date"
-                    value={searchDates.start}
-                    onChange={(e) => setSearchDates(prev => ({ ...prev, start: e.target.value }))}
-                    min={new Date().toISOString().split('T')[0]}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    placeholder="Check-in"
-                  />
-                  <input
-                    type="date"
-                    value={searchDates.end}
-                    onChange={(e) => setSearchDates(prev => ({ ...prev, end: e.target.value }))}
-                    min={searchDates.start || new Date().toISOString().split('T')[0]}
-                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    placeholder="Check-out"
-                  />
-                </div>
+      {/* Platform Snapshot */}
+      <section className="py-16 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Calendar className="w-8 h-8 text-white" />
               </div>
-
-              {/* Destination */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <MapPin className="w-4 h-4 inline mr-2" />
-                  Destination
-                </label>
-                <input
-                  type="text"
-                  value={searchDestination}
-                  onChange={(e) => setSearchDestination(e.target.value)}
-                  placeholder="City, hotel, or area"
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                />
-              </div>
-
-              {/* Size */}
-              <div>
-                <label className="block text-sm font-medium text-gray-700 mb-2">
-                  <Ruler className="w-4 h-4 inline mr-2" />
-                  Size (Optional)
-                </label>
-                <select
-                  value={searchSize}
-                  onChange={(e) => setSearchSize(e.target.value)}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                >
-                  <option value="">Any Size</option>
-                  {sizeOptions.map(size => (
-                    <option key={size} value={size}>{size}</option>
-                  ))}
-                </select>
-              </div>
+              <h3 className="text-xl font-medium mb-2">Easy Booking</h3>
+              <p className="text-slate-600">Book your outfits in minutes with our simple trip planner</p>
             </div>
-
-            <button
-              type="submit"
-              className="w-full bg-blue-600 text-white py-3 px-6 rounded-lg font-medium hover:bg-blue-700 transition flex items-center justify-center gap-2"
-            >
-              <Search className="w-5 h-5" />
-              Search Available Items
-            </button>
-          </form>
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                <MapPin className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-medium mb-2">Delivery to Hotels & Rentals</h3>
+              <p className="text-slate-600">We deliver directly to your accommodation worldwide</p>
+            </div>
+            <div className="text-center p-6">
+              <div className="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Headphones className="w-8 h-8 text-white" />
+              </div>
+              <h3 className="text-xl font-medium mb-2">24/7 Concierge Support</h3>
+              <p className="text-slate-600">Our team is always here to help with your travel needs</p>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* Email Form Section */}
-      <section className="py-16 bg-gray-50">
+      {/* Why Choose Us */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-light text-center mb-16 text-slate-900">Why Travelers Love Us</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-8 rounded-2xl bg-slate-50">
+              <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Plane className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-medium mb-4">Hands-Free Travel</h3>
+              <p className="text-slate-600 text-lg">No luggage. Just show up and look great.</p>
+            </div>
+            <div className="text-center p-8 rounded-2xl bg-slate-50">
+              <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Heart className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-medium mb-4">Tailored to You</h3>
+              <p className="text-slate-600 text-lg">Outfits matched to your trip & preferences.</p>
+            </div>
+            <div className="text-center p-8 rounded-2xl bg-slate-50">
+              <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Leaf className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-medium mb-4">Eco-Friendly</h3>
+              <p className="text-slate-600 text-lg">Reduce waste. Reuse in style.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* How It Works */}
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-light text-center mb-16 text-slate-900">How It Works</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <img 
+                src="https://images.unsplash.com/photo-1551836022-deb4988cc6c0?auto=format&fit=crop&q=80"
+                alt="Choose your trip"
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-8">
+                <div className="w-8 h-8 bg-slate-900 text-white rounded-full flex items-center justify-center text-sm font-bold mb-4">1</div>
+                <h3 className="text-2xl font-medium mb-4">Choose Your Trip</h3>
+                <p className="text-slate-600">Tell us your destination, dates, and style preferences</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <img 
+                src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80"
+                alt="Pick your style"
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-8">
+                <div className="w-8 h-8 bg-slate-900 text-white rounded-full flex items-center justify-center text-sm font-bold mb-4">2</div>
+                <h3 className="text-2xl font-medium mb-4">Pick Your Style</h3>
+                <p className="text-slate-600">Select from curated bundles: Work Trip, Family Vacation, or Custom</p>
+              </div>
+            </div>
+            <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+              <img 
+                src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80"
+                alt="Get it delivered"
+                className="w-full h-48 object-cover"
+              />
+              <div className="p-8">
+                <div className="w-8 h-8 bg-slate-900 text-white rounded-full flex items-center justify-center text-sm font-bold mb-4">3</div>
+                <h3 className="text-2xl font-medium mb-4">Get It Delivered</h3>
+                <p className="text-slate-600">Find your outfits waiting at your hotel or rental</p>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Collection Preview */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-light text-center mb-16 text-slate-900">Shop by Collection</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="group cursor-pointer" onClick={handleRentNowClick}>
+              <div className="relative overflow-hidden rounded-2xl shadow-lg">
+                <img 
+                  src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&q=80"
+                  alt="Men's collection"
+                  className="w-full h-80 object-cover group-hover:scale-105 transition duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-6 left-6">
+                  <h3 className="text-2xl font-medium text-white mb-2">Men's Collection</h3>
+                  <p className="text-white/90 flex items-center gap-2">
+                    Explore Men's →
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="group cursor-pointer" onClick={handleRentNowClick}>
+              <div className="relative overflow-hidden rounded-2xl shadow-lg">
+                <img 
+                  src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80"
+                  alt="Women's collection"
+                  className="w-full h-80 object-cover group-hover:scale-105 transition duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-6 left-6">
+                  <h3 className="text-2xl font-medium text-white mb-2">Women's Collection</h3>
+                  <p className="text-white/90 flex items-center gap-2">
+                    Explore Women's →
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="group cursor-pointer" onClick={handleRentNowClick}>
+              <div className="relative overflow-hidden rounded-2xl shadow-lg">
+                <img 
+                  src="https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&q=80"
+                  alt="Kids collection"
+                  className="w-full h-80 object-cover group-hover:scale-105 transition duration-500"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                <div className="absolute bottom-6 left-6">
+                  <h3 className="text-2xl font-medium text-white mb-2">Kids' Collection</h3>
+                  <p className="text-white/90 flex items-center gap-2">
+                    Explore Kids' →
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Simple Pricing */}
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-light text-center mb-4 text-slate-900">Transparent Pricing</h2>
+          <p className="text-xl text-slate-600 text-center mb-16">Choose the perfect package for your trip</p>
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            {/* Basic Tier */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-transparent hover:border-slate-200 transition">
+              <h3 className="text-2xl font-medium mb-4">Basic</h3>
+              <div className="text-4xl font-light mb-6">$49<span className="text-lg text-slate-600">/trip</span></div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span>2 outfits</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span>Casual wear</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span>Standard fabrics</span>
+                </li>
+              </ul>
+              <button 
+                onClick={handleRentNowClick}
+                className="w-full bg-slate-100 text-slate-900 py-3 rounded-lg font-medium hover:bg-slate-200 transition"
+              >
+                Select Basic
+              </button>
+            </div>
+
+            {/* Upscale Tier */}
+            <div className="bg-slate-900 text-white rounded-2xl shadow-lg p-8 transform scale-105 relative">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-slate-700 text-white px-4 py-1 rounded-full text-sm font-medium">
+                Most Popular
+              </div>
+              <h3 className="text-2xl font-medium mb-4">Upscale</h3>
+              <div className="text-4xl font-light mb-6">$89<span className="text-lg text-slate-300">/trip</span></div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-400" />
+                  <span>3 outfits</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-400" />
+                  <span>Business + casual mix</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-400" />
+                  <span>Premium materials</span>
+                </li>
+              </ul>
+              <button 
+                onClick={handleRentNowClick}
+                className="w-full bg-white text-slate-900 py-3 rounded-lg font-medium hover:bg-slate-100 transition"
+              >
+                Select Upscale
+              </button>
+            </div>
+
+            {/* Vacay Mode Tier */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-transparent hover:border-slate-200 transition">
+              <h3 className="text-2xl font-medium mb-4">Vacay Mode</h3>
+              <div className="text-4xl font-light mb-6">$119<span className="text-lg text-slate-600">/trip</span></div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span>4 outfits</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span>Resortwear + accessories</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span>Priority delivery</span>
+                </li>
+              </ul>
+              <button 
+                onClick={handleRentNowClick}
+                className="w-full bg-slate-100 text-slate-900 py-3 rounded-lg font-medium hover:bg-slate-200 transition"
+              >
+                Select Vacay Mode
+              </button>
+            </div>
+          </div>
+
+          {/* Comparison Table */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className="text-left p-6 font-medium">Features</th>
+                    <th className="text-center p-6 font-medium">Basic</th>
+                    <th className="text-center p-6 font-medium">Upscale</th>
+                    <th className="text-center p-6 font-medium">Vacay Mode</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  <tr>
+                    <td className="p-6 font-medium">Number of Outfits</td>
+                    <td className="text-center p-6">2</td>
+                    <td className="text-center p-6">3</td>
+                    <td className="text-center p-6">4</td>
+                  </tr>
+                  <tr>
+                    <td className="p-6 font-medium">Style Types</td>
+                    <td className="text-center p-6">Casual</td>
+                    <td className="text-center p-6">Business + Casual</td>
+                    <td className="text-center p-6">Resort + Accessories</td>
+                  </tr>
+                  <tr>
+                    <td className="p-6 font-medium">Fabric Quality</td>
+                    <td className="text-center p-6">Standard</td>
+                    <td className="text-center p-6">Premium</td>
+                    <td className="text-center p-6">Luxury</td>
+                  </tr>
+                  <tr>
+                    <td className="p-6 font-medium">Delivery Priority</td>
+                    <td className="text-center p-6">Standard</td>
+                    <td className="text-center p-6">Standard</td>
+                    <td className="text-center p-6">Priority</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Testimonials */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-light text-center mb-16 text-slate-900">What Travelers Say</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            {testimonials.map((testimonial, index) => (
+              <div key={index} className="bg-slate-50 rounded-2xl p-8 shadow-lg">
+                <div className="flex items-center mb-6">
+                  <img 
+                    src={testimonial.image} 
+                    alt={testimonial.name}
+                    className="w-16 h-16 rounded-full object-cover mr-4"
+                  />
+                  <div>
+                    <div className="font-medium text-slate-900">{testimonial.name}</div>
+                    <div className="text-slate-600 text-sm">{testimonial.city}</div>
+                  </div>
+                </div>
+                <div className="flex mb-4">
+                  {[...Array(5)].map((_, i) => (
+                    <Star key={i} className="w-5 h-5 text-yellow-400 fill-current" />
+                  ))}
+                </div>
+                <p className="text-slate-700 italic">"{testimonial.review}"</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Mid-page Email Sign-up */}
+      <section className="py-16 bg-slate-900">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+          <h3 className="text-3xl font-light text-white mb-4">Get Exclusive Access</h3>
+          <p className="text-xl text-slate-300 mb-8">Get exclusive discounts, trip tools, and early access to styles.</p>
+          
+          {submitted ? (
+            <div className="bg-green-500/20 border border-green-400 rounded-lg p-6 max-w-md mx-auto">
+              <div className="flex items-center justify-center gap-2 text-green-400 mb-2">
+                <Check className="w-6 h-6" />
+                <span className="font-medium">Welcome to the club!</span>
+              </div>
+              <p className="text-green-300">We'll notify you of exclusive offers and new collections.</p>
+            </div>
+          ) : (
+            <form 
+              action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca&f_id=00071ae1f0" 
+              method="post" 
+              target="_blank" 
+              noValidate 
+              className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
+            >
+              <input 
+                type="email" 
+                name="EMAIL" 
+                placeholder="Enter your email" 
+                required 
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="flex-1 px-6 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white/20 outline-none text-slate-900"
+              />
+              <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
+                <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} />
+              </div>
+              <button 
+                type="submit" 
+                name="subscribe" 
+                className="bg-white text-slate-900 px-8 py-3 rounded-lg font-medium hover:bg-slate-100 transition whitespace-nowrap"
+              >
+                Subscribe Now
+              </button>
+            </form>
+          )}
+        </div>
+      </section>
+
+      {/* FAQ Section */}
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-light text-center mb-16 text-slate-900">Frequently Asked Questions</h2>
+          <div className="space-y-4">
+            {faqs.map((faq, index) => (
+              <div key={index} className="bg-white rounded-xl shadow-sm border border-slate-200">
+                <button
+                  onClick={() => toggleFaq(index)}
+                  className="w-full px-6 py-4 text-left flex items-center justify-between hover:bg-slate-50 transition rounded-xl"
+                >
+                  <span className="font-medium text-slate-900">{faq.question}</span>
+                  {expandedFaq === index ? (
+                    <ChevronUp className="w-5 h-5 text-slate-500" />
+                  ) : (
+                    <ChevronDown className="w-5 h-5 text-slate-500" />
+                  )}
+                </button>
+                {expandedFaq === index && (
+                  <div className="px-6 pb-4">
+                    <p className="text-slate-600 leading-relaxed">{faq.answer}</p>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* Final Email Sign-up */}
+      <section className="py-16 bg-white">
         <div className="max-w-md mx-auto px-4 text-center">
           {submitted ? (
             <div className="bg-green-50 border border-green-200 rounded-lg p-6">
@@ -202,21 +589,20 @@ function HomePage() {
                   required 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-5 py-3 text-lg border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  className="w-full px-5 py-3 text-lg border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent outline-none"
                 />
               </div>
-              {/* Honeypot field */}
               <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
                 <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} />
               </div>
               <button 
                 type="submit" 
                 name="subscribe" 
-                className="w-full bg-black text-white px-6 py-3 text-lg rounded-lg font-medium hover:bg-gray-800 transition"
+                className="w-full bg-slate-900 text-white px-6 py-3 text-lg rounded-lg font-medium hover:bg-slate-800 transition"
               >
                 Join the Exclusive Clublist
               </button>
-              <p className="text-sm text-gray-600">
+              <p className="text-sm text-slate-600">
                 Join 100+ travelers simplifying their trips.
               </p>
             </form>
@@ -224,450 +610,48 @@ function HomePage() {
         </div>
       </section>
 
-      {/* How It Works */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-light text-center mb-12">How It Works</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin className="w-8 h-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-medium mb-2">1. Choose Your Trip</h3>
-              <p className="text-gray-600">Select your destination and travel dates</p>
-            </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <ShoppingBag className="w-8 h-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-medium mb-2">2. Pick Your Styles</h3>
-              <p className="text-gray-600">Choose from curated businesswear, casual outfits, and family options</p>
-            </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Plane className="w-8 h-8 text-blue-600" />
-              </div>
-              <h3 className="text-xl font-medium mb-2">3. Get It Delivered</h3>
-              <p className="text-gray-600">Receive your wardrobe at the airport or hotel when you land</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Available Clothing Section */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-light text-center mb-4">Available Clothing</h2>
-          <p className="text-gray-600 text-center mb-12">Find the perfect outfit for your needs with our AI-powered size matching</p>
-          
-          <div className="mb-12">
-            <h3 className="text-2xl font-light mb-8">Size Customization</h3>
-            <div className="grid md:grid-cols-2 gap-8 items-center bg-white p-8 rounded-xl shadow-sm">
-              <div>
-                <h4 className="text-xl font-medium mb-4">Perfect Fit with AI</h4>
-                <div className="space-y-4">
-                  <div className="flex items-center gap-3">
-                    <Ruler className="w-6 h-6 text-blue-600" />
-                    <span>AI-powered size recommendations</span>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <Upload className="w-6 h-6 text-blue-600" />
-                    <span>Upload your full body picture</span>
-                  </div>
-                  <Link 
-                    to="/virtual-try-on"
-                    className="inline-block mt-4 bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Get Started
-                  </Link>
-                </div>
-              </div>
-              <img 
-                src="https://images.unsplash.com/photo-1585487000160-6ebcfceb0d03?auto=format&fit=crop&q=80"
-                alt="Size customization"
-                className="rounded-lg"
-              />
-            </div>
-          </div>
-
-          {/* Men's Collection */}
-          <div className="mb-16">
-            <h3 className="text-2xl font-light mb-8">Men's Collection</h3>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&q=80"
-                  alt="Business Suit"
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h4 className="font-medium mb-2">Business Suit</h4>
-                  <p className="text-gray-600 mb-4">Classic navy suit with modern fit</p>
-                  <button 
-                    onClick={handleRentNowClick}
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Rent Now
-                  </button>
-                </div>
-              </div>
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1617137968427-85924c800a22?auto=format&fit=crop&q=80"
-                  alt="Casual Blazer"
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h4 className="font-medium mb-2">Casual Blazer</h4>
-                  <p className="text-gray-600 mb-4">Versatile blazer for any occasion</p>
-                  <button 
-                    onClick={handleRentNowClick}
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Rent Now
-                  </button>
-                </div>
-              </div>
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?auto=format&fit=crop&q=80"
-                  alt="Summer Collection"
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h4 className="font-medium mb-2">Summer Collection</h4>
-                  <p className="text-gray-600 mb-4">Light and breathable summer wear</p>
-                  <button 
-                    onClick={handleRentNowClick}
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Rent Now
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Women's Collection */}
-          <div className="mb-16">
-            <h3 className="text-2xl font-light mb-8">Women's Collection</h3>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80"
-                  alt="Evening Dress"
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h4 className="font-medium mb-2">Evening Dress</h4>
-                  <p className="text-gray-600 mb-4">Elegant black evening dress</p>
-                  <button 
-                    onClick={handleRentNowClick}
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Rent Now
-                  </button>
-                </div>
-              </div>
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?auto=format&fit=crop&q=80"
-                  alt="Business Attire"
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h4 className="font-medium mb-2">Business Attire</h4>
-                  <p className="text-gray-600 mb-4">Professional business ensemble</p>
-                  <button 
-                    onClick={handleRentNowClick}
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Rent Now
-                  </button>
-                </div>
-              </div>
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1515372039744-b8f02a3ae446?auto=format&fit=crop&q=80"
-                  alt="Casual Chic"
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h4 className="font-medium mb-2">Casual Chic</h4>
-                  <p className="text-gray-600 mb-4">Stylish everyday wear</p>
-                  <button 
-                    onClick={handleRentNowClick}
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Rent Now
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-
-          {/* Kids' Collection */}
-          <div>
-            <h3 className="text-2xl font-light mb-8">Kids' Collection</h3>
-            <div className="grid md:grid-cols-3 gap-8">
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&q=80"
-                  alt="Party Wear"
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h4 className="font-medium mb-2">Party Wear</h4>
-                  <p className="text-gray-600 mb-4">Adorable party outfits</p>
-                  <button 
-                    onClick={handleRentNowClick}
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Rent Now
-                  </button>
-                </div>
-              </div>
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1519457431-44ccd64a579b?auto=format&fit=crop&q=80"
-                  alt="Casual Play"
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h4 className="font-medium mb-2">Casual Play</h4>
-                  <p className="text-gray-600 mb-4">Comfortable play clothes</p>
-                  <button 
-                    onClick={handleRentNowClick}
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Rent Now
-                  </button>
-                </div>
-              </div>
-              <div className="bg-white rounded-xl shadow-lg overflow-hidden">
-                <img 
-                  src="https://images.unsplash.com/photo-1503944583220-79d8926ad5e2?auto=format&fit=crop&q=80"
-                  alt="Special Occasion"
-                  className="w-full h-64 object-cover"
-                />
-                <div className="p-6">
-                  <h4 className="font-medium mb-2">Special Occasion</h4>
-                  <p className="text-gray-600 mb-4">Formal wear for special events</p>
-                  <button 
-                    onClick={handleRentNowClick}
-                    className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Rent Now
-                  </button>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Subscription Tiers */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-3xl font-light text-center mb-4">Choose Your Style Package</h2>
-          <p className="text-gray-600 text-center mb-12 max-w-2xl mx-auto">Select from our curated clothing packages designed for every occasion and style preference</p>
-          
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            {/* Basic Tier */}
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition p-8">
-              <h3 className="text-2xl font-light text-gray-900 mb-4">Basic</h3>
-              <p className="text-gray-600 mb-6">Essential clothing for comfortable travel</p>
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span>White shirts (M/W/K)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span>Black shorts (M/W/K)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span>Basic accessories</span>
-                </div>
-              </div>
-              <button 
-                onClick={handleRentNowClick}
-                className="w-full bg-gray-100 text-gray-900 py-3 rounded-lg font-medium hover:bg-gray-200 transition"
-              >
-                Select Basic
-              </button>
-            </div>
-
-            {/* Vaca Mode Tier */}
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition p-8">
-              <h3 className="text-2xl font-light text-gray-900 mb-4">Vaca Mode</h3>
-              <p className="text-gray-600 mb-6">Perfect for casual vacation style</p>
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span>Breathable tan shirts (M/W/K)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span>Jean shorts & pants (M/W/K)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span>Vacation accessories</span>
-                </div>
-              </div>
-              <button 
-                onClick={handleRentNowClick}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-              >
-                Select Vaca Mode
-              </button>
-            </div>
-
-            {/* Upscale Tier */}
-            <div className="bg-white border border-gray-200 rounded-2xl shadow-sm hover:shadow-lg transition p-8">
-              <h3 className="text-2xl font-light text-gray-900 mb-4">Upscale</h3>
-              <p className="text-gray-600 mb-6">Professional business attire</p>
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span>Business suits (M/W)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span>Professional shoes</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-600" />
-                  <span>Business accessories</span>
-                </div>
-              </div>
-              <button 
-                onClick={handleRentNowClick}
-                className="w-full bg-gray-900 text-white py-3 rounded-lg font-medium hover:bg-gray-800 transition"
-              >
-                Select Upscale
-              </button>
-            </div>
-
-            {/* Award Tier */}
-            <div className="bg-gradient-to-br from-gray-900 to-gray-800 rounded-2xl shadow-lg p-8 text-white">
-              <h3 className="text-2xl font-light mb-4">Award</h3>
-              <p className="text-gray-300 mb-6">Premium fashion brands and styles</p>
-              <div className="space-y-3 mb-8">
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-400" />
-                  <span>Designer button-downs (M)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-400" />
-                  <span>Premium dresses (W)</span>
-                </div>
-                <div className="flex items-center gap-2">
-                  <Check className="w-5 h-5 text-blue-400" />
-                  <span>Kids designer wear</span>
-                </div>
-              </div>
-              <button 
-                onClick={handleRentNowClick}
-                className="w-full bg-blue-600 text-white py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-              >
-                Select Award
-              </button>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Features */}
-      <section className="py-20 bg-gray-50">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="grid md:grid-cols-2 gap-12 items-center">
-            <div>
-              <h2 className="text-3xl font-light mb-6">Why Choose Travel Clothing Club?</h2>
-              <div className="space-y-4">
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Users className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-medium mb-2">Verified Lenders</h3>
-                    <p className="text-gray-600">All lenders are verified and rated by our community</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <DollarSign className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-medium mb-2">Flexible Pricing</h3>
-                    <p className="text-gray-600">Rent by the day with transparent pricing</p>
-                  </div>
-                </div>
-                <div className="flex items-start gap-4">
-                  <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-                    <Plane className="w-6 h-6 text-blue-600" />
-                  </div>
-                  <div>
-                    <h3 className="text-xl font-medium mb-2">Convenient Delivery</h3>
-                    <p className="text-gray-600">Meet directly at your location - no extra trips needed</p>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div>
-              <img 
-                src="https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80"
-                alt="Professional clothing"
-                className="rounded-lg shadow-xl"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* Footer */}
-      <footer className="bg-gray-900 text-white py-12">
+      <footer className="bg-slate-900 text-white py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-4 gap-8">
             <div>
               <div className="flex items-center gap-3 mb-4">
                 <img 
-                  src="/ChatGPT Image Jun 4, 2025, 09_30_18 PM copy.png"
+                  src="/TCC Cursive.png"
                   alt="Travel Clothing Club"
                   className="w-8 h-8 object-contain"
                 />
                 <h3 className="text-lg font-medium">Travel Clothing Club</h3>
               </div>
-              <p className="text-gray-400">Connecting travelers with local clothing lenders worldwide.</p>
+              <p className="text-slate-400">Connecting travelers with local clothing lenders worldwide.</p>
             </div>
             <div>
-              <h4 className="text-lg font-medium mb-4">Quick Links</h4>
+              <h4 className="text-lg font-medium mb-4">Collections</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition">How It Works</a></li>
-                <li><Link to="/lender-portal" className="text-gray-400 hover:text-white transition">Become a Lender</Link></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Pricing</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition">Men's Collection</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition">Women's Collection</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition">Kids' Collection</a></li>
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-medium mb-4">Support</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition">FAQ</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Contact Us</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Terms of Service</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition">FAQs</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition">About</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition">Contact</a></li>
+                <li><Link to="/lender-portal" className="text-slate-400 hover:text-white transition">Become a Lender</Link></li>
               </ul>
             </div>
             <div>
               <h4 className="text-lg font-medium mb-4">Connect</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Twitter</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">Instagram</a></li>
-                <li><a href="#" className="text-gray-400 hover:text-white transition">LinkedIn</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition">Instagram</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition">TikTok</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition">Facebook</a></li>
               </ul>
             </div>
           </div>
-          <div className="border-t border-gray-800 mt-12 pt-8 text-center text-gray-400">
+          <div className="border-t border-slate-800 mt-12 pt-8 text-center text-slate-400">
             <p>&copy; 2025 Travel Clothing Club. All rights reserved.</p>
           </div>
         </div>

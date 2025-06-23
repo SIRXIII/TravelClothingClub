@@ -109,7 +109,7 @@ function VirtualTryOn() {
             </Link>
             <div className="flex items-center gap-3">
               <img 
-                src="/ChatGPT Image Jun 4, 2025, 09_30_18 PM copy.png"
+                src="/TCC Cursive.png"
                 alt="Travel Clothing Club"
                 className="w-8 h-8 object-contain"
               />

@@ -44,7 +44,7 @@ function AuthForm({ onSuccess }: AuthFormProps) {
       <div className="max-w-md w-full space-y-8">
         <div className="text-center">
           <img 
-            src="/ChatGPT Image Jun 4, 2025, 09_30_18 PM copy.png"
+            src="/TCC Cursive.png"
             alt="Travel Clothing Club"
             className="w-16 h-16 mx-auto mb-4"
           />
