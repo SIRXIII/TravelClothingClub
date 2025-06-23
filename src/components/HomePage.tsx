@@ -97,66 +97,102 @@ function HomePage() {
 
   return (
     <div className="min-h-screen bg-white">
-      {/* Hero Section - Split Layout */}
-      <header className="relative bg-gradient-to-br from-slate-50 to-white">
-        <div className="absolute inset-0">
-          <div className="absolute inset-0 bg-gradient-to-r from-white/95 to-white/80"></div>
+      {/* Hero Section - Split Layout with Background Images */}
+      <header className="relative min-h-screen">
+        {/* Split Background Images */}
+        <div className="absolute inset-0 grid grid-cols-2">
+          {/* Left Side - Airplane */}
+          <div className="relative">
+            <img 
+              src="https://images.unsplash.com/photo-1436491865332-7a61a109cc05?auto=format&fit=crop&q=80"
+              alt="Airplane"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-r from-slate-900/60 to-slate-900/20"></div>
+          </div>
+          
+          {/* Right Side - Hotel Check-in with Closet */}
+          <div className="relative">
+            <img 
+              src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&q=80"
+              alt="Hotel room with organized closet"
+              className="w-full h-full object-cover"
+            />
+            <div className="absolute inset-0 bg-gradient-to-l from-white/80 to-white/40"></div>
+          </div>
         </div>
         
-        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="relative max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 min-h-screen flex flex-col">
           {/* Navigation */}
-          <nav className="flex items-center justify-between py-6">
-            <div className="flex items-center gap-3">
+          <nav className="flex items-center justify-between py-8">
+            <div className="flex items-center gap-4">
               <img 
                 src="/TCC Cursive.png"
                 alt="Travel Clothing Club"
-                className="w-12 h-12 object-contain"
+                className="w-20 h-20 md:w-24 md:h-24 object-contain"
               />
-              <span className="text-xl font-medium text-slate-900">Travel Clothing Club</span>
+              <span className="text-2xl md:text-3xl font-light text-white drop-shadow-lg">Travel Clothing Club</span>
             </div>
             <Link 
               to="/lender-portal"
-              className="bg-slate-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800 transition flex items-center gap-2"
+              className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-medium hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
             >
-              <UserCheck className="w-4 h-4" />
+              <UserCheck className="w-5 h-5" />
               Lender Portal
             </Link>
           </nav>
 
           {/* Hero Content */}
-          <div className="grid lg:grid-cols-2 gap-12 items-center py-16">
-            {/* Left Side - Text */}
-            <div className="space-y-8">
-              <div className="space-y-4">
-                <p className="text-slate-600 font-medium tracking-wide uppercase text-sm">Travel light. Stress less.</p>
-                <h1 className="text-5xl lg:text-6xl font-light text-slate-900 leading-tight">
-                  Clothing Delivered Straight to Your Stay
-                </h1>
-                <p className="text-xl text-slate-600 leading-relaxed">
-                  Rent stylish, pre-washed outfits at your destination—without lifting a suitcase.
-                </p>
-              </div>
-              
-              <button
-                onClick={handleRentNowClick}
-                className="bg-slate-900 text-white px-8 py-4 rounded-xl font-medium text-lg hover:bg-slate-800 transition shadow-lg hover:shadow-xl"
-              >
-                Get Started →
-              </button>
-            </div>
-
-            {/* Right Side - Image */}
-            <div className="relative">
-              <img 
-                src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80"
-                alt="Hotel room with clothing delivery"
-                className="rounded-2xl shadow-2xl"
-              />
-              <div className="absolute -bottom-6 -left-6 bg-white p-4 rounded-xl shadow-lg">
-                <div className="flex items-center gap-3">
-                  <div className="w-3 h-3 bg-green-500 rounded-full"></div>
-                  <span className="text-sm font-medium text-slate-700">Delivered to your room</span>
+          <div className="flex-1 flex items-center">
+            <div className="grid lg:grid-cols-2 gap-16 items-center w-full">
+              {/* Left Side - Text Content */}
+              <div className="space-y-8 text-white">
+                <div className="space-y-6">
+                  <p className="text-white/90 font-medium tracking-wide uppercase text-lg">Travel light. Stress less.</p>
+                  <h1 className="text-5xl lg:text-7xl font-light leading-tight drop-shadow-lg">
+                    Clothing Delivered Straight to Your Stay
+                  </h1>
+                  <p className="text-2xl lg:text-3xl text-white/90 font-light leading-relaxed drop-shadow-md">
+                    Rent stylish, pre-washed outfits at your destination—without lifting a suitcase.
+                  </p>
                 </div>
+                
+                <button
+                  onClick={handleRentNowClick}
+                  className="bg-white text-slate-900 px-10 py-5 rounded-2xl font-semibold text-xl hover:bg-white/95 transition shadow-2xl hover:shadow-3xl transform hover:scale-105"
+                >
+                  Get Started →
+                </button>
+              </div>
+
+              {/* Right Side - Visual Elements */}
+              <div className="relative lg:block hidden">
+                <div className="absolute -top-8 -right-8 bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20">
+                  <div className="flex items-center gap-4">
+                    <div className="w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
+                    <span className="text-white font-medium">Live Delivery Tracking</span>
+                  </div>
+                </div>
+                
+                <div className="absolute -bottom-8 -left-8 bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20">
+                  <div className="flex items-center gap-4">
+                    <ShoppingBag className="w-6 h-6 text-white" />
+                    <div className="text-white">
+                      <div className="font-medium">3 Outfits Ready</div>
+                      <div className="text-sm text-white/80">Delivered to Room 1205</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          {/* Scroll Indicator */}
+          <div className="text-center pb-8">
+            <div className="inline-flex flex-col items-center text-white/80">
+              <span className="text-sm font-medium mb-2">Discover More</span>
+              <div className="w-6 h-10 border-2 border-white/40 rounded-full flex justify-center">
+                <div className="w-1 h-3 bg-white/60 rounded-full mt-2 animate-bounce"></div>
               </div>
             </div>
           </div>
@@ -164,29 +200,29 @@ function HomePage() {
       </header>
 
       {/* Platform Snapshot */}
-      <section className="py-16 bg-slate-50">
+      <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Calendar className="w-8 h-8 text-white" />
+            <div className="text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition">
+              <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Calendar className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-medium mb-2">Easy Booking</h3>
-              <p className="text-slate-600">Book your outfits in minutes with our simple trip planner</p>
+              <h3 className="text-2xl font-medium mb-4">Easy Booking</h3>
+              <p className="text-slate-600 text-lg">Book your outfits in minutes with our simple trip planner</p>
             </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                <MapPin className="w-8 h-8 text-white" />
+            <div className="text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition">
+              <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                <MapPin className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-medium mb-2">Delivery to Hotels & Rentals</h3>
-              <p className="text-slate-600">We deliver directly to your accommodation worldwide</p>
+              <h3 className="text-2xl font-medium mb-4">Delivery to Hotels & Rentals</h3>
+              <p className="text-slate-600 text-lg">We deliver directly to your accommodation worldwide</p>
             </div>
-            <div className="text-center p-6">
-              <div className="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Headphones className="w-8 h-8 text-white" />
+            <div className="text-center p-8 bg-white rounded-2xl shadow-lg hover:shadow-xl transition">
+              <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Headphones className="w-10 h-10 text-white" />
               </div>
-              <h3 className="text-xl font-medium mb-2">24/7 Concierge Support</h3>
-              <p className="text-slate-600">Our team is always here to help with your travel needs</p>
+              <h3 className="text-2xl font-medium mb-4">24/7 Concierge Support</h3>
+              <p className="text-slate-600 text-lg">Our team is always here to help with your travel needs</p>
             </div>
           </div>
         </div>
