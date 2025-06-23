@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { ArrowLeft, Calendar, MapPin, User, Users, Filter, Star, Heart, Check, Plus, Minus } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { ArrowLeft, Calendar, MapPin, User, Users, Filter, Star, Heart, Check, Plus, Minus, Upload, Camera, Sparkles } from 'lucide-react';
 import { supabase } from '../lib/supabase';
 import ProductCard from './ProductCard';
 
@@ -36,6 +36,7 @@ interface Person {
   gender: 'male' | 'female';
   size: string;
   selectedItems: ClothingItem[];
+  photo?: string;
 }
 
 interface RentNowFlowProps {
@@ -63,6 +64,14 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
   const [loading, setLoading] = useState(false);
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [favorites, setFavorites] = useState<string[]>([]);
+  
+  // Gender and photo selection state
+  const [selectedGender, setSelectedGender] = useState<'male' | 'female' | 'kids' | ''>('');
+  const [uploadedPhoto, setUploadedPhoto] = useState<string | null>(null);
+  const [showTryOn, setShowTryOn] = useState(false);
+  const [tryOnResult, setTryOnResult] = useState<string | null>(null);
+  const [tryOnLoading, setTryOnLoading] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Calculate rental days
   const getRentalDays = () => {
@@ -209,7 +218,87 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
       alert('Please fill in all fields');
       return;
     }
-    setStep(2);
+    setStep(2); // Go to gender selection step
+  };
+
+  const handlePhotoUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      // Check file size (max 10MB)
+      if (file.size > 10 * 1024 * 1024) {
+        alert('File size must be less than 10MB');
+        return;
+      }
+
+      // Check file type
+      if (!file.type.startsWith('image/')) {
+        alert('Please upload an image file');
+        return;
+      }
+
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        setUploadedPhoto(e.target?.result as string);
+      };
+      reader.readAsDataURL(file);
+    }
+  };
+
+  const handleTryOn = async () => {
+    if (!uploadedPhoto) {
+      alert('Please upload a photo first');
+      return;
+    }
+
+    setTryOnLoading(true);
+    try {
+      // Mock AI try-on API call
+      const response = await fetch('/api/ai-try-on', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          user_image: uploadedPhoto,
+          gender: selectedGender,
+          category: selectedGender === 'kids' ? 'kids' : 'adult'
+        })
+      });
+
+      if (!response.ok) {
+        throw new Error('Try-on service not available');
+      }
+
+      const data = await response.json();
+      setTryOnResult(data.result_image_url);
+    } catch (error) {
+      // For demo purposes, show a placeholder
+      setTryOnResult('https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80&w=400&h=600');
+    } finally {
+      setTryOnLoading(false);
+    }
+  };
+
+  const handleGenderContinue = () => {
+    if (!selectedGender) {
+      alert('Please select a gender');
+      return;
+    }
+    
+    // Update people array based on gender selection
+    if (selectedGender === 'kids') {
+      setKidCount(1);
+      setAdultCount(0);
+    } else {
+      setAdultCount(1);
+      setKidCount(0);
+      // Update the first person's gender
+      setPeople(prev => prev.map((person, index) => 
+        index === 0 ? { ...person, gender: selectedGender as 'male' | 'female' } : person
+      ));
+    }
+    
+    setStep(3); // Go to group size selection
   };
 
   const updatePersonInfo = (field: keyof Person, value: any) => {
@@ -241,7 +330,7 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
       setCurrentPersonIndex(currentPersonIndex + 1);
       setSelectedCategory('All'); // Reset category filter for next person
     } else {
-      setStep(4); // Go to final confirmation
+      setStep(5); // Go to final confirmation
     }
   };
 
@@ -367,7 +456,7 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
                 onClick={handleSearchSubmit}
                 className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition"
               >
-                Find Available Items
+                Continue
               </button>
             </div>
           </div>
@@ -376,8 +465,173 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
     );
   }
 
-  // Step 2: Group Size Selection
+  // Step 2: Gender Selection with Photo Upload and Try-On
   if (step === 2) {
+    return (
+      <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
+        <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
+          <div className="p-6">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="text-2xl font-light">Select Gender & Try On</h2>
+              <button
+                onClick={() => setStep(1)}
+                className="text-gray-400 hover:text-gray-600 text-2xl"
+              >
+                ×
+              </button>
+            </div>
+
+            <div className="space-y-6">
+              <div className="text-center mb-6">
+                <p className="text-gray-600">
+                  {startDate} - {endDate}<br />
+                  {destination}
+                </p>
+              </div>
+
+              {/* Gender Selection */}
+              <div>
+                <h3 className="text-lg font-medium mb-4">Select Gender</h3>
+                <div className="grid grid-cols-3 gap-4">
+                  <button
+                    onClick={() => setSelectedGender('male')}
+                    className={`p-6 rounded-xl border-2 transition ${
+                      selectedGender === 'male' 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <User className="w-8 h-8 mx-auto mb-2 text-blue-600" />
+                    <div className="font-medium">Adult Male</div>
+                  </button>
+                  <button
+                    onClick={() => setSelectedGender('female')}
+                    className={`p-6 rounded-xl border-2 transition ${
+                      selectedGender === 'female' 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <User className="w-8 h-8 mx-auto mb-2 text-pink-600" />
+                    <div className="font-medium">Adult Female</div>
+                  </button>
+                  <button
+                    onClick={() => setSelectedGender('kids')}
+                    className={`p-6 rounded-xl border-2 transition ${
+                      selectedGender === 'kids' 
+                        ? 'border-blue-500 bg-blue-50' 
+                        : 'border-gray-200 hover:border-gray-300'
+                    }`}
+                  >
+                    <Users className="w-8 h-8 mx-auto mb-2 text-green-600" />
+                    <div className="font-medium">Kids</div>
+                  </button>
+                </div>
+              </div>
+
+              {/* Photo Upload Section */}
+              {selectedGender && (
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">Upload Your Photo (Optional)</h3>
+                    <div 
+                      className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition cursor-pointer"
+                      onClick={() => fileInputRef.current?.click()}
+                    >
+                      {uploadedPhoto ? (
+                        <div className="space-y-4">
+                          <img 
+                            src={uploadedPhoto} 
+                            alt="Your photo" 
+                            className="max-w-full max-h-48 mx-auto rounded-lg shadow-md object-cover"
+                          />
+                          <p className="text-sm text-gray-600">Click to change photo</p>
+                        </div>
+                      ) : (
+                        <div className="space-y-4">
+                          <Camera className="w-12 h-12 text-gray-400 mx-auto" />
+                          <div>
+                            <p className="text-lg font-medium text-gray-900">Upload your photo</p>
+                            <p className="text-sm text-gray-600">See how clothes look on you with AI</p>
+                            <p className="text-xs text-gray-500 mt-2">PNG, JPG up to 10MB</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    <input
+                      ref={fileInputRef}
+                      type="file"
+                      accept="image/*"
+                      onChange={handlePhotoUpload}
+                      className="hidden"
+                    />
+
+                    {uploadedPhoto && (
+                      <button
+                        onClick={handleTryOn}
+                        disabled={tryOnLoading}
+                        className="w-full mt-4 bg-purple-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-purple-700 disabled:bg-purple-400 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
+                      >
+                        {tryOnLoading ? (
+                          <>
+                            <div className="animate-spin rounded-full h-5 w-5 border-b-2 border-white"></div>
+                            Generating Preview...
+                          </>
+                        ) : (
+                          <>
+                            <Sparkles className="w-5 h-5" />
+                            Try On Sample Outfit
+                          </>
+                        )}
+                      </button>
+                    )}
+                  </div>
+
+                  {/* Try-On Result */}
+                  <div>
+                    <h3 className="text-lg font-medium mb-4">AI Try-On Preview</h3>
+                    <div className="border-2 border-gray-200 rounded-lg p-6 min-h-64 flex items-center justify-center">
+                      {tryOnResult ? (
+                        <div className="text-center space-y-4">
+                          <img 
+                            src={tryOnResult} 
+                            alt="AI try-on result" 
+                            className="max-w-full max-h-60 mx-auto rounded-lg shadow-md object-cover"
+                          />
+                          <p className="text-sm text-gray-600">AI-generated preview</p>
+                        </div>
+                      ) : (
+                        <div className="text-center space-y-4">
+                          <div className="w-24 h-24 bg-gray-100 rounded-full flex items-center justify-center mx-auto">
+                            <Sparkles className="w-8 h-8 text-gray-400" />
+                          </div>
+                          <div>
+                            <p className="text-lg font-medium text-gray-900">Ready for try-on</p>
+                            <p className="text-sm text-gray-600">Upload your photo to see AI-generated preview</p>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              )}
+
+              <button
+                onClick={handleGenderContinue}
+                disabled={!selectedGender}
+                className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition"
+              >
+                Continue to Clothing Selection
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  // Step 3: Group Size Selection
+  if (step === 3) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
@@ -385,7 +639,7 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-light">Who's Traveling?</h2>
               <button
-                onClick={() => setStep(1)}
+                onClick={() => setStep(2)}
                 className="text-gray-400 hover:text-gray-600 text-2xl"
               >
                 ×
@@ -460,7 +714,7 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
               </div>
 
               <button
-                onClick={() => setStep(3)}
+                onClick={() => setStep(4)}
                 className="w-full bg-blue-600 text-white py-3 px-4 rounded-lg font-medium hover:bg-blue-700 transition"
               >
                 Continue to Clothing Selection
@@ -472,8 +726,8 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
     );
   }
 
-  // Step 3: Individual Person Selection
-  if (step === 3 && people.length > 0) {
+  // Step 4: Individual Person Selection
+  if (step === 4 && people.length > 0) {
     const currentPerson = people[currentPersonIndex];
     const isLastPerson = currentPersonIndex === people.length - 1;
     
@@ -486,7 +740,7 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
               <div className="flex items-center justify-between">
                 <div className="flex items-center gap-4">
                   <button
-                    onClick={currentPersonIndex === 0 ? () => setStep(2) : goToPreviousPerson}
+                    onClick={currentPersonIndex === 0 ? () => setStep(3) : goToPreviousPerson}
                     className="flex items-center gap-2 text-gray-600 hover:text-gray-900 transition"
                   >
                     <ArrowLeft className="w-5 h-5" />
@@ -673,8 +927,8 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
     );
   }
 
-  // Step 4: Final Booking Confirmation
-  if (step === 4) {
+  // Step 5: Final Booking Confirmation
+  if (step === 5) {
     return (
       <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
         <div className="bg-white rounded-2xl shadow-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto">
@@ -682,7 +936,7 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-2xl font-light">Confirm Booking</h2>
               <button
-                onClick={() => setStep(3)}
+                onClick={() => setStep(4)}
                 className="text-gray-400 hover:text-gray-600 text-2xl"
               >
                 ×
@@ -781,7 +1035,7 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
 
               <div className="flex gap-3">
                 <button
-                  onClick={() => setStep(3)}
+                  onClick={() => setStep(4)}
                   className="flex-1 bg-gray-100 text-gray-900 py-3 px-4 rounded-lg font-medium hover:bg-gray-200 transition"
                 >
                   Back to Items
