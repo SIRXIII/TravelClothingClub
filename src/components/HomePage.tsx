@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, UserCheck, Calendar, Search, Star, Heart, Shield, Leaf, Headphones, ChevronDown, ChevronUp } from 'lucide-react';
+import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, UserCheck, Calendar, Search, Star, Heart, Shield, Leaf, Headphones, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import RentNowFlow from './RentNowFlow';
 
 function HomePage() {
@@ -111,11 +111,11 @@ function HomePage() {
             <div className="absolute inset-0 bg-gradient-to-r from-slate-900/60 to-slate-900/20"></div>
           </div>
           
-          {/* Right Side - Hotel Check-in with Closet */}
+          {/* Right Side - Business traveler with luggage in hotel room */}
           <div className="relative">
             <img 
-              src="https://images.unsplash.com/photo-1571896349842-33c89424de2d?auto=format&fit=crop&q=80"
-              alt="Hotel room with organized closet"
+              src="https://images.unsplash.com/photo-1566073771259-6a8506099945?auto=format&fit=crop&q=80"
+              alt="Business traveler in hotel room with luggage"
               className="w-full h-full object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-l from-white/80 to-white/40"></div>
@@ -133,13 +133,22 @@ function HomePage() {
               />
               <span className="text-2xl md:text-3xl font-light text-white drop-shadow-lg">Travel Clothing Club</span>
             </div>
-            <Link 
-              to="/lender-portal"
-              className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-medium hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
-            >
-              <UserCheck className="w-5 h-5" />
-              Lender Portal
-            </Link>
+            <div className="flex items-center gap-4">
+              <Link 
+                to="/virtual-try-on-demo"
+                className="bg-purple-600/90 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-purple-700 transition flex items-center gap-2 border border-purple-500/30"
+              >
+                <Sparkles className="w-5 h-5" />
+                Virtual Try-On Demo
+              </Link>
+              <Link 
+                to="/lender-portal"
+                className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
+              >
+                <UserCheck className="w-5 h-5" />
+                Lender Portal
+              </Link>
+            </div>
           </nav>
 
           {/* Hero Content */}
@@ -170,7 +179,7 @@ function HomePage() {
                 <div className="absolute -top-8 -right-8 bg-white/10 backdrop-blur-sm p-6 rounded-2xl border border-white/20">
                   <div className="flex items-center gap-4">
                     <div className="w-4 h-4 bg-green-400 rounded-full animate-pulse"></div>
-                    <span className="text-white font-medium">Live Delivery Tracking</span>
+                    <span className="text-white font-semibold">Live Delivery Tracking</span>
                   </div>
                 </div>
                 
@@ -178,8 +187,8 @@ function HomePage() {
                   <div className="flex items-center gap-4">
                     <ShoppingBag className="w-6 h-6 text-white" />
                     <div className="text-white">
-                      <div className="font-medium">3 Outfits Ready</div>
-                      <div className="text-sm text-white/80">Delivered to Room 1205</div>
+                      <div className="font-semibold">3 Outfits Ready</div>
+                      <div className="text-sm text-white/90">Delivered to Room 1205</div>
                     </div>
                   </div>
                 </div>
