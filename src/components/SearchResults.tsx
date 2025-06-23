@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useLocation, Link } from 'react-router-dom';
-import { ArrowLeft, Filter, Heart, Star, MapPin, Calendar } from 'lucide-react';
+import { ArrowLeft, Filter, MapPin, Calendar } from 'lucide-react';
 import { inventory } from '../data/inventory';
+import ProductCard from './ProductCard';
 
 function SearchResults() {
   const location = useLocation();
@@ -10,7 +11,7 @@ function SearchResults() {
   
   const [category, setCategory] = useState('');
   const [sort, setSort] = useState('price-asc');
-  const [favorites, setFavorites] = useState<number[]>([]);
+  const [favorites, setFavorites] = useState<string[]>([]);
   const [filteredItems, setFilteredItems] = useState(inventory);
 
   useEffect(() => {
@@ -38,7 +39,7 @@ function SearchResults() {
     setFilteredItems(filtered);
   }, [dates, destination, size, category, sort]);
 
-  const toggleFavorite = (itemId: number) => {
+  const toggleFavorite = (itemId: string) => {
     setFavorites(prev => 
       prev.includes(itemId) 
         ? prev.filter(id => id !== itemId)
@@ -54,6 +55,22 @@ function SearchResults() {
     const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
     return diffDays || 1;
   };
+
+  // Convert inventory items to match ClothingItem interface
+  const convertedItems = filteredItems.map(item => ({
+    id: item.id.toString(),
+    title: item.title,
+    description: item.description,
+    category: item.category,
+    size: item.size,
+    price_per_rental: item.price,
+    images: item.images,
+    location: item.location,
+    lender: {
+      full_name: item.lender,
+      verified: true
+    }
+  }));
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -163,69 +180,15 @@ function SearchResults() {
           </div>
         ) : (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredItems.map((item) => (
-              <div key={item.id} className="bg-white rounded-xl shadow-sm border overflow-hidden hover:shadow-lg transition">
-                <div className="relative">
-                  <img
-                    src={item.images[0]}
-                    alt={item.title}
-                    className="w-full h-48 object-cover"
-                  />
-                  <button
-                    onClick={() => toggleFavorite(item.id)}
-                    className={`absolute top-3 right-3 p-2 rounded-full transition ${
-                      favorites.includes(item.id)
-                        ? 'bg-red-500 text-white'
-                        : 'bg-white/80 text-gray-600 hover:bg-white'
-                    }`}
-                  >
-                    <Heart className={`w-4 h-4 ${favorites.includes(item.id) ? 'fill-current' : ''}`} />
-                  </button>
-                </div>
-                
-                <div className="p-6">
-                  <div className="flex items-start justify-between mb-2">
-                    <h3 className="font-medium text-gray-900 line-clamp-2">{item.title}</h3>
-                    <div className="text-right ml-2">
-                      <div className="text-lg font-semibold text-green-600">
-                        ${item.price}
-                      </div>
-                      <div className="text-xs text-gray-500">per day</div>
-                    </div>
-                  </div>
-                  
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">{item.description}</p>
-                  
-                  <div className="flex items-center justify-between text-sm mb-4">
-                    <span className="bg-gray-100 px-2 py-1 rounded text-gray-700">
-                      {item.category} • {item.size}
-                    </span>
-                    <div className="flex items-center gap-1 text-gray-600">
-                      <MapPin className="w-3 h-3" />
-                      <span className="text-xs">{item.location}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center justify-between text-sm mb-4">
-                    <span className="text-gray-600">by {item.lender}</span>
-                    <div className="flex items-center gap-1">
-                      <Star className="w-3 h-3 text-yellow-400 fill-current" />
-                      <span className="text-xs text-gray-600">4.8</span>
-                    </div>
-                  </div>
-
-                  {dates?.start && dates?.end && (
-                    <div className="text-sm text-gray-600 mb-4">
-                      <strong>Total: ${(item.price * getRentalDays()).toFixed(2)}</strong>
-                      <span className="text-gray-500"> for {getRentalDays()} day{getRentalDays() !== 1 ? 's' : ''}</span>
-                    </div>
-                  )}
-
-                  <button className="w-full bg-blue-600 text-white py-2 px-4 rounded-lg font-medium hover:bg-blue-700 transition">
-                    Rent Now
-                  </button>
-                </div>
-              </div>
+            {convertedItems.map((item) => (
+              <ProductCard
+                key={item.id}
+                item={item}
+                onRent={() => console.log('Rent item:', item.id)}
+                onFavorite={toggleFavorite}
+                isFavorite={favorites.includes(item.id)}
+                rentalDays={getRentalDays()}
+              />
             ))}
           </div>
         )}
