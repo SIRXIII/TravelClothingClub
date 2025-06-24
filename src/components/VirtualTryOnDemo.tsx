@@ -145,7 +145,7 @@ function VirtualTryOnDemo() {
                 <Check className="w-6 h-6" />
                 <span className="font-medium">You're on the list!</span>
               </div>
-              <p className="text-green-600">We'll notify you as soon as virtual try-on is available.</p>
+              <p className="text-green-600">We'll notify you when virtual try-on is available.</p>
             </div>
           ) : (
             <form 

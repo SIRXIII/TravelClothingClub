@@ -568,7 +568,7 @@ function HomePage() {
               <input 
                 type="email" 
                 name="EMAIL" 
-                placeholder="Enter your email" 
+                placeholder="Enter your email address" 
                 required 
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
@@ -641,7 +641,7 @@ function HomePage() {
                 <input 
                   type="email" 
                   name="EMAIL" 
-                  placeholder="Email Address *" 
+                  placeholder="Enter your email address" 
                   required 
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}

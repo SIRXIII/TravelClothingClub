@@ -210,17 +210,29 @@ function LenderLandingPage() {
                 <p className="text-green-600">We'll notify you when AI try-on is available for lenders.</p>
               </div>
             ) : (
-              <form onSubmit={handleEmailSubmit} className="flex flex-col sm:flex-row gap-4">
+              <form 
+                action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca&f_id=00071ae1f0" 
+                method="post" 
+                target="_blank" 
+                noValidate 
+                className="flex flex-col sm:flex-row gap-4"
+                onSubmit={handleEmailSubmit}
+              >
                 <input
                   type="email"
+                  name="EMAIL"
                   value={email}
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
                   required
                   className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                 />
+                <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
+                  <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} />
+                </div>
                 <button
                   type="submit"
+                  name="subscribe"
                   className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition whitespace-nowrap flex items-center gap-2"
                 >
                   <Mail className="w-4 h-4" />
