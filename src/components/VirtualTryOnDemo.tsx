@@ -148,76 +148,26 @@ function VirtualTryOnDemo() {
               <p className="text-green-600">We'll notify you when virtual try-on is available.</p>
             </div>
           ) : (
-            <div className="max-w-md mx-auto">
-              <form 
-                action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca" 
-                method="post" 
-                target="_blank" 
-                noValidate
-                style={{
-                  maxWidth: '400px',
-                  margin: '0 auto',
-                  background: '#fff',
-                  padding: '2rem 1.5rem',
-                  borderRadius: '1.25rem',
-                  boxShadow: '0 2px 18px rgba(0,0,0,0.06)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1.1rem'
-                }}
-              >
-                <h2 style={{
-                  fontSize: '1.1rem',
-                  fontWeight: '600',
-                  color: '#2c2c2c',
-                  marginBottom: '0'
-                }}>
-                  Be the First to Use In-Site AI Try-On
-                </h2>
-                <div style={{
-                  fontSize: '1rem',
-                  color: '#555'
-                }}>
-                  Get early access to our integrated AI try-on feature and boost your rental rates
-                </div>
-                <input 
-                  type="email" 
-                  name="EMAIL" 
-                  required 
-                  placeholder="Enter your email address" 
-                  style={{
-                    padding: '1rem',
-                    border: '1.5px solid #e7e8ec',
-                    borderRadius: '0.8rem',
-                    fontSize: '1rem',
-                    width: '100%',
-                    background: '#f9f9fa'
-                  }}
+            <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+              <div className="space-y-4">
+                <h4 className="text-lg font-medium">Be the First to Use In-Site AI Try-On</h4>
+                <p className="text-slate-600 text-sm">Get early access to our integrated AI try-on feature</p>
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email address"
+                  className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  required
                 />
-                <button 
-                  type="submit" 
-                  style={{
-                    padding: '1rem',
-                    border: 'none',
-                    borderRadius: '2rem',
-                    background: '#334155',
-                    color: '#fff',
-                    fontWeight: '600',
-                    fontSize: '1rem',
-                    cursor: 'pointer',
-                    transition: 'background 0.2s'
-                  }}
-                  onMouseOver={(e) => e.currentTarget.style.background = '#1e293b'}
-                  onMouseOut={(e) => e.currentTarget.style.background = '#334155'}
+                <button
+                  type="submit"
+                  className="w-full bg-slate-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-slate-800 transition"
                 >
                   Join Waitlist
                 </button>
-                {/* Honeypot anti-spam field (hidden from real users) */}
-                <div aria-hidden="true" style={{position: 'absolute', left: '-5000px'}}>
-                  <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} value="" />
-                </div>
-              </form>
-            </div>
+              </div>
+            </form>
           )}
 
           <p className="text-sm text-slate-500 mt-4">

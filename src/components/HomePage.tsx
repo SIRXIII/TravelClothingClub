@@ -549,76 +549,35 @@ function HomePage() {
           <h3 className="text-3xl font-light text-white mb-4">Get Exclusive Access</h3>
           <p className="text-xl text-slate-300 mb-8">Early subscribers get first access before we go live—be the first in the Traveler's Club</p>
           
-          <div className="max-w-md mx-auto">
-            <form 
-              action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca" 
-              method="post" 
-              target="_blank" 
-              noValidate
-              style={{
-                maxWidth: '400px',
-                margin: '0 auto',
-                background: '#fff',
-                padding: '2rem 1.5rem',
-                borderRadius: '1.25rem',
-                boxShadow: '0 2px 18px rgba(0,0,0,0.06)',
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '1.1rem'
-              }}
-            >
-              <h2 style={{
-                fontSize: '1.1rem',
-                fontWeight: '600',
-                color: '#2c2c2c',
-                marginBottom: '0'
-              }}>
-                Join the Clublist
-              </h2>
-              <div style={{
-                fontSize: '1rem',
-                color: '#555'
-              }}>
-                Get early access to our integrated AI try-on feature and boost your rental rates
+          {submitted ? (
+            <div className="bg-green-500/20 border border-green-400 rounded-lg p-6 max-w-md mx-auto">
+              <div className="flex items-center justify-center gap-2 text-green-400 mb-2">
+                <Check className="w-6 h-6" />
+                <span className="font-medium">Welcome to the club!</span>
               </div>
-              <input 
-                type="email" 
-                name="EMAIL" 
-                required 
-                placeholder="Enter your email address" 
-                style={{
-                  padding: '1rem',
-                  border: '1.5px solid #e7e8ec',
-                  borderRadius: '0.8rem',
-                  fontSize: '1rem',
-                  width: '100%',
-                  background: '#f9f9fa'
-                }}
-              />
-              <button 
-                type="submit" 
-                style={{
-                  padding: '1rem',
-                  border: 'none',
-                  borderRadius: '2rem',
-                  background: '#334155',
-                  color: '#fff',
-                  fontWeight: '600',
-                  fontSize: '1rem',
-                  cursor: 'pointer',
-                  transition: 'background 0.2s'
-                }}
-                onMouseOver={(e) => e.currentTarget.style.background = '#1e293b'}
-                onMouseOut={(e) => e.currentTarget.style.background = '#334155'}
-              >
-                Subscribe
-              </button>
-              {/* Honeypot anti-spam field (hidden from real users) */}
-              <div aria-hidden="true" style={{position: 'absolute', left: '-5000px'}}>
-                <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} value="" />
+              <p className="text-green-300">We'll notify you of exclusive offers and new collections.</p>
+            </div>
+          ) : (
+            <form onSubmit={handleSubmit} className="max-w-md mx-auto">
+              <div className="flex gap-3">
+                <input
+                  type="email"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email"
+                  className="flex-1 px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  required
+                />
+                <button
+                  type="submit"
+                  className="bg-white text-slate-900 px-6 py-3 rounded-lg font-medium hover:bg-slate-100 transition flex items-center gap-2"
+                >
+                  <Send className="w-4 h-4" />
+                  Join
+                </button>
               </div>
             </form>
-          </div>
+          )}
         </div>
       </section>
 
@@ -654,74 +613,33 @@ function HomePage() {
       {/* Final Email Sign-up */}
       <section className="py-16 bg-white">
         <div className="max-w-md mx-auto px-4 text-center">
-          <form 
-            action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca" 
-            method="post" 
-            target="_blank" 
-            noValidate
-            style={{
-              maxWidth: '400px',
-              margin: '0 auto',
-              background: '#fff',
-              padding: '2rem 1.5rem',
-              borderRadius: '1.25rem',
-              boxShadow: '0 2px 18px rgba(0,0,0,0.06)',
-              display: 'flex',
-              flexDirection: 'column',
-              gap: '1.1rem'
-            }}
-          >
-            <h2 style={{
-              fontSize: '1.1rem',
-              fontWeight: '600',
-              color: '#2c2c2c',
-              marginBottom: '0'
-            }}>
-              Join the Clublist
-            </h2>
-            <div style={{
-              fontSize: '1rem',
-              color: '#555'
-            }}>
-              Get early access to our integrated AI try-on feature and boost your rental rates
+          {submitted ? (
+            <div className="bg-green-50 border border-green-200 rounded-lg p-6">
+              <div className="flex items-center justify-center gap-2 text-green-700 mb-2">
+                <Check className="w-6 h-6" />
+                <span className="font-medium">Thank you for joining our exclusive clublist!</span>
+              </div>
+              <p className="text-green-600">We'll notify you as soon as we launch.</p>
             </div>
-            <input 
-              type="email" 
-              name="EMAIL" 
-              required 
-              placeholder="Enter your email address" 
-              style={{
-                padding: '1rem',
-                border: '1.5px solid #e7e8ec',
-                borderRadius: '0.8rem',
-                fontSize: '1rem',
-                width: '100%',
-                background: '#f9f9fa'
-              }}
-            />
-            <button 
-              type="submit" 
-              style={{
-                padding: '1rem',
-                border: 'none',
-                borderRadius: '2rem',
-                background: '#334155',
-                color: '#fff',
-                fontWeight: '600',
-                fontSize: '1rem',
-                cursor: 'pointer',
-                transition: 'background 0.2s'
-              }}
-              onMouseOver={(e) => e.currentTarget.style.background = '#1e293b'}
-              onMouseOut={(e) => e.currentTarget.style.background = '#334155'}
-            >
-              Subscribe
-            </button>
-            {/* Honeypot anti-spam field (hidden from real users) */}
-            <div aria-hidden="true" style={{position: 'absolute', left: '-5000px'}}>
-              <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} value="" />
-            </div>
-          </form>
+          ) : (
+            <form onSubmit={handleSubmit} className="space-y-4">
+              <h3 className="text-2xl font-light text-slate-900 mb-4">Join the Clublist</h3>
+              <input
+                type="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                placeholder="Enter your email address"
+                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                required
+              />
+              <button
+                type="submit"
+                className="w-full bg-slate-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-slate-800 transition"
+              >
+                Subscribe
+              </button>
+            </form>
+          )}
           <p className="text-sm text-slate-600 mt-4">
             Join 100+ travelers simplifying their trips.
           </p>
