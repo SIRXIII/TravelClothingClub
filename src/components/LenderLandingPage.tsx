@@ -194,13 +194,6 @@ function LenderLandingPage() {
 
           {/* Waitlist Signup */}
           <div className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-semibold text-center mb-4 text-slate-900">
-              Be the First to Use In-Site AI Try-On
-            </h3>
-            <p className="text-slate-600 text-center mb-6">
-              Get early access to our integrated AI try-on feature and boost your rental rates
-            </p>
-
             {submitted ? (
               <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
                 <div className="flex items-center justify-center gap-2 text-green-700 mb-2">
@@ -211,13 +204,38 @@ function LenderLandingPage() {
               </div>
             ) : (
               <form 
-                action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca&f_id=00071ae1f0" 
+                action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca" 
                 method="post" 
                 target="_blank" 
-                noValidate 
-                className="flex flex-col sm:flex-row gap-4"
+                noValidate
+                style={{
+                  background: '#fff',
+                  padding: '2rem 1rem',
+                  borderRadius: '1.25rem',
+                  boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1.5rem'
+                }}
                 onSubmit={handleEmailSubmit}
               >
+                <h2 style={{
+                  textAlign: 'center',
+                  fontSize: '1.3rem',
+                  fontWeight: '600',
+                  color: '#222',
+                  marginBottom: '0.2em'
+                }}>
+                  Be the First to Use In-Site AI Try-On
+                </h2>
+                <div style={{
+                  textAlign: 'center',
+                  color: '#666',
+                  fontSize: '1rem',
+                  marginBottom: '0.4em'
+                }}>
+                  Get early access to our integrated AI try-on feature and boost your rental rates
+                </div>
                 <input
                   type="email"
                   name="EMAIL"
@@ -225,7 +243,14 @@ function LenderLandingPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
                   required
-                  className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                  style={{
+                    padding: '1rem',
+                    border: '1.5px solid #e7e8ec',
+                    borderRadius: '0.75rem',
+                    fontSize: '1rem',
+                    width: '100%',
+                    background: '#f9f9fa'
+                  }}
                 />
                 <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
                   <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} />
@@ -233,9 +258,20 @@ function LenderLandingPage() {
                 <button
                   type="submit"
                   name="subscribe"
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition whitespace-nowrap flex items-center gap-2"
+                  style={{
+                    padding: '1rem',
+                    border: 'none',
+                    borderRadius: '2rem',
+                    background: '#ff6b6b',
+                    color: '#fff',
+                    fontWeight: '600',
+                    fontSize: '1.05rem',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.background = '#ff5252'}
+                  onMouseOut={(e) => e.currentTarget.style.background = '#ff6b6b'}
                 >
-                  <Mail className="w-4 h-4" />
                   Join Waitlist
                 </button>
               </form>

@@ -558,33 +558,76 @@ function HomePage() {
               <p className="text-green-300">We'll notify you of exclusive offers and new collections.</p>
             </div>
           ) : (
-            <form 
-              action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca&f_id=00071ae1f0" 
-              method="post" 
-              target="_blank" 
-              noValidate 
-              className="flex flex-col sm:flex-row gap-4 max-w-md mx-auto"
-            >
-              <input 
-                type="email" 
-                name="EMAIL" 
-                placeholder="Enter your email address" 
-                required 
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="flex-1 px-6 py-3 rounded-lg border-0 focus:ring-2 focus:ring-white/20 outline-none text-slate-900"
-              />
-              <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
-                <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} />
-              </div>
-              <button 
-                type="submit" 
-                name="subscribe" 
-                className="bg-white text-slate-900 px-8 py-3 rounded-lg font-medium hover:bg-slate-100 transition whitespace-nowrap"
+            <div className="max-w-md mx-auto">
+              <form 
+                action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca" 
+                method="post" 
+                target="_blank" 
+                noValidate
+                style={{
+                  background: '#fff',
+                  padding: '2rem 1rem',
+                  borderRadius: '1.25rem',
+                  boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1.5rem'
+                }}
               >
-                Subscribe Now
-              </button>
-            </form>
+                <h2 style={{
+                  textAlign: 'center',
+                  fontSize: '1.3rem',
+                  fontWeight: '600',
+                  color: '#222',
+                  marginBottom: '0.2em'
+                }}>
+                  Be the First to Use In-Site AI Try-On
+                </h2>
+                <div style={{
+                  textAlign: 'center',
+                  color: '#666',
+                  fontSize: '1rem',
+                  marginBottom: '0.4em'
+                }}>
+                  Get early access to our integrated AI try-on feature and boost your rental rates
+                </div>
+                <input 
+                  type="email" 
+                  name="EMAIL" 
+                  required 
+                  placeholder="Enter your email address" 
+                  style={{
+                    padding: '1rem',
+                    border: '1.5px solid #e7e8ec',
+                    borderRadius: '0.75rem',
+                    fontSize: '1rem',
+                    width: '100%',
+                    background: '#f9f9fa'
+                  }}
+                />
+                <button 
+                  type="submit" 
+                  style={{
+                    padding: '1rem',
+                    border: 'none',
+                    borderRadius: '2rem',
+                    background: '#ff6b6b',
+                    color: '#fff',
+                    fontWeight: '600',
+                    fontSize: '1.05rem',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.background = '#ff5252'}
+                  onMouseOut={(e) => e.currentTarget.style.background = '#ff6b6b'}
+                >
+                  Join Waitlist
+                </button>
+                <div aria-hidden="true" style={{ position: 'absolute', left: '-5000px' }}>
+                  <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} value="" />
+                </div>
+              </form>
+            </div>
           )}
         </div>
       </section>
@@ -631,38 +674,79 @@ function HomePage() {
             </div>
           ) : (
             <form 
-              action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca&f_id=00071ae1f0" 
+              action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca" 
               method="post" 
               target="_blank" 
-              noValidate 
-              className="space-y-4"
+              noValidate
+              style={{
+                maxWidth: '440px',
+                margin: '0 auto',
+                background: '#fff',
+                padding: '2rem 1rem',
+                borderRadius: '1.25rem',
+                boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+                display: 'flex',
+                flexDirection: 'column',
+                gap: '1.5rem'
+              }}
             >
-              <div>
-                <input 
-                  type="email" 
-                  name="EMAIL" 
-                  placeholder="Enter your email address" 
-                  required 
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  className="w-full px-5 py-3 text-lg border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent outline-none"
-                />
+              <h2 style={{
+                textAlign: 'center',
+                fontSize: '1.3rem',
+                fontWeight: '600',
+                color: '#222',
+                marginBottom: '0.2em'
+              }}>
+                Be the First to Use In-Site AI Try-On
+              </h2>
+              <div style={{
+                textAlign: 'center',
+                color: '#666',
+                fontSize: '1rem',
+                marginBottom: '0.4em'
+              }}>
+                Get early access to our integrated AI try-on feature and boost your rental rates
               </div>
-              <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
-                <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} />
-              </div>
+              <input 
+                type="email" 
+                name="EMAIL" 
+                required 
+                placeholder="Enter your email address" 
+                style={{
+                  padding: '1rem',
+                  border: '1.5px solid #e7e8ec',
+                  borderRadius: '0.75rem',
+                  fontSize: '1rem',
+                  width: '100%',
+                  background: '#f9f9fa'
+                }}
+              />
               <button 
                 type="submit" 
-                name="subscribe" 
-                className="w-full bg-slate-900 text-white px-6 py-3 text-lg rounded-lg font-medium hover:bg-slate-800 transition"
+                style={{
+                  padding: '1rem',
+                  border: 'none',
+                  borderRadius: '2rem',
+                  background: '#ff6b6b',
+                  color: '#fff',
+                  fontWeight: '600',
+                  fontSize: '1.05rem',
+                  cursor: 'pointer',
+                  transition: 'background 0.2s'
+                }}
+                onMouseOver={(e) => e.currentTarget.style.background = '#ff5252'}
+                onMouseOut={(e) => e.currentTarget.style.background = '#ff6b6b'}
               >
-                Join the Exclusive Clublist
+                Join Waitlist
               </button>
-              <p className="text-sm text-slate-600">
-                Join 100+ travelers simplifying their trips.
-              </p>
+              <div aria-hidden="true" style={{ position: 'absolute', left: '-5000px' }}>
+                <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} value="" />
+              </div>
             </form>
           )}
+          <p className="text-sm text-slate-600 mt-4">
+            Join 100+ travelers simplifying their trips.
+          </p>
         </div>
       </section>
 

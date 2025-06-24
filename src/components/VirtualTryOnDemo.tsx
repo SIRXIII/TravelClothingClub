@@ -148,40 +148,79 @@ function VirtualTryOnDemo() {
               <p className="text-green-600">We'll notify you when virtual try-on is available.</p>
             </div>
           ) : (
-            <form 
-              action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca&f_id=00071ae1f0" 
-              method="post" 
-              target="_blank" 
-              noValidate 
-              className="max-w-md mx-auto"
-              onSubmit={handleSubmit}
-            >
-              <div className="flex flex-col sm:flex-row gap-4">
-                <div className="flex-1">
-                  <input 
-                    type="email" 
-                    name="EMAIL" 
-                    placeholder="Enter your email address" 
-                    required 
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  />
+            <div className="max-w-md mx-auto">
+              <form 
+                action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca" 
+                method="post" 
+                target="_blank" 
+                noValidate
+                style={{
+                  background: '#fff',
+                  padding: '2rem 1rem',
+                  borderRadius: '1.25rem',
+                  boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
+                  display: 'flex',
+                  flexDirection: 'column',
+                  gap: '1.5rem'
+                }}
+                onSubmit={handleSubmit}
+              >
+                <h2 style={{
+                  textAlign: 'center',
+                  fontSize: '1.3rem',
+                  fontWeight: '600',
+                  color: '#222',
+                  marginBottom: '0.2em'
+                }}>
+                  Be the First to Use In-Site AI Try-On
+                </h2>
+                <div style={{
+                  textAlign: 'center',
+                  color: '#666',
+                  fontSize: '1rem',
+                  marginBottom: '0.4em'
+                }}>
+                  Get early access to our integrated AI try-on feature and boost your rental rates
                 </div>
+                <input 
+                  type="email" 
+                  name="EMAIL" 
+                  required 
+                  placeholder="Enter your email address" 
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  style={{
+                    padding: '1rem',
+                    border: '1.5px solid #e7e8ec',
+                    borderRadius: '0.75rem',
+                    fontSize: '1rem',
+                    width: '100%',
+                    background: '#f9f9fa'
+                  }}
+                />
                 <button 
                   type="submit" 
-                  name="subscribe" 
-                  className="bg-slate-900 text-white px-6 py-3 rounded-lg font-medium hover:bg-slate-800 transition whitespace-nowrap flex items-center gap-2"
+                  style={{
+                    padding: '1rem',
+                    border: 'none',
+                    borderRadius: '2rem',
+                    background: '#ff6b6b',
+                    color: '#fff',
+                    fontWeight: '600',
+                    fontSize: '1.05rem',
+                    cursor: 'pointer',
+                    transition: 'background 0.2s'
+                  }}
+                  onMouseOver={(e) => e.currentTarget.style.background = '#ff5252'}
+                  onMouseOut={(e) => e.currentTarget.style.background = '#ff6b6b'}
                 >
-                  <Mail className="w-4 h-4" />
                   Join Waitlist
                 </button>
-              </div>
-              {/* Honeypot field */}
-              <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
-                <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} />
-              </div>
-            </form>
+                <div aria-hidden="true" style={{ position: 'absolute', left: '-5000px' }}>
+                  <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} value="" />
+                </div>
+              </form>
+            </div>
           )}
 
           <p className="text-sm text-slate-500 mt-4">
