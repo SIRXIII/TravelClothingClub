@@ -558,25 +558,106 @@ function HomePage() {
               <p className="text-green-300">We'll notify you of exclusive offers and new collections.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="max-w-md mx-auto">
-              <div className="flex gap-3">
-                <input
-                  type="email"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email"
-                  className="flex-1 px-4 py-3 rounded-lg border border-slate-300 focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                  required
-                />
-                <button
-                  type="submit"
-                  className="bg-white text-slate-900 px-6 py-3 rounded-lg font-medium hover:bg-slate-100 transition flex items-center gap-2"
-                >
-                  <Send className="w-4 h-4" />
-                  Join
-                </button>
+            <div className="max-w-md mx-auto">
+              <div id="mc_embed_shell">
+                <link href="//cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css" />
+                <style type="text/css">
+                  {`
+                    #mc_embed_signup {
+                      background: #fff;
+                      clear: left;
+                      font: 14px Helvetica,Arial,sans-serif;
+                      width: 100%;
+                      max-width: 440px;
+                      margin: 0 auto;
+                      padding: 2rem 1rem;
+                      border-radius: 1.25rem;
+                      box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+                    }
+                    #mc_embed_signup h2 {
+                      text-align: center;
+                      font-size: 1.3rem;
+                      font-weight: 600;
+                      color: #222;
+                      margin-bottom: 0.5rem;
+                    }
+                    #mc_embed_signup .indicates-required {
+                      text-align: center;
+                      color: #666;
+                      font-size: 1rem;
+                      margin-bottom: 1rem;
+                    }
+                    #mc_embed_signup input[type="email"] {
+                      padding: 1rem;
+                      border: 1.5px solid #e7e8ec;
+                      border-radius: 0.75rem;
+                      font-size: 1rem;
+                      width: 100%;
+                      background: #f9f9fa;
+                      margin-bottom: 1rem;
+                    }
+                    #mc_embed_signup input[type="submit"] {
+                      padding: 1rem;
+                      border: none;
+                      border-radius: 2rem;
+                      background: #334155;
+                      color: #fff;
+                      font-weight: 600;
+                      font-size: 1.05rem;
+                      cursor: pointer;
+                      transition: background 0.2s;
+                      width: 100%;
+                    }
+                    #mc_embed_signup input[type="submit"]:hover {
+                      background: #1e293b;
+                    }
+                    #mc_embed_signup .mc-field-group label {
+                      display: none;
+                    }
+                    #mc_embed_signup .asterisk {
+                      display: none;
+                    }
+                    #mc_embed_signup .optionalParent {
+                      margin-top: 1rem;
+                    }
+                    #mc_embed_signup .refferal_badge {
+                      display: none;
+                    }
+                    #mc_embed_signup .foot p {
+                      display: none;
+                    }
+                  `}
+                </style>
+                <div id="mc_embed_signup">
+                  <form action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&amp;id=451cee46ca&amp;f_id=00321ae1f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank">
+                    <div id="mc_embed_signup_scroll">
+                      <h2>Be the First to Use In-Site AI Try-On</h2>
+                      <div className="indicates-required">Get early access to our integrated AI try-on feature and boost your rental rates</div>
+                      <div className="mc-field-group">
+                        <label htmlFor="mce-EMAIL">Email Address <span className="asterisk">*</span></label>
+                        <input type="email" name="EMAIL" className="required email" id="mce-EMAIL" required value="" placeholder="Enter your email address" />
+                      </div>
+                      <div id="mce-responses" className="clear foot">
+                        <div className="response" id="mce-error-response" style={{display: 'none'}}></div>
+                        <div className="response" id="mce-success-response" style={{display: 'none'}}></div>
+                      </div>
+                      <div aria-hidden="true" style={{position: 'absolute', left: '-5000px'}}>
+                        <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} value="" />
+                      </div>
+                      <div className="optionalParent">
+                        <div className="clear foot">
+                          <input type="submit" name="subscribe" id="mc-embedded-subscribe" className="button" value="Join Waitlist" />
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+                <script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
+                <script type="text/javascript">
+                  {`(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[3]='ADDRESS';ftypes[3]='address';fnames[4]='PHONE';ftypes[4]='phone';fnames[5]='BIRTHDAY';ftypes[5]='birthday';fnames[6]='COMPANY';ftypes[6]='text';}(jQuery));var $mcj = jQuery.noConflict(true);`}
+                </script>
               </div>
-            </form>
+            </div>
           )}
         </div>
       </section>
@@ -622,23 +703,104 @@ function HomePage() {
               <p className="text-green-600">We'll notify you as soon as we launch.</p>
             </div>
           ) : (
-            <form onSubmit={handleSubmit} className="space-y-4">
-              <h3 className="text-2xl font-light text-slate-900 mb-4">Join the Clublist</h3>
-              <input
-                type="email"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                placeholder="Enter your email address"
-                className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                required
-              />
-              <button
-                type="submit"
-                className="w-full bg-slate-900 text-white py-3 px-4 rounded-lg font-medium hover:bg-slate-800 transition"
-              >
-                Subscribe
-              </button>
-            </form>
+            <div id="mc_embed_shell">
+              <link href="//cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css" />
+              <style type="text/css">
+                {`
+                  #mc_embed_signup {
+                    background: #fff;
+                    clear: left;
+                    font: 14px Helvetica,Arial,sans-serif;
+                    width: 100%;
+                    max-width: 440px;
+                    margin: 0 auto;
+                    padding: 2rem 1rem;
+                    border-radius: 1.25rem;
+                    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+                  }
+                  #mc_embed_signup h2 {
+                    text-align: center;
+                    font-size: 1.3rem;
+                    font-weight: 600;
+                    color: #222;
+                    margin-bottom: 0.5rem;
+                  }
+                  #mc_embed_signup .indicates-required {
+                    text-align: center;
+                    color: #666;
+                    font-size: 1rem;
+                    margin-bottom: 1rem;
+                  }
+                  #mc_embed_signup input[type="email"] {
+                    padding: 1rem;
+                    border: 1.5px solid #e7e8ec;
+                    border-radius: 0.75rem;
+                    font-size: 1rem;
+                    width: 100%;
+                    background: #f9f9fa;
+                    margin-bottom: 1rem;
+                  }
+                  #mc_embed_signup input[type="submit"] {
+                    padding: 1rem;
+                    border: none;
+                    border-radius: 2rem;
+                    background: #334155;
+                    color: #fff;
+                    font-weight: 600;
+                    font-size: 1.05rem;
+                    cursor: pointer;
+                    transition: background 0.2s;
+                    width: 100%;
+                  }
+                  #mc_embed_signup input[type="submit"]:hover {
+                    background: #1e293b;
+                  }
+                  #mc_embed_signup .mc-field-group label {
+                    display: none;
+                  }
+                  #mc_embed_signup .asterisk {
+                    display: none;
+                  }
+                  #mc_embed_signup .optionalParent {
+                    margin-top: 1rem;
+                  }
+                  #mc_embed_signup .refferal_badge {
+                    display: none;
+                  }
+                  #mc_embed_signup .foot p {
+                    display: none;
+                  }
+                `}
+              </style>
+              <div id="mc_embed_signup">
+                <form action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&amp;id=451cee46ca&amp;f_id=00321ae1f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank">
+                  <div id="mc_embed_signup_scroll">
+                    <h2>Be the First to Use In-Site AI Try-On</h2>
+                    <div className="indicates-required">Get early access to our integrated AI try-on feature and boost your rental rates</div>
+                    <div className="mc-field-group">
+                      <label htmlFor="mce-EMAIL">Email Address <span className="asterisk">*</span></label>
+                      <input type="email" name="EMAIL" className="required email" id="mce-EMAIL" required value="" placeholder="Enter your email address" />
+                    </div>
+                    <div id="mce-responses" className="clear foot">
+                      <div className="response" id="mce-error-response" style={{display: 'none'}}></div>
+                      <div className="response" id="mce-success-response" style={{display: 'none'}}></div>
+                    </div>
+                    <div aria-hidden="true" style={{position: 'absolute', left: '-5000px'}}>
+                      <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} value="" />
+                    </div>
+                    <div className="optionalParent">
+                      <div className="clear foot">
+                        <input type="submit" name="subscribe" id="mc-embedded-subscribe" className="button" value="Join Waitlist" />
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
+              <script type="text/javascript">
+                {`(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[3]='ADDRESS';ftypes[3]='address';fnames[4]='PHONE';ftypes[4]='phone';fnames[5]='BIRTHDAY';ftypes[5]='birthday';fnames[6]='COMPANY';ftypes[6]='text';}(jQuery));var $mcj = jQuery.noConflict(true);`}
+              </script>
+            </div>
           )}
           <p className="text-sm text-slate-600 mt-4">
             Join 100+ travelers simplifying their trips.
