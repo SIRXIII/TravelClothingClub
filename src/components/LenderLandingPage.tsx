@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Upload, DollarSign, Package, TrendingUp, ArrowRight, Star, Users, Calculator, Sparkles, ExternalLink, Check, Mail } from 'lucide-react';
 
@@ -6,6 +6,8 @@ function LenderLandingPage() {
   const [items, setItems] = useState(5);
   const [dailyPrice, setDailyPrice] = useState(25);
   const [rentalDays, setRentalDays] = useState(10);
+  const [email, setEmail] = useState('');
+  const [submitted, setSubmitted] = useState(false);
 
   // Upload form state
   const [itemName, setItemName] = useState('');
@@ -18,6 +20,15 @@ function LenderLandingPage() {
 
   const calculateEarnings = () => {
     return items * dailyPrice * rentalDays;
+  };
+
+  const handleEmailSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    setSubmitted(true);
+    setTimeout(() => {
+      setSubmitted(false);
+      setEmail('');
+    }, 3000);
   };
 
   const categories = ['Suit', 'Dress', 'Shirt', 'Pants', 'Jacket', 'Blazer', 'Skirt', 'Blouse', 'Kids', 'Accessories', 'Other'];
@@ -183,49 +194,52 @@ function LenderLandingPage() {
 
           {/* Waitlist Signup */}
           <div className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
-            <div id="mc_embed_shell">
-              <link href="//cdn-images.mailchimp.com/embedcode/classic-061523.css" rel="stylesheet" type="text/css" />
-              <style type="text/css">
-                {`#mc_embed_signup{background:#fff; false;clear:left; font:14px Helvetica,Arial,sans-serif; width: 600px;}
-                /* Add your own Mailchimp form style overrides in your site stylesheet or in this style block.
-                   We recommend moving this block and the preceding CSS link to the HEAD of your HTML file. */`}
-              </style>
-              <div id="mc_embed_signup">
-                <form action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&amp;id=451cee46ca&amp;f_id=00321ae1f0" method="post" id="mc-embedded-subscribe-form" name="mc-embedded-subscribe-form" className="validate" target="_blank">
-                  <div id="mc_embed_signup_scroll">
-                    <h2>Be the First to Use In-Site AI Try-On</h2>
-                    <div className="indicates-required"><span className="asterisk">*</span> indicates required</div>
-                    <div className="mc-field-group">
-                      <label htmlFor="mce-EMAIL">Email Address <span className="asterisk">*</span></label>
-                      <input type="email" name="EMAIL" className="required email" id="mce-EMAIL" required value="" />
-                    </div>
-                    <div id="mce-responses" className="clear foot">
-                      <div className="response" id="mce-error-response" style={{display: 'none'}}></div>
-                      <div className="response" id="mce-success-response" style={{display: 'none'}}></div>
-                    </div>
-                    <div aria-hidden="true" style={{position: 'absolute', left: '-5000px'}}>
-                      <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} value="" />
-                    </div>
-                    <div className="optionalParent">
-                      <div className="clear foot">
-                        <input type="submit" name="subscribe" id="mc-embedded-subscribe" className="button" value="Subscribe" />
-                        <p style={{margin: '0px auto'}}>
-                          <a href="http://eepurl.com/jgPlRU" title="Mailchimp - email marketing made easy and fun">
-                            <span style={{display: 'inline-block', backgroundColor: 'transparent', borderRadius: '4px'}}>
-                              <img className="refferal_badge" src="https://digitalasset.intuit.com/render/content/dam/intuit/mc-fe/en_us/images/intuit-mc-rewards-text-dark.svg" alt="Intuit Mailchimp" style={{width: '220px', height: '40px', display: 'flex', padding: '2px 0px', justifyContent: 'center', alignItems: 'center'}} />
-                            </span>
-                          </a>
-                        </p>
-                      </div>
-                    </div>
-                  </div>
-                </form>
+            <h3 className="text-2xl font-semibold text-center mb-4 text-slate-900">
+              Be the First to Use In-Site AI Try-On
+            </h3>
+            <p className="text-slate-600 text-center mb-6">
+              Get early access to our integrated AI try-on feature and boost your rental rates
+            </p>
+
+            {submitted ? (
+              <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
+                <div className="flex items-center justify-center gap-2 text-green-700 mb-2">
+                  <Check className="w-6 h-6" />
+                  <span className="font-medium">You're on the waitlist!</span>
+                </div>
+                <p className="text-green-600">We'll notify you when AI try-on is available for lenders.</p>
               </div>
-              <script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
-              <script type="text/javascript" dangerouslySetInnerHTML={{
-                __html: `(function($) {window.fnames = new Array(); window.ftypes = new Array();fnames[0]='EMAIL';ftypes[0]='email';fnames[1]='FNAME';ftypes[1]='text';fnames[2]='LNAME';ftypes[2]='text';fnames[3]='ADDRESS';ftypes[3]='address';fnames[4]='PHONE';ftypes[4]='phone';fnames[5]='BIRTHDAY';ftypes[5]='birthday';fnames[6]='COMPANY';ftypes[6]='text';}(jQuery));var $mcj = jQuery.noConflict(true);`
-              }}></script>
-            </div>
+            ) : (
+              <form 
+                action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca&f_id=00321ae1f0" 
+                method="post" 
+                target="_blank" 
+                noValidate 
+                className="flex flex-col sm:flex-row gap-4"
+                onSubmit={handleEmailSubmit}
+              >
+                <input
+                  type="email"
+                  name="EMAIL"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                  placeholder="Enter your email address"
+                  required
+                  className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+                />
+                <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
+                  <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} />
+                </div>
+                <button
+                  type="submit"
+                  name="subscribe"
+                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition whitespace-nowrap flex items-center gap-2"
+                >
+                  <Mail className="w-4 h-4" />
+                  Join Waitlist
+                </button>
+              </form>
+            )}
           </div>
         </div>
       </section>
