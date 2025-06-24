@@ -52,7 +52,7 @@ function HomePage() {
       name: "Ava B.",
       review: "Travel Clothing Club saved me $80 in luggage fees! The clothes were spotless and stylish.",
       city: "Los Angeles",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?auto=format&fit=crop&q=80&w=150&h=150"
+      image: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?auto=format&fit=crop&q=80&w=150&h=150"
     },
     {
       name: "Nate D.",
@@ -135,13 +135,6 @@ function HomePage() {
             </div>
             <div className="flex items-center gap-4">
               <Link 
-                to="/virtual-try-on-demo"
-                className="bg-purple-600/90 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-purple-700 transition flex items-center gap-2 border border-purple-500/30"
-              >
-                <Sparkles className="w-5 h-5" />
-                Virtual Try-On Demo
-              </Link>
-              <Link 
                 to="/lender-portal"
                 className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
               >
@@ -150,6 +143,24 @@ function HomePage() {
               </Link>
             </div>
           </nav>
+
+          {/* Virtual Try-On Demo Banner - Positioned above hero content */}
+          <div className="mb-8">
+            <div className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-xl p-4 text-center">
+              <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-5 h-5 text-white" />
+                  <span className="text-white font-medium">See Virtual Try-On in Action</span>
+                </div>
+                <Link 
+                  to="/virtual-try-on-demo"
+                  className="bg-white text-slate-900 px-4 py-2 rounded-lg font-medium hover:bg-white/95 transition text-sm"
+                >
+                  Try Demo
+                </Link>
+              </div>
+            </div>
+          </div>
 
           {/* Hero Content */}
           <div className="flex-1 flex items-center">
@@ -187,7 +198,7 @@ function HomePage() {
                   <div className="flex items-center gap-4">
                     <ShoppingBag className="w-6 h-6 text-white" />
                     <div className="text-white">
-                      <div className="font-semibold">3 Outfits Ready</div>
+                      <div className="font-semibold text-white">3 Outfits Ready</div>
                       <div className="text-sm text-white/90">Delivered to Room 1205</div>
                     </div>
                   </div>
@@ -237,38 +248,8 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Why Choose Us */}
-      <section className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-light text-center mb-16 text-slate-900">Why Travelers Love Us</h2>
-          <div className="grid md:grid-cols-3 gap-8">
-            <div className="text-center p-8 rounded-2xl bg-slate-50">
-              <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Plane className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-2xl font-medium mb-4">Hands-Free Travel</h3>
-              <p className="text-slate-600 text-lg">No luggage. Just show up and look great.</p>
-            </div>
-            <div className="text-center p-8 rounded-2xl bg-slate-50">
-              <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Heart className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-2xl font-medium mb-4">Tailored to You</h3>
-              <p className="text-slate-600 text-lg">Outfits matched to your trip & preferences.</p>
-            </div>
-            <div className="text-center p-8 rounded-2xl bg-slate-50">
-              <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
-                <Leaf className="w-10 h-10 text-white" />
-              </div>
-              <h3 className="text-2xl font-medium mb-4">Eco-Friendly</h3>
-              <p className="text-slate-600 text-lg">Reduce waste. Reuse in style.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       {/* How It Works */}
-      <section className="py-20 bg-slate-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-light text-center mb-16 text-slate-900">How It Works</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -313,7 +294,7 @@ function HomePage() {
       </section>
 
       {/* Collection Preview */}
-      <section className="py-20 bg-white">
+      <section className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-light text-center mb-16 text-slate-900">Shop by Collection</h2>
           <div className="grid md:grid-cols-3 gap-8">
@@ -370,7 +351,7 @@ function HomePage() {
       </section>
 
       {/* Simple Pricing */}
-      <section className="py-20 bg-slate-50">
+      <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-light text-center mb-4 text-slate-900">Transparent Pricing</h2>
           <p className="text-xl text-slate-600 text-center mb-16">Choose the perfect package for your trip</p>
@@ -502,6 +483,36 @@ function HomePage() {
         </div>
       </section>
 
+      {/* Why Choose Us - Moved after pricing */}
+      <section className="py-20 bg-slate-50">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-light text-center mb-16 text-slate-900">Why Travelers Love Us</h2>
+          <div className="grid md:grid-cols-3 gap-8">
+            <div className="text-center p-8 rounded-2xl bg-white shadow-lg">
+              <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Plane className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-medium mb-4">Hands-Free Travel</h3>
+              <p className="text-slate-600 text-lg">No luggage. Just show up and look great.</p>
+            </div>
+            <div className="text-center p-8 rounded-2xl bg-white shadow-lg">
+              <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Heart className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-medium mb-4">Tailored to You</h3>
+              <p className="text-slate-600 text-lg">Outfits matched to your trip & preferences.</p>
+            </div>
+            <div className="text-center p-8 rounded-2xl bg-white shadow-lg">
+              <div className="w-20 h-20 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6">
+                <Leaf className="w-10 h-10 text-white" />
+              </div>
+              <h3 className="text-2xl font-medium mb-4">Eco-Friendly</h3>
+              <p className="text-slate-600 text-lg">Reduce waste. Reuse in style.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Testimonials */}
       <section className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -536,7 +547,7 @@ function HomePage() {
       <section className="py-16 bg-slate-900">
         <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
           <h3 className="text-3xl font-light text-white mb-4">Get Exclusive Access</h3>
-          <p className="text-xl text-slate-300 mb-8">Get exclusive discounts, trip tools, and early access to styles.</p>
+          <p className="text-xl text-slate-300 mb-8">Early subscribers get first access before we go live—be the first in the Traveler's Club</p>
           
           {submitted ? (
             <div className="bg-green-500/20 border border-green-400 rounded-lg p-6 max-w-md mx-auto">
@@ -690,7 +701,7 @@ function HomePage() {
             <div>
               <h4 className="text-lg font-medium mb-4">Connect</h4>
               <ul className="space-y-2">
-                <li><a href="#" className="text-slate-400 hover:text-white transition">Instagram</a></li>
+                <li><a href="https://www.instagram.com/travelclothingclub/" target="_blank" rel="noopener noreferrer" className="text-slate-400 hover:text-white transition">Instagram</a></li>
                 <li><a href="#" className="text-slate-400 hover:text-white transition">TikTok</a></li>
                 <li><a href="#" className="text-slate-400 hover:text-white transition">Facebook</a></li>
               </ul>
