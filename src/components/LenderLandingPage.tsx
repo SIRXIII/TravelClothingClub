@@ -8,7 +8,6 @@ function LenderLandingPage() {
   const [rentalDays, setRentalDays] = useState(10);
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
-  const [showWaitlist, setShowWaitlist] = useState(false);
 
   // Upload form state
   const [itemName, setItemName] = useState('');
@@ -30,10 +29,6 @@ function LenderLandingPage() {
       setSubmitted(false);
       setEmail('');
     }, 3000);
-  };
-
-  const handleStartLending = () => {
-    setShowWaitlist(true);
   };
 
   const categories = ['Suit', 'Dress', 'Shirt', 'Pants', 'Jacket', 'Blazer', 'Skirt', 'Blouse', 'Kids', 'Accessories', 'Other'];
@@ -73,17 +68,14 @@ function LenderLandingPage() {
           <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-4xl mx-auto leading-relaxed">
             Join thousands of travelers earning money by sharing their high-quality travel clothing with our AI-powered rental platform
           </p>
-          <button 
-            onClick={handleStartLending}
-            className="bg-slate-900 text-white px-10 py-5 rounded-2xl font-semibold text-xl hover:bg-slate-800 transition shadow-lg hover:shadow-xl transform hover:scale-105 mb-12"
-          >
+          <button className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-semibold text-xl hover:bg-blue-700 transition shadow-lg hover:shadow-xl transform hover:scale-105 mb-12">
             Start Lending Today
           </button>
           
           {/* Trust Indicators */}
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="bg-white rounded-2xl p-6 shadow-lg">
-              <div className="text-3xl font-bold text-slate-900 mb-2">50K+</div>
+              <div className="text-3xl font-bold text-blue-600 mb-2">50K+</div>
               <div className="text-slate-600">Active Lenders</div>
             </div>
             <div className="bg-white rounded-2xl p-6 shadow-lg">
@@ -105,8 +97,8 @@ function LenderLandingPage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-light text-center mb-16 text-slate-900">How It Works</h2>
           <div className="grid md:grid-cols-4 gap-8">
-            <div className="bg-gradient-to-br from-slate-50 to-slate-100 rounded-2xl p-8 text-center hover:shadow-lg transition group">
-              <div className="w-16 h-16 bg-slate-900 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition">
+            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 text-center hover:shadow-lg transition group">
+              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition">
                 <Upload className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-4 text-slate-900">1. Upload Items</h3>
@@ -121,16 +113,16 @@ function LenderLandingPage() {
               <p className="text-slate-600">Choose competitive daily rental rates and earn money from clothes sitting in your closet</p>
             </div>
             
-            <div className="bg-gradient-to-br from-blue-50 to-blue-100 rounded-2xl p-8 text-center hover:shadow-lg transition group">
-              <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition">
+            <div className="bg-gradient-to-br from-purple-50 to-purple-100 rounded-2xl p-8 text-center hover:shadow-lg transition group">
+              <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition">
                 <Package className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-4 text-slate-900">3. Ship & Earn</h3>
               <p className="text-slate-600">We handle bookings and payments. You ship directly to travelers and get paid instantly</p>
             </div>
             
-            <div className="bg-gradient-to-br from-amber-50 to-amber-100 rounded-2xl p-8 text-center hover:shadow-lg transition group">
-              <div className="w-16 h-16 bg-amber-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition">
+            <div className="bg-gradient-to-br from-orange-50 to-orange-100 rounded-2xl p-8 text-center hover:shadow-lg transition group">
+              <div className="w-16 h-16 bg-orange-600 rounded-full flex items-center justify-center mx-auto mb-6 group-hover:scale-110 transition">
                 <TrendingUp className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-4 text-slate-900">4. Scale Up</h3>
@@ -153,8 +145,8 @@ function LenderLandingPage() {
           {/* Visual Process */}
           <div className="flex flex-col md:flex-row items-center justify-center gap-8 mb-12">
             <div className="bg-white rounded-2xl p-8 shadow-lg text-center flex-1 max-w-xs">
-              <div className="w-16 h-16 bg-slate-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Upload className="w-8 h-8 text-slate-600" />
+              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Upload className="w-8 h-8 text-blue-600" />
               </div>
               <h3 className="font-semibold text-slate-900 mb-2">Your Item</h3>
               <p className="text-sm text-slate-600">Upload photos of your clothing</p>
@@ -166,8 +158,8 @@ function LenderLandingPage() {
             </div>
             
             <div className="bg-white rounded-2xl p-8 shadow-lg text-center flex-1 max-w-xs">
-              <div className="w-16 h-16 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
-                <Sparkles className="w-8 h-8 text-blue-600" />
+              <div className="w-16 h-16 bg-purple-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Sparkles className="w-8 h-8 text-purple-600" />
               </div>
               <h3 className="font-semibold text-slate-900 mb-2">AI Processing</h3>
               <p className="text-sm text-slate-600">AI creates virtual try-on models</p>
@@ -202,6 +194,13 @@ function LenderLandingPage() {
 
           {/* Waitlist Signup */}
           <div className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
+            <h3 className="text-2xl font-semibold text-center mb-4 text-slate-900">
+              Be the First to Use In-Site AI Try-On
+            </h3>
+            <p className="text-slate-600 text-center mb-6">
+              Get early access to our integrated AI try-on feature and boost your rental rates
+            </p>
+
             {submitted ? (
               <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
                 <div className="flex items-center justify-center gap-2 text-green-700 mb-2">
@@ -212,38 +211,13 @@ function LenderLandingPage() {
               </div>
             ) : (
               <form 
-                action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca" 
+                action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca&f_id=00071ae1f0" 
                 method="post" 
                 target="_blank" 
-                noValidate
-                style={{
-                  background: '#fff',
-                  padding: '2rem 1rem',
-                  borderRadius: '1.25rem',
-                  boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '1.5rem'
-                }}
+                noValidate 
+                className="flex flex-col sm:flex-row gap-4"
                 onSubmit={handleEmailSubmit}
               >
-                <h2 style={{
-                  textAlign: 'center',
-                  fontSize: '1.3rem',
-                  fontWeight: '600',
-                  color: '#222',
-                  marginBottom: '0.2em'
-                }}>
-                  Be the First to Use In-Site AI Try-On
-                </h2>
-                <div style={{
-                  textAlign: 'center',
-                  color: '#666',
-                  fontSize: '1rem',
-                  marginBottom: '0.4em'
-                }}>
-                  Get early access to our integrated AI try-on feature and boost your rental rates
-                </div>
                 <input
                   type="email"
                   name="EMAIL"
@@ -251,14 +225,7 @@ function LenderLandingPage() {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="Enter your email address"
                   required
-                  style={{
-                    padding: '1rem',
-                    border: '1.5px solid #e7e8ec',
-                    borderRadius: '0.75rem',
-                    fontSize: '1rem',
-                    width: '100%',
-                    background: '#f9f9fa'
-                  }}
+                  className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                 />
                 <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
                   <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} />
@@ -266,20 +233,9 @@ function LenderLandingPage() {
                 <button
                   type="submit"
                   name="subscribe"
-                  style={{
-                    padding: '1rem',
-                    border: 'none',
-                    borderRadius: '2rem',
-                    background: '#334155',
-                    color: '#fff',
-                    fontWeight: '600',
-                    fontSize: '1.05rem',
-                    cursor: 'pointer',
-                    transition: 'background 0.2s'
-                  }}
-                  onMouseOver={(e) => e.currentTarget.style.background = '#1e293b'}
-                  onMouseOut={(e) => e.currentTarget.style.background = '#334155'}
+                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition whitespace-nowrap flex items-center gap-2"
                 >
+                  <Mail className="w-4 h-4" />
                   Join Waitlist
                 </button>
               </form>
@@ -300,17 +256,17 @@ function LenderLandingPage() {
               <span className="text-sm text-slate-500">Item Details</span>
             </div>
             <div className="w-full bg-slate-200 rounded-full h-2">
-              <div className="bg-slate-900 h-2 rounded-full" style={{ width: '33%' }}></div>
+              <div className="bg-blue-600 h-2 rounded-full" style={{ width: '33%' }}></div>
             </div>
           </div>
 
           <div className="max-w-6xl mx-auto">
             {/* Upload Zone */}
-            <div className="border-2 border-dashed border-slate-300 rounded-2xl p-12 text-center mb-12 hover:border-slate-400 transition bg-slate-50/50">
-              <Upload className="w-16 h-16 text-slate-600 mx-auto mb-6" />
+            <div className="border-2 border-dashed border-blue-300 rounded-2xl p-12 text-center mb-12 hover:border-blue-400 transition bg-blue-50/50">
+              <Upload className="w-16 h-16 text-blue-600 mx-auto mb-6" />
               <h3 className="text-2xl font-semibold text-slate-900 mb-4">Drag & Drop Your Photos</h3>
               <p className="text-slate-600 mb-6">Upload up to 5 high-quality photos of your item</p>
-              <button className="bg-slate-900 text-white px-8 py-3 rounded-lg font-medium hover:bg-slate-800 transition">
+              <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
                 Choose Files
               </button>
             </div>
@@ -327,7 +283,7 @@ function LenderLandingPage() {
                       value={itemName}
                       onChange={(e) => setItemName(e.target.value)}
                       placeholder="e.g., Navy Blue Business Suit"
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
 
@@ -338,7 +294,7 @@ function LenderLandingPage() {
                       value={brand}
                       onChange={(e) => setBrand(e.target.value)}
                       placeholder="e.g., Hugo Boss, Zara, etc."
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     />
                   </div>
 
@@ -348,7 +304,7 @@ function LenderLandingPage() {
                       <select
                         value={category}
                         onChange={(e) => setCategory(e.target.value)}
-                        className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent outline-none"
+                        className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                       >
                         <option value="">Select category</option>
                         {categories.map(cat => (
@@ -362,7 +318,7 @@ function LenderLandingPage() {
                       <select
                         value={size}
                         onChange={(e) => setSize(e.target.value)}
-                        className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent outline-none"
+                        className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                       >
                         <option value="">Select size</option>
                         {sizes.map(s => (
@@ -380,7 +336,7 @@ function LenderLandingPage() {
                     <select
                       value={condition}
                       onChange={(e) => setCondition(e.target.value)}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent outline-none"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                     >
                       <option value="">Select condition</option>
                       {conditions.map(c => (
@@ -398,7 +354,7 @@ function LenderLandingPage() {
                         value={price}
                         onChange={(e) => setPrice(e.target.value)}
                         placeholder="25.00"
-                        className="pl-10 w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent outline-none"
+                        className="pl-10 w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
                       />
                     </div>
                   </div>
@@ -410,14 +366,14 @@ function LenderLandingPage() {
                       onChange={(e) => setDescription(e.target.value)}
                       rows={4}
                       placeholder="Describe the item, its condition, and any special features..."
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-slate-500 focus:border-transparent outline-none resize-none"
+                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
                     />
                   </div>
                 </div>
               </div>
 
               <div className="mt-8 flex justify-end">
-                <button className="bg-slate-900 text-white px-8 py-3 rounded-lg font-medium hover:bg-slate-800 transition shadow-lg hover:shadow-xl">
+                <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition shadow-lg hover:shadow-xl">
                   Continue to Pricing
                 </button>
               </div>
@@ -519,8 +475,8 @@ function LenderLandingPage() {
           <div className="grid md:grid-cols-3 gap-8">
             <div className="bg-slate-50 rounded-2xl p-8 shadow-lg">
               <div className="flex items-center mb-6">
-                <div className="w-16 h-16 bg-slate-600 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
-                  JM
+                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
+                  SM
                 </div>
                 <div>
                   <div className="font-semibold text-slate-900">James M.</div>
@@ -535,8 +491,8 @@ function LenderLandingPage() {
 
             <div className="bg-slate-50 rounded-2xl p-8 shadow-lg">
               <div className="flex items-center mb-6">
-                <div className="w-16 h-16 bg-blue-600 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
-                  CL
+                <div className="w-16 h-16 bg-purple-600 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
+                  JL
                 </div>
                 <div>
                   <div className="font-semibold text-slate-900">Chloe L.</div>
@@ -552,7 +508,7 @@ function LenderLandingPage() {
             <div className="bg-slate-50 rounded-2xl p-8 shadow-lg">
               <div className="flex items-center mb-6">
                 <div className="w-16 h-16 bg-green-600 rounded-full flex items-center justify-center text-white font-bold text-xl mr-4">
-                  GR
+                  MR
                 </div>
                 <div>
                   <div className="font-semibold text-slate-900">Gwen R.</div>
@@ -617,115 +573,13 @@ function LenderLandingPage() {
         </div>
       </footer>
 
-      {/* Waitlist Modal */}
-      {showWaitlist && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50">
-          <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full max-h-[90vh] overflow-y-auto">
-            <div className="p-6">
-              <div className="flex items-center justify-between mb-6">
-                <h2 className="text-2xl font-light">Join the Lender Waitlist</h2>
-                <button
-                  onClick={() => setShowWaitlist(false)}
-                  className="text-gray-400 hover:text-gray-600 text-2xl"
-                >
-                  ×
-                </button>
-              </div>
-
-              {submitted ? (
-                <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-                  <div className="flex items-center justify-center gap-2 text-green-700 mb-2">
-                    <Check className="w-6 h-6" />
-                    <span className="font-medium">Welcome to the waitlist!</span>
-                  </div>
-                  <p className="text-green-600">We'll notify you as soon as the lender platform launches.</p>
-                </div>
-              ) : (
-                <form 
-                  action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca" 
-                  method="post" 
-                  target="_blank" 
-                  noValidate
-                  style={{
-                    background: '#fff',
-                    padding: '2rem 1rem',
-                    borderRadius: '1.25rem',
-                    boxShadow: '0 4px 24px rgba(0,0,0,0.06)',
-                    display: 'flex',
-                    flexDirection: 'column',
-                    gap: '1.5rem'
-                  }}
-                  onSubmit={handleEmailSubmit}
-                >
-                  <h2 style={{
-                    textAlign: 'center',
-                    fontSize: '1.3rem',
-                    fontWeight: '600',
-                    color: '#222',
-                    marginBottom: '0.2em'
-                  }}>
-                    Be the First to Start Lending
-                  </h2>
-                  <div style={{
-                    textAlign: 'center',
-                    color: '#666',
-                    fontSize: '1rem',
-                    marginBottom: '0.4em'
-                  }}>
-                    Get early access to our lender platform and start earning from your travel wardrobe
-                  </div>
-                  <input
-                    type="email"
-                    name="EMAIL"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    placeholder="Enter your email address"
-                    required
-                    style={{
-                      padding: '1rem',
-                      border: '1.5px solid #e7e8ec',
-                      borderRadius: '0.75rem',
-                      fontSize: '1rem',
-                      width: '100%',
-                      background: '#f9f9fa'
-                    }}
-                  />
-                  <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
-                    <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} />
-                  </div>
-                  <button
-                    type="submit"
-                    name="subscribe"
-                    style={{
-                      padding: '1rem',
-                      border: 'none',
-                      borderRadius: '2rem',
-                      background: '#334155',
-                      color: '#fff',
-                      fontWeight: '600',
-                      fontSize: '1.05rem',
-                      cursor: 'pointer',
-                      transition: 'background 0.2s'
-                    }}
-                    onMouseOver={(e) => e.currentTarget.style.background = '#1e293b'}
-                    onMouseOut={(e) => e.currentTarget.style.background = '#334155'}
-                  >
-                    Join Waitlist
-                  </button>
-                </form>
-              )}
-            </div>
-          </div>
-        </div>
-      )}
-
       <style jsx>{`
         .slider::-webkit-slider-thumb {
           appearance: none;
           height: 20px;
           width: 20px;
           border-radius: 50%;
-          background: #334155;
+          background: #3b82f6;
           cursor: pointer;
         }
         
@@ -733,7 +587,7 @@ function LenderLandingPage() {
           height: 20px;
           width: 20px;
           border-radius: 50%;
-          background: #334155;
+          background: #3b82f6;
           cursor: pointer;
           border: none;
         }
