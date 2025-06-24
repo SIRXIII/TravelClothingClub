@@ -467,8 +467,8 @@ function LenderLandingPage() {
                   SM
                 </div>
                 <div>
-                  <div className="font-semibold text-slate-900">Sarah M.</div>
-                  <div className="text-slate-600 text-sm">Business Traveler</div>
+                  <div className="font-semibold text-slate-900">James M.</div>
+                  <div className="text-slate-600 text-sm">Crown & Cuff Menswear</div>
                 </div>
               </div>
               <p className="text-slate-700 italic mb-4">
@@ -483,8 +483,8 @@ function LenderLandingPage() {
                   JL
                 </div>
                 <div>
-                  <div className="font-semibold text-slate-900">James L.</div>
-                  <div className="text-slate-600 text-sm">Fashion Enthusiast</div>
+                  <div className="font-semibold text-slate-900">Chloe L.</div>
+                  <div className="text-slate-600 text-sm">Velvet & Vine Boutique</div>
                 </div>
               </div>
               <p className="text-slate-700 italic mb-4">
@@ -499,8 +499,8 @@ function LenderLandingPage() {
                   MR
                 </div>
                 <div>
-                  <div className="font-semibold text-slate-900">Maria R.</div>
-                  <div className="text-slate-600 text-sm">Event Coordinator</div>
+                  <div className="font-semibold text-slate-900">Gwen R.</div>
+                  <div className="text-slate-600 text-sm">The Gilded Thread</div>
                 </div>
               </div>
               <p className="text-slate-700 italic mb-4">
