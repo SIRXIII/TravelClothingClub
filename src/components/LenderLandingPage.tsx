@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { Upload, DollarSign, Package, TrendingUp, ArrowRight, Star, Users, Calculator, Sparkles, ExternalLink, Check, Mail } from 'lucide-react';
 
@@ -6,8 +6,6 @@ function LenderLandingPage() {
   const [items, setItems] = useState(5);
   const [dailyPrice, setDailyPrice] = useState(25);
   const [rentalDays, setRentalDays] = useState(10);
-  const [email, setEmail] = useState('');
-  const [submitted, setSubmitted] = useState(false);
 
   // Upload form state
   const [itemName, setItemName] = useState('');
@@ -20,15 +18,6 @@ function LenderLandingPage() {
 
   const calculateEarnings = () => {
     return items * dailyPrice * rentalDays;
-  };
-
-  const handleEmailSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    setSubmitted(true);
-    setTimeout(() => {
-      setSubmitted(false);
-      setEmail('');
-    }, 3000);
   };
 
   const categories = ['Suit', 'Dress', 'Shirt', 'Pants', 'Jacket', 'Blazer', 'Skirt', 'Blouse', 'Kids', 'Accessories', 'Other'];
@@ -192,54 +181,153 @@ function LenderLandingPage() {
             </a>
           </div>
 
-          {/* Waitlist Signup */}
+          {/* Mailchimp Embedded Form */}
           <div className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
-            <h3 className="text-2xl font-semibold text-center mb-4 text-slate-900">
-              Be the First to Use In-Site AI Try-On
-            </h3>
-            <p className="text-slate-600 text-center mb-6">
-              Get early access to our integrated AI try-on feature and boost your rental rates
-            </p>
+            <div className="text-center mb-6">
+              <h3 className="text-2xl font-semibold text-slate-900 mb-4">
+                Be the First to Use In-Site AI Try-On
+              </h3>
+              <p className="text-slate-600">
+                Get early access to our integrated AI try-on feature and boost your rental rates
+              </p>
+            </div>
 
-            {submitted ? (
-              <div className="bg-green-50 border border-green-200 rounded-lg p-6 text-center">
-                <div className="flex items-center justify-center gap-2 text-green-700 mb-2">
-                  <Check className="w-6 h-6" />
-                  <span className="font-medium">You're on the waitlist!</span>
-                </div>
-                <p className="text-green-600">We'll notify you when AI try-on is available for lenders.</p>
-              </div>
-            ) : (
-              <form 
-                action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca&f_id=00321ae1f0" 
-                method="post" 
-                target="_blank" 
-                noValidate 
-                className="flex flex-col sm:flex-row gap-4"
-                onSubmit={handleEmailSubmit}
-              >
-                <input
-                  type="email"
-                  name="EMAIL"
-                  value={email}
-                  onChange={(e) => setEmail(e.target.value)}
-                  placeholder="Enter your email address"
-                  required
-                  className="flex-1 px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                />
-                <div style={{ position: 'absolute', left: '-5000px' }} aria-hidden="true">
-                  <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} />
-                </div>
-                <button
-                  type="submit"
-                  name="subscribe"
-                  className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition whitespace-nowrap flex items-center gap-2"
+            {/* Mailchimp Embedded Form with Custom Styling */}
+            <div id="mc_embed_shell">
+              <style type="text/css">
+                {`
+                  #mc_embed_signup {
+                    background: transparent !important;
+                    clear: left;
+                    font: 14px Helvetica,Arial,sans-serif;
+                    width: 100% !important;
+                  }
+                  #mc_embed_signup h2 {
+                    display: none !important;
+                  }
+                  #mc_embed_signup .indicates-required {
+                    display: none !important;
+                  }
+                  #mc_embed_signup .mc-field-group {
+                    margin-bottom: 1rem;
+                  }
+                  #mc_embed_signup .mc-field-group label {
+                    display: none !important;
+                  }
+                  #mc_embed_signup input[type="email"] {
+                    width: 100% !important;
+                    padding: 0.75rem 1rem !important;
+                    border: 1px solid #cbd5e1 !important;
+                    border-radius: 0.5rem !important;
+                    font-size: 1rem !important;
+                    outline: none !important;
+                    transition: all 0.2s !important;
+                  }
+                  #mc_embed_signup input[type="email"]:focus {
+                    border-color: #3b82f6 !important;
+                    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+                  }
+                  #mc_embed_signup .button {
+                    background-color: #3b82f6 !important;
+                    color: white !important;
+                    padding: 0.75rem 1.5rem !important;
+                    border: none !important;
+                    border-radius: 0.5rem !important;
+                    font-weight: 500 !important;
+                    cursor: pointer !important;
+                    transition: background-color 0.2s !important;
+                    display: inline-flex !important;
+                    align-items: center !important;
+                    gap: 0.5rem !important;
+                  }
+                  #mc_embed_signup .button:hover {
+                    background-color: #2563eb !important;
+                  }
+                  #mc_embed_signup .optionalParent {
+                    margin-top: 1rem;
+                  }
+                  #mc_embed_signup .clear.foot {
+                    display: flex !important;
+                    flex-direction: column !important;
+                    gap: 1rem !important;
+                    align-items: center !important;
+                  }
+                  #mc_embed_signup .refferal_badge {
+                    display: none !important;
+                  }
+                  #mc_embed_signup p {
+                    display: none !important;
+                  }
+                  @media (min-width: 640px) {
+                    #mc_embed_signup .clear.foot {
+                      flex-direction: row !important;
+                      justify-content: center !important;
+                    }
+                  }
+                `}
+              </style>
+              <div id="mc_embed_signup">
+                <form 
+                  action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca&f_id=00321ae1f0" 
+                  method="post" 
+                  id="mc-embedded-subscribe-form" 
+                  name="mc-embedded-subscribe-form" 
+                  className="validate" 
+                  target="_blank"
                 >
-                  <Mail className="w-4 h-4" />
-                  Join Waitlist
-                </button>
-              </form>
-            )}
+                  <div id="mc_embed_signup_scroll">
+                    <h2>Be the First to Use In-Site AI Try-On</h2>
+                    <div className="indicates-required">
+                      <span className="asterisk">*</span> indicates required
+                    </div>
+                    <div className="mc-field-group">
+                      <label htmlFor="mce-EMAIL">Email Address <span className="asterisk">*</span></label>
+                      <input 
+                        type="email" 
+                        name="EMAIL" 
+                        className="required email" 
+                        id="mce-EMAIL" 
+                        required 
+                        placeholder="Enter your email address"
+                      />
+                    </div>
+                    <div id="mce-responses" className="clear foot">
+                      <div className="response" id="mce-error-response" style={{ display: 'none' }}></div>
+                      <div className="response" id="mce-success-response" style={{ display: 'none' }}></div>
+                    </div>
+                    <div aria-hidden="true" style={{ position: 'absolute', left: '-5000px' }}>
+                      <input type="text" name="b_76ec7acb17d86542fbeae7fae_451cee46ca" tabIndex={-1} />
+                    </div>
+                    <div className="optionalParent">
+                      <div className="clear foot">
+                        <input 
+                          type="submit" 
+                          name="subscribe" 
+                          id="mc-embedded-subscribe" 
+                          className="button" 
+                          value="Join Waitlist"
+                        />
+                      </div>
+                    </div>
+                  </div>
+                </form>
+              </div>
+              <script type="text/javascript" src="//s3.amazonaws.com/downloads.mailchimp.com/js/mc-validate.js"></script>
+              <script type="text/javascript">
+                {`(function($) {
+                  window.fnames = new Array(); 
+                  window.ftypes = new Array();
+                  fnames[0]='EMAIL';ftypes[0]='email';
+                  fnames[1]='FNAME';ftypes[1]='text';
+                  fnames[2]='LNAME';ftypes[2]='text';
+                  fnames[3]='ADDRESS';ftypes[3]='address';
+                  fnames[4]='PHONE';ftypes[4]='phone';
+                  fnames[5]='BIRTHDAY';ftypes[5]='birthday';
+                  fnames[6]='COMPANY';ftypes[6]='text';
+                }(jQuery));
+                var $mcj = jQuery.noConflict(true);`}
+              </script>
+            </div>
           </div>
         </div>
       </section>
