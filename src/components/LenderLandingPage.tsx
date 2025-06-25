@@ -24,6 +24,10 @@ function LenderLandingPage() {
   const sizes = ['XS', 'S', 'M', 'L', 'XL', 'XXL', '28', '30', '32', '34', '36', '38', '40', '42', '44', '46', '48', '50', '2T', '3T', '4T', '5T', '6', '7', '8', '10', '12', '14', '16'];
   const conditions = ['New with tags', 'Like new', 'Excellent', 'Good', 'Fair'];
 
+  const handleScrollToSignup = () => {
+    document.getElementById('waitlist-signup')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
   return (
     <div className="min-h-screen bg-white">
       {/* Sticky Header */}
@@ -57,7 +61,10 @@ function LenderLandingPage() {
           <p className="text-xl md:text-2xl text-slate-600 mb-8 max-w-4xl mx-auto leading-relaxed">
             Join thousands of travelers earning money by sharing their high-quality travel clothing with our AI-powered rental platform
           </p>
-          <button className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-semibold text-xl hover:bg-blue-700 transition shadow-lg hover:shadow-xl transform hover:scale-105 mb-12">
+          <button 
+            onClick={handleScrollToSignup}
+            className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-semibold text-xl hover:bg-blue-700 transition shadow-lg hover:shadow-xl transform hover:scale-105 mb-12"
+          >
             Start Lending Today
           </button>
           
@@ -122,7 +129,7 @@ function LenderLandingPage() {
       </section>
 
       {/* AI Try-On Demo Section */}
-      <section className="py-20 bg-slate-50">
+      <section id="waitlist-signup" className="py-20 bg-slate-50">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="text-center mb-12">
             <h2 className="text-4xl font-light mb-6 text-slate-900">AI Virtual Try-On Technology</h2>
