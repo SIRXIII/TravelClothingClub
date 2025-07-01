@@ -116,7 +116,7 @@ function LenderDashboard({ onSignOut }: LenderDashboardProps) {
                 alt="Travel Clothing Club"
                 className="w-8 h-8 object-contain"
               />
-              <h1 className="text-xl font-medium">Lender Dashboard</h1>
+              <h1 className="text-xl font-medium">Partner Dashboard</h1>
             </div>
             <div className="flex items-center gap-4">
               <span className="text-sm text-gray-600">Welcome, {user?.email}</span>

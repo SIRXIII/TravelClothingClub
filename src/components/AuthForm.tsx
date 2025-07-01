@@ -49,12 +49,12 @@ function AuthForm({ onSuccess }: AuthFormProps) {
             className="w-16 h-16 mx-auto mb-4"
           />
           <h2 className="text-3xl font-light text-gray-900">
-            {isSignUp ? 'Join as a Verified Lender' : 'Lender Portal Sign In'}
+            {isSignUp ? 'Join as a Verified Partner' : 'Partner Portal Sign In'}
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             {isSignUp 
               ? 'Create your account to start listing clothing items'
-              : 'Access your lender dashboard'
+              : 'Access your partner dashboard'
             }
           </p>
         </div>

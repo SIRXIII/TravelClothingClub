@@ -139,7 +139,7 @@ function HomePage() {
                 className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
               >
                 <UserCheck className="w-5 h-5" />
-                Lender Portal
+                Partner Portal
               </Link>
             </div>
           </nav>
@@ -695,7 +695,7 @@ function HomePage() {
                 <li><a href="#" className="text-slate-400 hover:text-white transition">FAQs</a></li>
                 <li><a href="#" className="text-slate-400 hover:text-white transition">About</a></li>
                 <li><a href="#" className="text-slate-400 hover:text-white transition">Contact</a></li>
-                <li><Link to="/lender-portal" className="text-slate-400 hover:text-white transition">Become a Lender</Link></li>
+                <li><Link to="/lender-portal" className="text-slate-400 hover:text-white transition">Become a Partner</Link></li>
               </ul>
             </div>
             <div>

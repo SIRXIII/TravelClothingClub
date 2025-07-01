@@ -42,7 +42,7 @@ function VirtualTryOnDemo() {
               to="/lender-portal"
               className="bg-slate-900 text-white px-4 py-2 rounded-lg font-medium hover:bg-slate-800 transition flex items-center gap-2"
             >
-              Lender Portal
+              Partner Portal
             </Link>
           </div>
         </div>
@@ -209,7 +209,7 @@ function VirtualTryOnDemo() {
             </ul>
           </div>
           <div className="bg-green-50 rounded-xl p-6">
-            <h4 className="text-lg font-semibold text-slate-900 mb-3">For Lenders</h4>
+            <h4 className="text-lg font-semibold text-slate-900 mb-3">For Partners</h4>
             <ul className="space-y-2 text-slate-700">
               <li className="flex items-center gap-2">
                 <Check className="w-4 h-4 text-green-600" />

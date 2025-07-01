@@ -65,14 +65,14 @@ function LenderLandingPage() {
             onClick={handleScrollToSignup}
             className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-semibold text-xl hover:bg-blue-700 transition shadow-lg hover:shadow-xl transform hover:scale-105 mb-12"
           >
-            Start Lending Today
+            Start Partnering Today
           </button>
           
           {/* Trust Indicators */}
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
             <div className="bg-white rounded-2xl p-6 shadow-lg">
               <div className="text-3xl font-bold text-blue-600 mb-2">50K+</div>
-              <div className="text-slate-600">Active Lenders</div>
+              <div className="text-slate-600">Active Partners</div>
             </div>
             <div className="bg-white rounded-2xl p-6 shadow-lg">
               <div className="text-3xl font-bold text-green-600 mb-2">$2.3M</div>
@@ -82,7 +82,7 @@ function LenderLandingPage() {
               <div className="flex items-center justify-center gap-2 text-3xl font-bold text-yellow-500 mb-2">
                 4.9 <Star className="w-8 h-8 fill-current" />
               </div>
-              <div className="text-slate-600">Lender Rating</div>
+              <div className="text-slate-600">Partner Rating</div>
             </div>
           </div>
         </div>
@@ -122,7 +122,7 @@ function LenderLandingPage() {
                 <TrendingUp className="w-8 h-8 text-white" />
               </div>
               <h3 className="text-xl font-semibold mb-4 text-slate-900">4. Scale Up</h3>
-              <p className="text-slate-600">Build your reputation, get more bookings, and turn lending into a profitable side business</p>
+              <p className="text-slate-600">Build your reputation, get more bookings, and turn partnering into a profitable side business</p>
             </div>
           </div>
         </div>
@@ -632,15 +632,15 @@ function LenderLandingPage() {
                 />
                 <h3 className="text-lg font-medium">Travel Clothing Club</h3>
               </div>
-              <p className="text-slate-400">Connecting travelers with local clothing lenders worldwide.</p>
+              <p className="text-slate-400">Connecting travelers with local clothing partners worldwide.</p>
             </div>
             <div>
-              <h4 className="text-lg font-medium mb-4">For Lenders</h4>
+              <h4 className="text-lg font-medium mb-4">For Partners</h4>
               <ul className="space-y-2">
                 <li><a href="#" className="text-slate-400 hover:text-white transition">How It Works</a></li>
                 <li><a href="#" className="text-slate-400 hover:text-white transition">Pricing Guide</a></li>
                 <li><a href="#" className="text-slate-400 hover:text-white transition">Success Stories</a></li>
-                <li><a href="#" className="text-slate-400 hover:text-white transition">Lender Resources</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition">Partner Resources</a></li>
               </ul>
             </div>
             <div>
@@ -657,7 +657,7 @@ function LenderLandingPage() {
               <ul className="space-y-2">
                 <li><a href="#" className="text-slate-400 hover:text-white transition">Privacy Policy</a></li>
                 <li><a href="#" className="text-slate-400 hover:text-white transition">Terms of Service</a></li>
-                <li><a href="#" className="text-slate-400 hover:text-white transition">Lender Agreement</a></li>
+                <li><a href="#" className="text-slate-400 hover:text-white transition">Partner Agreement</a></li>
                 <li><a href="#" className="text-slate-400 hover:text-white transition">Community Guidelines</a></li>
               </ul>
             </div>
