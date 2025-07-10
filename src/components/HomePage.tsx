@@ -2,17 +2,13 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, UserCheck, Calendar, Search, Star, Heart, Shield, Leaf, Headphones, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import RentNowFlow from './RentNowFlow';
-import SubscriptionPlans from './SubscriptionPlans';
-import { useAuth } from '../hooks/useAuth';
 
 function HomePage() {
   const [email, setEmail] = useState('');
   const [submitted, setSubmitted] = useState(false);
   const [showRentFlow, setShowRentFlow] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
-  const [showAuthModal, setShowAuthModal] = useState(false);
   const navigate = useNavigate();
-  const { user } = useAuth();
 
   // Search form state
   const [searchDates, setSearchDates] = useState({ start: '', end: '' });
@@ -43,10 +39,6 @@ function HomePage() {
         size: searchSize
       }
     });
-  };
-
-  const handleAuthClick = () => {
-    navigate('/auth');
   };
 
   const sizeOptions = [
@@ -142,30 +134,13 @@ function HomePage() {
               <span className="text-2xl md:text-3xl font-light text-white drop-shadow-lg">Travel Clothing Club</span>
             </div>
             <div className="flex items-center gap-4">
-              {user ? (
-                <Link 
-                  to="/dashboard"
-                  className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
-                >
-                  <UserCheck className="w-5 h-5" />
-                  My Account
-                </Link>
-              ) : (
-                <>
-                  <button
-                    onClick={handleAuthClick}
-                    className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
-                  >
-                    Sign In
-                  </button>
-                  <Link 
-                    to="/lender-portal"
-                    className="bg-white text-slate-900 px-6 py-3 rounded-xl font-semibold hover:bg-white/95 transition"
-                  >
-                    Partner Portal
-                  </Link>
-                </>
-              )}
+              <Link 
+                to="/lender-portal"
+                className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
+              >
+                <UserCheck className="w-5 h-5" />
+                Partner Portal
+              </Link>
             </div>
           </nav>
 
@@ -375,8 +350,138 @@ function HomePage() {
         </div>
       </section>
 
-      {/* Subscription Plans */}
-      <SubscriptionPlans />
+      {/* Simple Pricing */}
+      <section className="py-20 bg-white">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <h2 className="text-4xl font-light text-center mb-4 text-slate-900">Transparent Pricing</h2>
+          <p className="text-xl text-slate-600 text-center mb-16">Choose the perfect package for your trip</p>
+          
+          <div className="grid md:grid-cols-3 gap-8 mb-16">
+            {/* Basic Tier */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-transparent hover:border-slate-200 transition">
+              <h3 className="text-2xl font-medium mb-4">Basic</h3>
+              <div className="text-4xl font-light mb-6">$49<span className="text-lg text-slate-600">/trip</span></div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span>2 outfits</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span>Casual wear</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span>Standard fabrics</span>
+                </li>
+              </ul>
+              <button 
+                onClick={handleRentNowClick}
+                className="w-full bg-slate-100 text-slate-900 py-3 rounded-lg font-medium hover:bg-slate-200 transition"
+              >
+                Select Basic
+              </button>
+            </div>
+
+            {/* Upscale Tier */}
+            <div className="bg-slate-900 text-white rounded-2xl shadow-lg p-8 transform scale-105 relative">
+              <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-slate-700 text-white px-4 py-1 rounded-full text-sm font-medium">
+                Most Popular
+              </div>
+              <h3 className="text-2xl font-medium mb-4">Upscale</h3>
+              <div className="text-4xl font-light mb-6">$89<span className="text-lg text-slate-300">/trip</span></div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-400" />
+                  <span>3 outfits</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-400" />
+                  <span>Business + casual mix</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-400" />
+                  <span>Premium materials</span>
+                </li>
+              </ul>
+              <button 
+                onClick={handleRentNowClick}
+                className="w-full bg-white text-slate-900 py-3 rounded-lg font-medium hover:bg-slate-100 transition"
+              >
+                Select Upscale
+              </button>
+            </div>
+
+            {/* Vacay Mode Tier */}
+            <div className="bg-white rounded-2xl shadow-lg p-8 border-2 border-transparent hover:border-slate-200 transition">
+              <h3 className="text-2xl font-medium mb-4">Vacay Mode</h3>
+              <div className="text-4xl font-light mb-6">$119<span className="text-lg text-slate-600">/trip</span></div>
+              <ul className="space-y-3 mb-8">
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span>4 outfits</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span>Resortwear + accessories</span>
+                </li>
+                <li className="flex items-center gap-3">
+                  <Check className="w-5 h-5 text-green-600" />
+                  <span>Priority delivery</span>
+                </li>
+              </ul>
+              <button 
+                onClick={handleRentNowClick}
+                className="w-full bg-slate-100 text-slate-900 py-3 rounded-lg font-medium hover:bg-slate-200 transition"
+              >
+                Select Vacay Mode
+              </button>
+            </div>
+          </div>
+
+          {/* Comparison Table */}
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead className="bg-slate-50">
+                  <tr>
+                    <th className="text-left p-6 font-medium">Features</th>
+                    <th className="text-center p-6 font-medium">Basic</th>
+                    <th className="text-center p-6 font-medium">Upscale</th>
+                    <th className="text-center p-6 font-medium">Vacay Mode</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-100">
+                  <tr>
+                    <td className="p-6 font-medium">Number of Outfits</td>
+                    <td className="text-center p-6">2</td>
+                    <td className="text-center p-6">3</td>
+                    <td className="text-center p-6">4</td>
+                  </tr>
+                  <tr>
+                    <td className="p-6 font-medium">Style Types</td>
+                    <td className="text-center p-6">Casual</td>
+                    <td className="text-center p-6">Business + Casual</td>
+                    <td className="text-center p-6">Resort + Accessories</td>
+                  </tr>
+                  <tr>
+                    <td className="p-6 font-medium">Fabric Quality</td>
+                    <td className="text-center p-6">Standard</td>
+                    <td className="text-center p-6">Premium</td>
+                    <td className="text-center p-6">Luxury</td>
+                  </tr>
+                  <tr>
+                    <td className="p-6 font-medium">Delivery Priority</td>
+                    <td className="text-center p-6">Standard</td>
+                    <td className="text-center p-6">Standard</td>
+                    <td className="text-center p-6">Priority</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </section>
 
       {/* Why Choose Us - Moved after pricing */}
       <section className="py-20 bg-slate-50">
