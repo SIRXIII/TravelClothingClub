@@ -4,16 +4,18 @@ import { useAuth } from '../hooks/useAuth';
 
 interface AuthFormProps {
   onSuccess: () => void;
+  mode?: 'signin' | 'signup';
 }
 
-function AuthForm({ onSuccess }: AuthFormProps) {
-  const [isSignUp, setIsSignUp] = useState(false);
+function AuthForm({ onSuccess, mode = 'signin' }: AuthFormProps) {
+  const [isSignUp, setIsSignUp] = useState(mode === 'signup');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [success, setSuccess] = useState<string | null>(null);
 
   const { signIn, signUp } = useAuth();
 
@@ -21,12 +23,17 @@ function AuthForm({ onSuccess }: AuthFormProps) {
     e.preventDefault();
     setLoading(true);
     setError(null);
+    setSuccess(null);
 
     try {
       if (isSignUp) {
         const { error } = await signUp(email, password, fullName);
         if (error) throw error;
-        alert('Account created! Please check your email to verify your account.');
+        setSuccess('Account created successfully! You can now sign in.');
+        setIsSignUp(false);
+        setEmail('');
+        setPassword('');
+        setFullName('');
       } else {
         const { error } = await signIn(email, password);
         if (error) throw error;
@@ -49,12 +56,12 @@ function AuthForm({ onSuccess }: AuthFormProps) {
             className="w-16 h-16 mx-auto mb-4"
           />
           <h2 className="text-3xl font-light text-gray-900">
-            {isSignUp ? 'Join as a Verified Partner' : 'Partner Portal Sign In'}
+            {isSignUp ? 'Create Your Account' : 'Welcome Back'}
           </h2>
           <p className="mt-2 text-sm text-gray-600">
             {isSignUp 
-              ? 'Create your account to start listing clothing items'
-              : 'Access your partner dashboard'
+              ? 'Join Travel Clothing Club and start your journey'
+              : 'Sign in to your Travel Clothing Club account'
             }
           </p>
         </div>
@@ -63,6 +70,12 @@ function AuthForm({ onSuccess }: AuthFormProps) {
           {error && (
             <div className="bg-red-50 border border-red-200 text-red-700 px-4 py-3 rounded-lg">
               {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-50 border border-green-200 text-green-700 px-4 py-3 rounded-lg">
+              {success}
             </div>
           )}
 
@@ -146,7 +159,11 @@ function AuthForm({ onSuccess }: AuthFormProps) {
           <div className="text-center">
             <button
               type="button"
-              onClick={() => setIsSignUp(!isSignUp)}
+              onClick={() => {
+                setIsSignUp(!isSignUp);
+                setError(null);
+                setSuccess(null);
+              }}
               className="text-blue-600 hover:text-blue-700 font-medium"
             >
               {isSignUp 
