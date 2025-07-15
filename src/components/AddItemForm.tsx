@@ -50,6 +50,8 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
   const [loading, setLoading] = useState(false);
   const [aiLoading, setAiLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [aiError, setAiError] = useState<string | null>(null);
+  const [modelGender, setModelGender] = useState<'Male' | 'Female'>('Female');
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,6 +62,7 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
     }
     setImages([...images, ...files]);
     setError(null);
+    setAiError(null);
   };
 
   const removeImage = (index: number) => {
@@ -90,43 +93,62 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
 
   const handleAIGenerate = async () => {
     if (images.length === 0 && existingImages.length === 0) {
-      setError('Please upload at least one image first');
+      setAiError('Please upload at least one image first');
       return;
     }
 
     setAiLoading(true);
-    setError(null);
+    setAiError(null);
 
     try {
-      // Use the first available image
-      const imageUrl = existingImages[0] || (images[0] ? URL.createObjectURL(images[0]) : null);
-      
-      if (!imageUrl) {
-        throw new Error('No image available for AI generation');
+      // Get the first available image
+      let clothingImageFile: File | null = null;
+      let clothingImageUrl: string | null = null;
+
+      if (images.length > 0) {
+        clothingImageFile = images[0];
+      } else if (existingImages.length > 0) {
+        clothingImageUrl = existingImages[0];
       }
 
-      // This is where the actual AI API call would go
-      // For now, we'll simulate the API call
-      const response = await fetch('/api/generate-model', {
+      // Prepare form data for Fashn.ai API
+      const formData = new FormData();
+      
+      if (clothingImageFile) {
+        formData.append('clothing_image', clothingImageFile);
+      } else if (clothingImageUrl) {
+        // Convert URL to blob and append
+        const response = await fetch(clothingImageUrl);
+        const blob = await response.blob();
+        formData.append('clothing_image', blob, 'clothing_image.jpg');
+      }
+      
+      formData.append('gender', modelGender);
+
+      // Call Fashn.ai API
+      const response = await fetch('https://app.fashn.ai/api/tryon', {
         method: 'POST',
         headers: {
-          'Content-Type': 'application/json',
+          'Authorization': 'Bearer YOUR_API_KEY', // This would be replaced with actual API key
         },
-        body: JSON.stringify({
-          image_url: imageUrl,
-          category: category.toLowerCase(),
-        }),
+        body: formData
       });
 
       if (!response.ok) {
-        throw new Error('AI generation service not yet configured');
+        throw new Error('API request failed');
       }
 
       const data = await response.json();
-      setAiImage(data.generated_url);
+      
+      if (data.tryon_image_url) {
+        setAiImage(data.tryon_image_url);
+      } else {
+        throw new Error('No image URL returned from API');
+      }
     } catch (err: any) {
-      // For demo purposes, we'll show a placeholder
-      setError('AI model generation is not yet configured. This feature will be available once the API is integrated.');
+      // For demo purposes, show error message since API key is not configured
+      setAiError('AI preview failed. Please try again.');
+      console.error('Fashn.ai API error:', err);
     } finally {
       setAiLoading(false);
     }
@@ -394,15 +416,47 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
                   />
                 </div>
 
-                {/* AI Model Generation */}
-                <div className="border-t pt-6">
-                  <div className="flex items-center justify-between mb-4">
-                    <h3 className="text-lg font-medium text-gray-900">AI Model Preview</h3>
+                {/* Model Gender Selector */}
+                {(images.length > 0 || existingImages.length > 0) && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      Model Gender
+                    </label>
+                    <div className="flex gap-4">
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="modelGender"
+                          value="Female"
+                          checked={modelGender === 'Female'}
+                          onChange={(e) => setModelGender(e.target.value as 'Female')}
+                          className="mr-2 text-blue-600"
+                        />
+                        Female
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="modelGender"
+                          value="Male"
+                          checked={modelGender === 'Male'}
+                          onChange={(e) => setModelGender(e.target.value as 'Male')}
+                          className="mr-2 text-blue-600"
+                        />
+                        Male
+                      </label>
+                    </div>
+                  </div>
+                )}
+
+                {/* Generate AI Model Preview Button */}
+                {(images.length > 0 || existingImages.length > 0) && (
+                  <div>
                     <button
                       type="button"
                       onClick={handleAIGenerate}
-                      disabled={aiLoading || (images.length === 0 && existingImages.length === 0)}
-                      className="bg-purple-600 text-white px-4 py-2 rounded-lg font-medium hover:bg-purple-700 disabled:bg-gray-300 disabled:cursor-not-allowed transition flex items-center gap-2"
+                      disabled={aiLoading}
+                      className="w-full bg-purple-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-purple-700 disabled:bg-purple-400 disabled:cursor-not-allowed transition flex items-center justify-center gap-2"
                     >
                       {aiLoading ? (
                         <>
@@ -412,18 +466,31 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
                       ) : (
                         <>
                           <Sparkles className="w-4 h-4" />
-                          Generate AI Model
+                          Generate AI Model Preview
                         </>
                       )}
                     </button>
-                  </div>
 
-                  {aiImage ? (
+                    {/* AI Error Message */}
+                    {aiError && (
+                      <div className="mt-2 text-sm text-red-600">
+                        {aiError}
+                      </div>
+                    )}
+                  </div>
+                )}
+
+                {/* AI Model Preview Display */}
+                {aiImage && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      AI Model Preview
+                    </label>
                     <div className="relative">
                       <img
                         src={aiImage}
                         alt="AI Model Preview"
-                        className="w-full h-64 object-cover rounded-lg"
+                        className="w-full h-64 object-cover rounded-lg shadow-md"
                       />
                       <button
                         type="button"
@@ -433,18 +500,26 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
                         <X className="w-4 h-4" />
                       </button>
                     </div>
-                  ) : (
+                  </div>
+                )}
+
+                {/* Placeholder when no AI image */}
+                {!aiImage && (images.length > 0 || existingImages.length > 0) && (
+                  <div>
+                    <label className="block text-sm font-medium text-gray-700 mb-2">
+                      AI Model Preview
+                    </label>
                     <div className="border-2 border-dashed border-gray-200 rounded-lg p-8 text-center">
                       <Sparkles className="w-8 h-8 text-gray-400 mx-auto mb-2" />
                       <p className="text-sm text-gray-600">
                         Generate an AI model wearing this item
                       </p>
                       <p className="text-xs text-gray-500 mt-1">
-                        Upload images first, then click Generate
+                        Select gender and click Generate
                       </p>
                     </div>
-                  )}
-                </div>
+                  </div>
+                )}
               </div>
             </div>
 
