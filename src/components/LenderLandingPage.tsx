@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Upload, DollarSign, Package, TrendingUp, ArrowRight, Star, Users, Calculator, Sparkles, ExternalLink, Check, Mail } from 'lucide-react';
 
@@ -15,6 +16,8 @@ function LenderLandingPage() {
   const [condition, setCondition] = useState('');
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
+  const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const calculateEarnings = () => {
     return items * dailyPrice * rentalDays;
@@ -26,6 +29,19 @@ function LenderLandingPage() {
 
   const handleScrollToSignup = () => {
     document.getElementById('waitlist-signup')?.scrollIntoView({ behavior: 'smooth' });
+  };
+
+  const handleFileUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(event.target.files || []);
+    if (files.length > 0) {
+      setUploadedFiles(files);
+      console.log('Files selected:', files);
+      // You can add additional logic here to handle the files
+    }
+  };
+
+  const triggerFileUpload = () => {
+    fileInputRef.current?.click();
   };
 
   return (
@@ -357,13 +373,44 @@ function LenderLandingPage() {
 
           <div className="max-w-6xl mx-auto">
             {/* Upload Zone */}
-            <div className="border-2 border-dashed border-blue-300 rounded-2xl p-12 text-center mb-12 hover:border-blue-400 transition bg-blue-50/50">
+            <div className="border-2 border-dashed border-blue-300 rounded-2xl p-12 text-center mb-12 hover:border-blue-400 transition bg-blue-50/50"
+                 onClick={triggerFileUpload}>
               <Upload className="w-16 h-16 text-blue-600 mx-auto mb-6" />
-              <h3 className="text-2xl font-semibold text-slate-900 mb-4">Drag & Drop Your Photos</h3>
-              <p className="text-slate-600 mb-6">Upload up to 5 high-quality photos of your item</p>
-              <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition">
+              {uploadedFiles.length > 0 ? (
+                <div className="space-y-4">
+                  <h3 className="text-2xl font-semibold text-slate-900 mb-4">
+                    {uploadedFiles.length} File{uploadedFiles.length !== 1 ? 's' : ''} Selected
+                  </h3>
+                  <div className="space-y-2">
+                    {uploadedFiles.map((file, index) => (
+                      <div key={index} className="text-slate-600 text-sm">
+                        📁 {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                      </div>
+                    ))}
+                  </div>
+                  <p className="text-slate-600 mb-6">Click to change files or drag & drop new ones</p>
+                </div>
+              ) : (
+                <div>
+                  <h3 className="text-2xl font-semibold text-slate-900 mb-4">Drag & Drop Your Photos</h3>
+                  <p className="text-slate-600 mb-6">Upload up to 5 high-quality photos of your item</p>
+                </div>
+              )}
+              <button 
+                type="button"
+                onClick={triggerFileUpload}
+                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+              >
                 Choose Files
               </button>
+              <input
+                ref={fileInputRef}
+                type="file"
+                accept="image/*"
+                multiple
+                onChange={handleFileUpload}
+                className="hidden"
+              />
             </div>
 
             {/* Form */}
