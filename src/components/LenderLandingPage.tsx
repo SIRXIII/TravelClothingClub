@@ -65,24 +65,33 @@ function LenderLandingPage() {
 
       const response = await fetch('/api/fashn-tryon', {
         method: 'POST',
-        body: formData
+        body: formData,
       });
 
+      const contentType = response.headers.get('content-type') || '';
+
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(errorData.error || 'AI generation failed');
+        const errorText = contentType.includes('application/json')
+          ? await response.json()
+          : await response.text();
+
+        throw new Error(
+          typeof errorText === 'string'
+            ? errorText
+            : errorText.error || JSON.stringify(errorText)
+        );
       }
 
       const data = await response.json();
-      
+
       if (data.tryon_image_url) {
         setAiPreviewUrl(data.tryon_image_url);
       } else {
-        throw new Error('No AI preview generated');
+        throw new Error('No AI preview generated from response');
       }
     } catch (err: any) {
-      setAiError(`AI preview failed: ${err.message}`);
       console.error('Fashn.ai API error:', err);
+      setAiError(`AI preview failed: ${err.message}`);
     } finally {
       setAiLoading(false);
     }
