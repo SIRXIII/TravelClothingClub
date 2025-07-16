@@ -1,0 +1,42 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+* {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+}
+
+.modern-title {
+  font-family: 'Inter', system-ui, -apple-system, sans-serif;
+  color: white;
+  text-shadow: 
+    0 4px 8px rgba(0,0,0,0.3),
+    0 2px 4px rgba(0,0,0,0.2);
+  font-weight: 300;
+  letter-spacing: 0.02em;
+  line-height: 0.9;
+}
+
+.modern-title::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    135deg,
+    rgba(255,255,255,0.1) 0%,
+    transparent 50%,
+    rgba(255,255,255,0.05) 100%
+  );
+  pointer-events: none;
+  border-radius: 4px;
+}
+
+/* Remove old knitted text styles */
+.knitted-text {
+  display: none;
+}
