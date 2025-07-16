@@ -9,6 +9,66 @@ if (!supabaseUrl || !supabaseAnonKey) {
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 
+// Helper function to add new clothing item
+export async function addItem(data: {
+  owner_id: string;
+  title: string;
+  category: string;
+  size: string;
+  condition: string;
+  price: number;
+  description?: string;
+  image_url: string;
+  ai_preview_url: string;
+}) {
+  const { data: item, error } = await supabase
+    .from('items')
+    .insert([data])
+    .single();
+  if (error) throw error;
+  return item;
+}
+
+// Helper function to get user's items
+export async function getUserItems(userId: string) {
+  const { data, error } = await supabase
+    .from('items')
+    .select('*')
+    .eq('owner_id', userId)
+    .order('created_at', { ascending: false });
+  if (error) throw error;
+  return data;
+}
+
+// Helper function to update item
+export async function updateItem(id: string, updates: Partial<{
+  title: string;
+  category: string;
+  size: string;
+  condition: string;
+  price: number;
+  description: string;
+  image_url: string;
+  ai_preview_url: string;
+}>) {
+  const { data, error } = await supabase
+    .from('items')
+    .update(updates)
+    .eq('id', id)
+    .single();
+  if (error) throw error;
+  return data;
+}
+
+// Helper function to delete item
+export async function deleteItem(id: string) {
+  const { error } = await supabase
+    .from('items')
+    .delete()
+    .eq('id', id);
+  if (error) throw error;
+}
+
 export type Database = {
   public: {
     Tables: {

@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Eye, EyeOff, LogOut } from 'lucide-react';
+import { Plus, Edit, Trash2, Eye, EyeOff, LogOut, Sparkles } from 'lucide-react';
 import { useAuth } from '../hooks/useAuth';
-import { supabase } from '../lib/supabase';
-import AddItemForm from './AddItemForm';
+import { getUserItems, deleteItem } from '../lib/supabase';
+import AddItemModal from './AddItemModal';
 
-interface ClothingItem {
+interface Item {
   id: string;
+  owner_id: string;
   title: string;
-  description: string;
   category: string;
   size: string;
-  price_per_rental: number;
-  images: string[];
-  ai_model_image: string | null;
-  active: boolean;
+  condition: string;
+  price: number;
+  description?: string;
+  image_url: string;
+  ai_preview_url?: string;
   created_at: string;
-  updated_at: string;
 }
 
 interface LenderDashboardProps {
@@ -24,24 +24,19 @@ interface LenderDashboardProps {
 
 function LenderDashboard({ onSignOut }: LenderDashboardProps) {
   const { user, signOut } = useAuth();
-  const [items, setItems] = useState<ClothingItem[]>([]);
+  const [items, setItems] = useState<Item[]>([]);
   const [loading, setLoading] = useState(true);
-  const [showAddForm, setShowAddForm] = useState(false);
-  const [editingItem, setEditingItem] = useState<ClothingItem | null>(null);
+  const [showAddModal, setShowAddModal] = useState(false);
 
   useEffect(() => {
     fetchItems();
   }, []);
 
   const fetchItems = async () => {
+    if (!user) return;
+    
     try {
-      const { data, error } = await supabase
-        .from('clothing_items')
-        .select('*')
-        .eq('lender_id', user?.id)
-        .order('created_at', { ascending: false });
-
-      if (error) throw error;
+      const data = await getUserItems(user.id);
       setItems(data || []);
     } catch (error) {
       console.error('Error fetching items:', error);
@@ -55,54 +50,20 @@ function LenderDashboard({ onSignOut }: LenderDashboardProps) {
     onSignOut();
   };
 
-  const toggleItemStatus = async (itemId: string, currentStatus: boolean) => {
-    try {
-      const { error } = await supabase
-        .from('clothing_items')
-        .update({ active: !currentStatus })
-        .eq('id', itemId);
-
-      if (error) throw error;
-      fetchItems();
-    } catch (error) {
-      console.error('Error updating item status:', error);
-    }
-  };
-
-  const deleteItem = async (itemId: string) => {
+  const handleDeleteItem = async (itemId: string) => {
     if (!confirm('Are you sure you want to delete this item?')) return;
 
     try {
-      const { error } = await supabase
-        .from('clothing_items')
-        .delete()
-        .eq('id', itemId);
-
-      if (error) throw error;
+      await deleteItem(itemId);
       fetchItems();
     } catch (error) {
       console.error('Error deleting item:', error);
     }
   };
 
-  const handleItemAdded = () => {
-    setShowAddForm(false);
-    setEditingItem(null);
+  const handleItemSuccess = () => {
     fetchItems();
   };
-
-  if (showAddForm || editingItem) {
-    return (
-      <AddItemForm
-        item={editingItem}
-        onSuccess={handleItemAdded}
-        onCancel={() => {
-          setShowAddForm(false);
-          setEditingItem(null);
-        }}
-      />
-    );
-  }
 
   return (
     <div className="min-h-screen bg-gray-50">
@@ -136,11 +97,11 @@ function LenderDashboard({ onSignOut }: LenderDashboardProps) {
       <main className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         <div className="flex items-center justify-between mb-8">
           <div>
-            <h2 className="text-2xl font-light text-gray-900">Your Clothing Inventory</h2>
-            <p className="text-gray-600 mt-1">Manage your rental items and track performance</p>
+            <h2 className="text-2xl font-light text-gray-900">Your Item Inventory</h2>
+            <p className="text-gray-600 mt-1">Manage your clothing items and AI try-on previews</p>
           </div>
           <button
-            onClick={() => setShowAddForm(true)}
+            onClick={() => setShowAddModal(true)}
             className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition flex items-center gap-2"
           >
             <Plus className="w-5 h-5" />
@@ -160,7 +121,7 @@ function LenderDashboard({ onSignOut }: LenderDashboardProps) {
             <h3 className="text-lg font-medium text-gray-900 mb-2">No items yet</h3>
             <p className="text-gray-600 mb-6">Start building your inventory by adding your first clothing item</p>
             <button
-              onClick={() => setShowAddForm(true)}
+              onClick={() => setShowAddModal(true)}
               className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
             >
               Add Your First Item
@@ -170,35 +131,17 @@ function LenderDashboard({ onSignOut }: LenderDashboardProps) {
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {items.map((item) => (
               <div key={item.id} className="bg-white rounded-xl shadow-sm border overflow-hidden">
-                {item.images.length > 0 && (
-                  <img
-                    src={item.images[0]}
-                    alt={item.title}
-                    className="w-full h-48 object-cover"
-                  />
-                )}
+                <img
+                  src={item.image_url}
+                  alt={item.title}
+                  className="w-full h-48 object-cover"
+                />
                 <div className="p-6">
                   <div className="flex items-start justify-between mb-2">
                     <h3 className="font-medium text-gray-900 truncate">{item.title}</h3>
                     <div className="flex items-center gap-1 ml-2">
                       <button
-                        onClick={() => toggleItemStatus(item.id, item.active)}
-                        className={`p-1 rounded ${
-                          item.active ? 'text-green-600 hover:bg-green-50' : 'text-gray-400 hover:bg-gray-50'
-                        }`}
-                        title={item.active ? 'Active - Click to hide' : 'Hidden - Click to activate'}
-                      >
-                        {item.active ? <Eye className="w-4 h-4" /> : <EyeOff className="w-4 h-4" />}
-                      </button>
-                      <button
-                        onClick={() => setEditingItem(item)}
-                        className="p-1 text-blue-600 hover:bg-blue-50 rounded"
-                        title="Edit item"
-                      >
-                        <Edit className="w-4 h-4" />
-                      </button>
-                      <button
-                        onClick={() => deleteItem(item.id)}
+                        onClick={() => handleDeleteItem(item.id)}
                         className="p-1 text-red-600 hover:bg-red-50 rounded"
                         title="Delete item"
                       >
@@ -206,40 +149,43 @@ function LenderDashboard({ onSignOut }: LenderDashboardProps) {
                       </button>
                     </div>
                   </div>
-                  <p className="text-sm text-gray-600 mb-3 line-clamp-2">{item.description}</p>
+                  {item.description && (
+                    <p className="text-sm text-gray-600 mb-3 line-clamp-2">{item.description}</p>
+                  )}
                   <div className="flex items-center justify-between text-sm">
                     <span className="bg-gray-100 px-2 py-1 rounded text-gray-700">
-                      {item.category} - {item.size}
+                      {item.category} • {item.size} • {item.condition}
                     </span>
                     <span className="font-medium text-green-600">
-                      ${item.price_per_rental}/day
+                      ${item.price}/day
                     </span>
                   </div>
-                  {item.ai_model_image && (
+                  {item.ai_preview_url && (
                     <div className="mt-3 pt-3 border-t">
-                      <p className="text-xs text-gray-500 mb-2">AI Model Preview:</p>
+                      <div className="flex items-center gap-2 mb-2">
+                        <Sparkles className="w-3 h-3 text-purple-600" />
+                        <p className="text-xs text-gray-500">AI Try-On Preview:</p>
+                      </div>
                       <img
-                        src={item.ai_model_image}
-                        alt="AI Model"
+                        src={item.ai_preview_url}
+                        alt="AI Try-On Preview"
                         className="w-full h-32 object-cover rounded"
                       />
                     </div>
                   )}
-                  <div className="mt-3 pt-3 border-t">
-                    <span className={`inline-flex items-center px-2 py-1 rounded-full text-xs font-medium ${
-                      item.active 
-                        ? 'bg-green-100 text-green-800' 
-                        : 'bg-gray-100 text-gray-800'
-                    }`}>
-                      {item.active ? 'Active' : 'Hidden'}
-                    </span>
-                  </div>
                 </div>
               </div>
             ))}
           </div>
         )}
       </main>
+
+      {/* Add Item Modal */}
+      <AddItemModal
+        isOpen={showAddModal}
+        onClose={() => setShowAddModal(false)}
+        onSuccess={handleItemSuccess}
+      />
     </div>
   );
 }
