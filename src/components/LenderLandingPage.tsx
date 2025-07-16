@@ -7,6 +7,7 @@ function LenderLandingPage() {
   const [items, setItems] = useState(5);
   const [dailyPrice, setDailyPrice] = useState(25);
   const [rentalDays, setRentalDays] = useState(10);
+  const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
 
   // Upload form state
   const [itemName, setItemName] = useState('');
@@ -17,6 +18,10 @@ function LenderLandingPage() {
   const [price, setPrice] = useState('');
   const [description, setDescription] = useState('');
   const [uploadedFiles, setUploadedFiles] = useState<File[]>([]);
+  const [selectedGender, setSelectedGender] = useState<'Male' | 'Female'>('Female');
+  const [aiPreviewUrl, setAiPreviewUrl] = useState<string | null>(null);
+  const [aiLoading, setAiLoading] = useState(false);
+  const [aiError, setAiError] = useState<string | null>(null);
   const fileInputRef = useRef<HTMLInputElement>(null);
 
   const calculateEarnings = () => {
@@ -42,6 +47,58 @@ function LenderLandingPage() {
 
   const triggerFileUpload = () => {
     fileInputRef.current?.click();
+  };
+
+  const generateAIPreview = async () => {
+    if (uploadedFiles.length === 0) {
+      setAiError('Please upload an image first');
+      return;
+    }
+
+    setAiLoading(true);
+    setAiError(null);
+
+    try {
+      const formData = new FormData();
+      formData.append('clothing_image', uploadedFiles[0]);
+      formData.append('gender', selectedGender);
+
+      const response = await fetch('/api/fashn-tryon', {
+        method: 'POST',
+        body: formData
+      });
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || 'AI generation failed');
+      }
+
+      const data = await response.json();
+      
+      if (data.tryon_image_url) {
+        setAiPreviewUrl(data.tryon_image_url);
+      } else {
+        throw new Error('No AI preview generated');
+      }
+    } catch (err: any) {
+      setAiError(`AI preview failed: ${err.message}`);
+      console.error('Fashn.ai API error:', err);
+    } finally {
+      setAiLoading(false);
+    }
+  };
+
+  const resetUpload = () => {
+    setUploadedFiles([]);
+    setAiPreviewUrl(null);
+    setAiError(null);
+    setItemName('');
+    setBrand('');
+    setCategory('');
+    setSize('');
+    setCondition('');
+    setPrice('');
+    setDescription('');
   };
 
   return (
@@ -358,166 +415,186 @@ function LenderLandingPage() {
       {/* Upload Interface Section */}
       <section id="upload-items" className="py-20 bg-white">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <h2 className="text-4xl font-light text-center mb-16 text-slate-900">Upload Your Travel Clothes</h2>
+          <h2 className="text-4xl font-light text-center mb-8 text-slate-900">Upload Your Travel Clothes</h2>
+          <p className="text-xl text-slate-600 text-center mb-16 max-w-3xl mx-auto">
+            See how our AI try-on technology works! Upload a clothing item and watch as we generate a professional model preview.
+          </p>
           
-          {/* Progress Bar */}
-          <div className="max-w-4xl mx-auto mb-12">
-            <div className="flex items-center justify-between mb-4">
-              <span className="text-sm font-medium text-slate-700">Step 1 of 3</span>
-              <span className="text-sm text-slate-500">Item Details</span>
-            </div>
-            <div className="w-full bg-slate-200 rounded-full h-2">
-              <div className="bg-blue-600 h-2 rounded-full" style={{ width: '33%' }}></div>
-            </div>
-          </div>
-
-          <div className="max-w-6xl mx-auto">
-            {/* Upload Zone */}
-            <div className="border-2 border-dashed border-blue-300 rounded-2xl p-12 text-center mb-12 hover:border-blue-400 transition bg-blue-50/50"
-                 onClick={triggerFileUpload}>
-              <Upload className="w-16 h-16 text-blue-600 mx-auto mb-6" />
-              {uploadedFiles.length > 0 ? (
-                <div className="space-y-4">
-                  <h3 className="text-2xl font-semibold text-slate-900 mb-4">
-                    {uploadedFiles.length} File{uploadedFiles.length !== 1 ? 's' : ''} Selected
-                  </h3>
-                  <div className="space-y-2">
-                    {uploadedFiles.map((file, index) => (
-                      <div key={index} className="text-slate-600 text-sm">
-                        📁 {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                      </div>
-                    ))}
-                  </div>
-                  <p className="text-slate-600 mb-6">Click to change files or drag & drop new ones</p>
-                </div>
-              ) : (
-                <div>
-                  <h3 className="text-2xl font-semibold text-slate-900 mb-4">Drag & Drop Your Photos</h3>
-                  <p className="text-slate-600 mb-6">Upload up to 5 high-quality photos of your item</p>
-                </div>
-              )}
-              <button 
-                type="button"
-                onClick={triggerFileUpload}
-                className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
-              >
-                Choose Files
-              </button>
-              <input
-                ref={fileInputRef}
-                type="file"
-                accept="image/*"
-                multiple
-                onChange={handleFileUpload}
-                className="hidden"
-              />
-            </div>
-
-            {/* Form */}
-            <div className="bg-white rounded-2xl shadow-lg p-8">
-              <div className="grid md:grid-cols-2 gap-8">
-                {/* Left Column */}
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Item Name *</label>
-                    <input
-                      type="text"
-                      value={itemName}
-                      onChange={(e) => setItemName(e.target.value)}
-                      placeholder="e.g., Navy Blue Business Suit"
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    />
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Brand</label>
-                    <input
-                      type="text"
-                      value={brand}
-                      onChange={(e) => setBrand(e.target.value)}
-                      placeholder="e.g., Hugo Boss, Zara, etc."
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    />
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">Category *</label>
-                      <select
-                        value={category}
-                        onChange={(e) => setCategory(e.target.value)}
-                        className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                      >
-                        <option value="">Select category</option>
-                        {categories.map(cat => (
-                          <option key={cat} value={cat}>{cat}</option>
-                        ))}
-                      </select>
-                    </div>
-
-                    <div>
-                      <label className="block text-sm font-medium text-slate-700 mb-2">Size *</label>
-                      <select
-                        value={size}
-                        onChange={(e) => setSize(e.target.value)}
-                        className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                      >
-                        <option value="">Select size</option>
-                        {sizes.map(s => (
-                          <option key={s} value={s}>{s}</option>
-                        ))}
-                      </select>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Right Column */}
-                <div className="space-y-6">
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Condition *</label>
-                    <select
-                      value={condition}
-                      onChange={(e) => setCondition(e.target.value)}
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
-                    >
-                      <option value="">Select condition</option>
-                      {conditions.map(c => (
-                        <option key={c} value={c}>{c}</option>
-                      ))}
-                    </select>
-                  </div>
-
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Daily Rental Price *</label>
-                    <div className="relative">
-                      <DollarSign className="absolute left-3 top-1/2 transform -translate-y-1/2 text-slate-400 w-5 h-5" />
-                      <input
-                        type="number"
-                        value={price}
-                        onChange={(e) => setPrice(e.target.value)}
-                        placeholder="25.00"
-                        className="pl-10 w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none"
+          <div className="max-w-7xl mx-auto">
+            <div className="grid lg:grid-cols-2 gap-12">
+              {/* Left Side - Upload and Form */}
+              <div className="space-y-8">
+                {/* Upload Zone */}
+                <div className="border-2 border-dashed border-blue-300 rounded-2xl p-8 text-center hover:border-blue-400 transition bg-blue-50/50"
+                     onClick={triggerFileUpload}>
+                  <Upload className="w-12 h-12 text-blue-600 mx-auto mb-4" />
+                  {uploadedFiles.length > 0 ? (
+                    <div className="space-y-4">
+                      <img 
+                        src={URL.createObjectURL(uploadedFiles[0])} 
+                        alt="Uploaded clothing" 
+                        className="max-w-full max-h-48 mx-auto rounded-lg shadow-md object-cover"
                       />
+                      <p className="text-slate-600 text-sm">Click to change image</p>
+                    </div>
+                  ) : (
+                    <div>
+                      <h3 className="text-xl font-semibold text-slate-900 mb-2">Upload Clothing Image</h3>
+                      <p className="text-slate-600 mb-4">Upload a high-quality photo of your clothing item</p>
+                      <button 
+                        type="button"
+                        className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition"
+                      >
+                        Choose File
+                      </button>
+                    </div>
+                  )}
+                  <input
+                    ref={fileInputRef}
+                    type="file"
+                    accept="image/*"
+                    onChange={handleFileUpload}
+                    className="hidden"
+                  />
+                </div>
+
+                {/* Gender Selection */}
+                {uploadedFiles.length > 0 && (
+                  <div className="bg-white rounded-xl shadow-sm p-6 border">
+                    <h4 className="text-lg font-medium mb-4">Select Model Gender</h4>
+                    <div className="flex gap-4">
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="Female"
+                          checked={selectedGender === 'Female'}
+                          onChange={(e) => setSelectedGender(e.target.value as 'Female')}
+                          className="mr-2 text-blue-600"
+                        />
+                        Female Model
+                      </label>
+                      <label className="flex items-center">
+                        <input
+                          type="radio"
+                          name="gender"
+                          value="Male"
+                          checked={selectedGender === 'Male'}
+                          onChange={(e) => setSelectedGender(e.target.value as 'Male')}
+                          className="mr-2 text-blue-600"
+                        />
+                        Male Model
+                      </label>
                     </div>
                   </div>
+                )}
 
-                  <div>
-                    <label className="block text-sm font-medium text-slate-700 mb-2">Description</label>
-                    <textarea
-                      value={description}
-                      onChange={(e) => setDescription(e.target.value)}
-                      rows={4}
-                      placeholder="Describe the item, its condition, and any special features..."
-                      className="w-full px-4 py-3 border border-slate-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent outline-none resize-none"
-                    />
+                {/* Generate AI Preview Button */}
+                {uploadedFiles.length > 0 && (
+                  <div className="bg-white rounded-xl shadow-sm p-6 border">
+                    <button
+                      onClick={generateAIPreview}
+                      disabled={aiLoading}
+                      className="w-full bg-purple-600 text-white py-4 px-6 rounded-lg font-semibold hover:bg-purple-700 disabled:bg-purple-400 disabled:cursor-not-allowed transition flex items-center justify-center gap-3 text-lg"
+                    >
+                      {aiLoading ? (
+                        <>
+                          <div className="animate-spin rounded-full h-6 w-6 border-b-2 border-white"></div>
+                          Generating AI Preview...
+                        </>
+                      ) : (
+                        <>
+                          <Sparkles className="w-6 h-6" />
+                          Generate AI Model Preview
+                        </>
+                      )}
+                    </button>
+
+                    {aiError && (
+                      <div className="mt-4 p-4 bg-red-50 border border-red-200 rounded-lg">
+                        <p className="text-red-700 text-sm">{aiError}</p>
+                      </div>
+                    )}
                   </div>
-                </div>
+                )}
+
+                {/* Reset Button */}
+                {(uploadedFiles.length > 0 || aiPreviewUrl) && (
+                  <div className="text-center">
+                    <button
+                      onClick={resetUpload}
+                      className="bg-slate-100 text-slate-900 px-6 py-3 rounded-lg font-medium hover:bg-slate-200 transition"
+                    >
+                      Try Another Item
+                    </button>
+                  </div>
+                )}
               </div>
 
-              <div className="mt-8 flex justify-end">
-                <button className="bg-blue-600 text-white px-8 py-3 rounded-lg font-medium hover:bg-blue-700 transition shadow-lg hover:shadow-xl">
-                  Continue to Pricing
-                </button>
+              {/* Right Side - AI Preview */}
+              <div className="space-y-8">
+                <div className="bg-white rounded-2xl shadow-lg p-8 border">
+                  <h3 className="text-2xl font-semibold text-slate-900 mb-6 text-center">AI Try-On Preview</h3>
+                  
+                  <div className="border-2 border-slate-200 rounded-xl p-8 min-h-96 flex items-center justify-center">
+                    {aiPreviewUrl ? (
+                      <div className="text-center space-y-4">
+                        <img 
+                          src={aiPreviewUrl} 
+                          alt="AI try-on preview" 
+                          className="max-w-full max-h-80 mx-auto rounded-lg shadow-md object-cover"
+                        />
+                        <div className="bg-green-50 border border-green-200 rounded-lg p-4">
+                          <p className="text-green-800 font-medium">✨ AI Preview Generated Successfully!</p>
+                          <p className="text-green-700 text-sm mt-1">This is how your item will look on our platform</p>
+                        </div>
+                      </div>
+                    ) : uploadedFiles.length > 0 ? (
+                      <div className="text-center space-y-4">
+                        <div className="w-24 h-24 bg-purple-100 rounded-full flex items-center justify-center mx-auto">
+                          <Sparkles className="w-12 h-12 text-purple-600" />
+                        </div>
+                        <div>
+                          <p className="text-lg font-medium text-slate-900">Ready to Generate</p>
+                          <p className="text-slate-600">Select model gender and click generate to see the AI preview</p>
+                        </div>
+                      </div>
+                    ) : (
+                      <div className="text-center space-y-4">
+                        <div className="w-24 h-24 bg-slate-100 rounded-full flex items-center justify-center mx-auto">
+                          <Upload className="w-12 h-12 text-slate-400" />
+                        </div>
+                        <div>
+                          <p className="text-lg font-medium text-slate-900">Upload an Image</p>
+                          <p className="text-slate-600">Upload a clothing item to see AI try-on preview</p>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                </div>
+
+                {/* How It Works */}
+                <div className="bg-slate-50 rounded-xl p-6">
+                  <h4 className="text-lg font-semibold text-slate-900 mb-4">How AI Try-On Works</h4>
+                  <div className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs font-bold text-blue-600">1</div>
+                      <span className="text-slate-700">Upload your clothing item photo</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs font-bold text-blue-600">2</div>
+                      <span className="text-slate-700">Select model gender preference</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs font-bold text-blue-600">3</div>
+                      <span className="text-slate-700">AI generates professional model preview</span>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="w-6 h-6 bg-blue-100 rounded-full flex items-center justify-center text-xs font-bold text-blue-600">4</div>
+                      <span className="text-slate-700">Travelers see realistic try-on results</span>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>
