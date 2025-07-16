@@ -65,17 +65,15 @@ function VirtualTryOn() {
       // For now, we'll simulate the API call
       const selectedGarmentData = garmentOptions.find(g => g.value === selectedGarment);
       
-      const response = await fetch('https://api.fashn.ai/v1/run', {
+      // Use the same proxy endpoint as other components
+      const garmentBlob = await fetch(selectedGarment).then(r => r.blob());
+      const formData = new FormData();
+      formData.append('clothing_image', garmentBlob, 'garment.jpg');
+      formData.append('gender', 'Female');
+
+      const response = await fetch('/api/fashn-tryon', {
         method: 'POST',
-        headers: {
-          'Authorization': 'Bearer YOUR_API_KEY', // This will be replaced when API is available
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model_image: userImage,
-          garment_image: selectedGarment,
-          category: selectedGarmentData?.category || 'tops'
-        })
+        body: formData
       });
 
       if (!response.ok) {

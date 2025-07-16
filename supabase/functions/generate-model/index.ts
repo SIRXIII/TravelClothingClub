@@ -24,7 +24,7 @@ Deno.serve(async (req: Request) => {
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer YOUR_API_KEY',
+        'Authorization': `Bearer ${Deno.env.get('FASHN_API_KEY')}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({

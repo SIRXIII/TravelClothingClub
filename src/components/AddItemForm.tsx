@@ -122,13 +122,9 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
 
       formData.append('gender', modelGender);
 
-      // Call the Fashn.ai API
-      const response = await fetch('https://app.fashn.ai/api/tryon', {
+      // Call our proxy API to interact with Fashn.ai
+      const response = await fetch('/api/fashn-tryon', {
         method: 'POST',
-        headers: {
-          // It is recommended to use environment variables for API keys
-          'Authorization': `Bearer ${import.meta.env.VITE_FASHN_AI_API_KEY}`,
-        },
         body: formData
       });
 
