@@ -36,10 +36,17 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
         // Create FormData for Fashn.ai API
         const formData = new FormData();
         formData.append('clothing_image', new Blob([buffer]), file.originalFilename || 'clothing.jpg');
-        formData.append('gender', gender);
+        formData.append('category', 'tops'); // Default category, can be made dynamic
+        
+        // Add model image based on gender
+        const modelImageUrl = gender.toLowerCase() === 'male' 
+          ? 'https://fashn-ai-models.s3.amazonaws.com/male-model-1.jpg'
+          : 'https://fashn-ai-models.s3.amazonaws.com/female-model-1.jpg';
+        
+        formData.append('model_image', modelImageUrl);
 
-        // Call Fashn.ai API
-        const response = await fetch('https://app.fashn.ai/api/tryon', {
+        // Call Fashn.ai API with correct endpoint
+        const response = await fetch('https://api.fashn.ai/v1/run', {
           method: 'POST',
           headers: {
             'Authorization': `Bearer ${process.env.FASHN_API_KEY}`,
@@ -57,11 +64,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
 
         const json = await response.json();
         
-        if (!json.tryon_image_url) {
+        if (!json.output) {
           return res.status(500).json({ error: 'No try-on image URL returned' });
         }
 
-        res.status(200).json({ tryon_image_url: json.tryon_image_url });
+        res.status(200).json({ tryon_image_url: json.output });
 
       } catch (apiError) {
         console.error('API call error:', apiError);
