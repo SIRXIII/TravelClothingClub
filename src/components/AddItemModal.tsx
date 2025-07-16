@@ -90,18 +90,15 @@ function AddItemModal({ isOpen, onClose, onSuccess }: AddItemModalProps) {
       formData.append('clothing_image', image);
       formData.append('gender', modelGender);
 
-      // Call Fashn.ai API
-      const response = await fetch('https://app.fashn.ai/api/tryon', {
+      // Call our Vercel API endpoint
+      const response = await fetch('/api/fashn-tryon', {
         method: 'POST',
-        headers: {
-          'Authorization': `Bearer ${import.meta.env.VITE_FASHN_AI_API_KEY}`,
-        },
         body: formData
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'AI generation failed');
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || 'AI generation failed');
       }
 
       const data = await response.json();
