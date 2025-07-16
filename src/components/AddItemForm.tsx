@@ -129,7 +129,7 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
       const response = await fetch('https://app.fashn.ai/api/tryon', {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer YOUR_API_KEY', // This would be replaced with actual API key
+          'Authorization': 'Bearer fa-jHifZcnqSIen-ngJEiDy95f6Zd6eDwErbyty8',
         },
         body: formData
       });
@@ -146,7 +146,6 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
         throw new Error('No image URL returned from API');
       }
     } catch (err: any) {
-      // For demo purposes, show error message since API key is not configured
       setAiError('AI preview failed. Please try again.');
       console.error('Fashn.ai API error:', err);
     } finally {
