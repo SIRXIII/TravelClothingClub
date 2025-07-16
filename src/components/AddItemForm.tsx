@@ -102,51 +102,50 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
 
     try {
       // Get the first available image
-      let clothingImageFile: File | null = null;
-      let clothingImageUrl: string | null = null;
+      let clothingImage: File | string | null = null;
 
       if (images.length > 0) {
-        clothingImageFile = images[0];
+        clothingImage = images[0];
       } else if (existingImages.length > 0) {
-        clothingImageUrl = existingImages[0];
+        clothingImage = existingImages[0];
       }
 
-      // Prepare form data for Fashn.ai API
       const formData = new FormData();
-      
-      if (clothingImageFile) {
-        formData.append('clothing_image', clothingImageFile);
-      } else if (clothingImageUrl) {
-        // Convert URL to blob and append
-        const response = await fetch(clothingImageUrl);
+      if (clothingImage instanceof File) {
+        formData.append('clothing_image', clothingImage);
+      } else if (typeof clothingImage === 'string') {
+        // If it's a URL, fetch it and convert to a blob
+        const response = await fetch(clothingImage);
         const blob = await response.blob();
         formData.append('clothing_image', blob, 'clothing_image.jpg');
       }
-      
+
       formData.append('gender', modelGender);
 
-      // Call Fashn.ai API
+      // Call the Fashn.ai API
       const response = await fetch('https://app.fashn.ai/api/tryon', {
         method: 'POST',
         headers: {
-          'Authorization': 'Bearer fa-jHifZcnqSIen-ngJEiDy95f6Zd6eDwErbyty8',
+          // It is recommended to use environment variables for API keys
+          'Authorization': `Bearer ${import.meta.env.VITE_FASHN_AI_API_KEY}`,
         },
         body: formData
       });
 
       if (!response.ok) {
-        throw new Error('API request failed');
+        const errorData = await response.json();
+        throw new Error(errorData.message || 'API request failed');
       }
 
       const data = await response.json();
-      
+
       if (data.tryon_image_url) {
         setAiImage(data.tryon_image_url);
       } else {
         throw new Error('No image URL returned from API');
       }
     } catch (err: any) {
-      setAiError('AI preview failed. Please try again.');
+      setAiError(`AI preview failed: ${err.message}`);
       console.error('Fashn.ai API error:', err);
     } finally {
       setAiLoading(false);
@@ -219,7 +218,7 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
               <span>Back to Dashboard</span>
             </button>
             <div className="flex items-center gap-3">
-              <img 
+              <img
                 src="/TCC Cursive.png"
                 alt="Travel Clothing Club"
                 className="w-8 h-8 object-contain"
@@ -338,7 +337,7 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
                   <label className="block text-sm font-medium text-gray-700 mb-2">
                     Images (Max 3) *
                   </label>
-                  
+
                   {/* Existing Images */}
                   {existingImages.length > 0 && (
                     <div className="mb-4">
