@@ -30,6 +30,11 @@ export default async function handler(req: VercelRequest, res: VercelResponse) {
       }
 
       try {
+        if (!process.env.FASHN_API_KEY) {
+          console.error('FASHN_API_KEY not configured');
+          return res.status(500).json({ error: 'FASHN_API_KEY not configured' });
+        }
+
         // Read the uploaded file
         const buffer = fs.readFileSync(file.filepath);
         

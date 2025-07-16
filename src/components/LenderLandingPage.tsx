@@ -68,18 +68,11 @@ function LenderLandingPage() {
         body: formData,
       });
 
-      const contentType = response.headers.get('content-type') || '';
-
       if (!response.ok) {
-        const errorText = contentType.includes('application/json')
-          ? await response.json()
-          : await response.text();
-
-        throw new Error(
-          typeof errorText === 'string'
-            ? errorText
-            : errorText.error || JSON.stringify(errorText)
-        );
+        const errorData = await response
+          .json()
+          .catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.error || 'AI generation failed');
       }
 
       const data = await response.json();
