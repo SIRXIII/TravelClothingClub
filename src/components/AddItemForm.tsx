@@ -129,8 +129,17 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'API request failed');
+        const contentType = response.headers.get('content-type') || '';
+        const errorText = contentType.includes('application/json')
+          ? await response.json().catch(() => ({}))
+          : await response.text();
+
+        const message =
+          typeof errorText === 'string'
+            ? errorText.trim() || response.statusText
+            : errorText.message || response.statusText || JSON.stringify(errorText);
+
+        throw new Error(message);
       }
 
       const data = await response.json();
@@ -141,7 +150,11 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
         throw new Error('No image URL returned from API');
       }
     } catch (err: any) {
-      setAiError(`AI preview failed: ${err.message}`);
+      setAiError(
+        `AI preview failed: ${
+          err.message || 'Unknown error occurred. Please try again.'
+        }`
+      );
       console.error('Fashn.ai API error:', err);
     } finally {
       setAiLoading(false);
