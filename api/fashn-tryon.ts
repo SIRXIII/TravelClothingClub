@@ -1,7 +1,7 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import formidable from 'formidable';
 import fs from 'fs';
-import { FormData, Blob } from 'formdata-node';
+import { Blob } from 'formdata-node';
 
 export const config = { api: { bodyParser: false } };
 
