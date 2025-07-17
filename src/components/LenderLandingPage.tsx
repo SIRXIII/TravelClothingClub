@@ -75,11 +75,12 @@ function LenderLandingPage() {
           ? await response.json()
           : await response.text();
 
-        throw new Error(
+        const message =
           typeof errorText === 'string'
-            ? errorText
-            : errorText.error || JSON.stringify(errorText)
-        );
+            ? errorText.trim() || response.statusText
+            : errorText.error || response.statusText || JSON.stringify(errorText);
+
+        throw new Error(message);
       }
 
       const data = await response.json();

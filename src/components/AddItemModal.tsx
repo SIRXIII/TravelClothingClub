@@ -97,8 +97,17 @@ function AddItemModal({ isOpen, onClose, onSuccess }: AddItemModalProps) {
       });
 
       if (!response.ok) {
-        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
-        throw new Error(errorData.error || 'AI generation failed');
+        const contentType = response.headers.get('content-type') || '';
+        const errorText = contentType.includes('application/json')
+          ? await response.json().catch(() => ({}))
+          : await response.text();
+
+        const message =
+          typeof errorText === 'string'
+            ? errorText.trim() || response.statusText
+            : errorText.error || response.statusText || JSON.stringify(errorText);
+
+        throw new Error(message);
       }
 
       const data = await response.json();
@@ -109,7 +118,11 @@ function AddItemModal({ isOpen, onClose, onSuccess }: AddItemModalProps) {
         throw new Error('No AI preview generated');
       }
     } catch (err: any) {
-      setAiError(`AI preview failed: ${err.message}`);
+      setAiError(
+        `AI preview failed: ${
+          err.message || 'Unknown error occurred. Please try again.'
+        }`
+      );
       console.error('Fashn.ai API error:', err);
     } finally {
       setAiLoading(false);
