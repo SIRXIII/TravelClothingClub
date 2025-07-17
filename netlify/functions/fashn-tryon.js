@@ -1,5 +1,6 @@
 const fetch = require('node-fetch');
-const FormData = require('form-data');
+const formidable = require('formidable');
+const fs = require('fs');
 
 exports.handler = async (event, context) => {
   // Handle CORS preflight
@@ -34,66 +35,75 @@ exports.handler = async (event, context) => {
 
     const BASE_URL = "https://api.fashn.ai/v1";
 
-    // Parse multipart form data
-    const contentType = event.headers['content-type'] || event.headers['Content-Type'];
-    if (!contentType || !contentType.includes('multipart/form-data')) {
-      throw new Error('Content-Type must be multipart/form-data');
+    // Parse multipart form data using formidable
+    const parseForm = () => {
+      return new Promise((resolve, reject) => {
+        const form = formidable({
+          maxFileSize: 10 * 1024 * 1024, // 10MB limit
+          keepExtensions: true,
+        });
+
+        // Convert event body to buffer for formidable
+        let buffer;
+        if (event.isBase64Encoded) {
+          buffer = Buffer.from(event.body, 'base64');
+        } else {
+          buffer = Buffer.from(event.body);
+        }
+
+        // Create a mock request object for formidable
+        const mockReq = {
+          headers: event.headers,
+          method: 'POST',
+          url: '/',
+          body: buffer,
+        };
+
+        // Parse the form data
+        form.parse(mockReq, (err, fields, files) => {
+          if (err) {
+            reject(err);
+            return;
+          }
+          resolve({ fields, files });
+        });
+
+        // Simulate data events for formidable
+        process.nextTick(() => {
+          mockReq.emit = mockReq.emit || (() => {});
+          if (buffer) {
+            form._writeRaw(buffer);
+            form._parser.end();
+          }
+        });
+      });
+    };
+
+    const { fields, files } = await parseForm();
+
+    // Extract gender and clothing image
+    const gender = fields.gender?.[0] || fields.gender || 'Female';
+    const clothingFile = files.clothing_image?.[0] || files.clothing_image;
+
+    if (!clothingFile) {
+      throw new Error('No clothing image provided');
     }
 
-    // Extract boundary from content-type header
-    const boundary = contentType.split('boundary=')[1];
-    if (!boundary) {
-      throw new Error('No boundary found in Content-Type header');
-    }
-
-    // Parse the multipart data manually (simplified for this use case)
-    const body = event.body;
-    const isBase64 = event.isBase64Encoded;
-    
-    let buffer;
-    if (isBase64) {
-      buffer = Buffer.from(body, 'base64');
-    } else {
-      buffer = Buffer.from(body);
-    }
-
-    // Extract gender from form data
-    const bodyStr = buffer.toString();
-    const genderMatch = bodyStr.match(/name="gender"[\s\S]*?\r?\n\r?\n([^\r\n]+)/);
-    const gender = genderMatch ? genderMatch[1].trim() : 'Female';
-
-    // Extract file data (simplified - in production you'd want more robust parsing)
-    const fileStart = bodyStr.indexOf('\r\n\r\n') + 4;
-    const fileEnd = bodyStr.lastIndexOf(`\r\n--${boundary}`);
-    
-    if (fileStart === -1 || fileEnd === -1) {
-      throw new Error('Could not parse file from form data');
-    }
-
-    // Get the binary file data
-    const fileBuffer = buffer.slice(fileStart, fileEnd);
+    // Read the uploaded file
+    const clothingImageBuffer = fs.readFileSync(clothingFile.filepath);
+    const clothingImageBase64 = clothingImageBuffer.toString('base64');
 
     // Select model image based on gender
     const modelImageUrl = gender.toLowerCase() === 'male' 
       ? 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg'
       : 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg';
 
-    // Create FormData for the API request
-    const formData = new FormData();
-    formData.append('clothing_image', fileBuffer, {
-      filename: 'clothing.jpg',
-      contentType: 'image/jpeg'
-    });
-
-    // First, upload the garment image to get a URL (if needed)
-    // For now, we'll use the model image approach from the Python example
-
     // Step 1: Submit the prediction job
     const inputData = {
       model_name: "tryon-v1.6",
       inputs: {
         model_image: modelImageUrl,
-        garment_image: fileBuffer.toString('base64') // Convert to base64 for API
+        garment_image: `data:image/jpeg;base64,${clothingImageBase64}`
       }
     };
 
@@ -146,6 +156,14 @@ exports.handler = async (event, context) => {
 
       if (statusData.status === 'completed') {
         console.log('Prediction completed successfully');
+        
+        // Clean up temporary file
+        try {
+          fs.unlinkSync(clothingFile.filepath);
+        } catch (cleanupError) {
+          console.warn('Failed to cleanup temp file:', cleanupError);
+        }
+
         return {
           statusCode: 200,
           headers: {
