@@ -1,6 +1,7 @@
 const fetch = require('node-fetch');
 const formidable = require('formidable');
 const fs = require('fs');
+const { Readable } = require('stream');
 
 exports.handler = async (event, context) => {
   // Handle CORS preflight
@@ -35,7 +36,7 @@ exports.handler = async (event, context) => {
 
     const BASE_URL = "https://api.fashn.ai/v1";
 
-    // Parse multipart form data using formidable
+    // Parse multipart form data using formidable with proper stream handling
     const parseForm = () => {
       return new Promise((resolve, reject) => {
         const form = formidable({
@@ -43,7 +44,7 @@ exports.handler = async (event, context) => {
           keepExtensions: true,
         });
 
-        // Convert event body to buffer for formidable
+        // Convert event body to buffer
         let buffer;
         if (event.isBase64Encoded) {
           buffer = Buffer.from(event.body, 'base64');
@@ -51,47 +52,53 @@ exports.handler = async (event, context) => {
           buffer = Buffer.from(event.body);
         }
 
-        // Create a mock request object for formidable
-        const mockReq = {
+        // Create a readable stream from the buffer
+        const stream = new Readable();
+        stream.push(buffer);
+        stream.push(null); // End the stream
+
+        // Create a mock request object with the stream
+        const mockReq = Object.assign(stream, {
           headers: event.headers,
           method: 'POST',
           url: '/',
-          body: buffer,
-        };
+        });
 
         // Parse the form data
         form.parse(mockReq, (err, fields, files) => {
           if (err) {
-            reject(err);
+            console.error('Form parsing error:', err);
+            reject(new Error(`Form parsing failed: ${err.message}`));
             return;
           }
+          
+          console.log('Form parsed successfully');
+          console.log('Fields:', Object.keys(fields));
+          console.log('Files:', Object.keys(files));
+          
           resolve({ fields, files });
-        });
-
-        // Simulate data events for formidable
-        process.nextTick(() => {
-          mockReq.emit = mockReq.emit || (() => {});
-          if (buffer) {
-            form._writeRaw(buffer);
-            form._parser.end();
-          }
         });
       });
     };
 
     const { fields, files } = await parseForm();
 
-    // Extract gender and clothing image
-    const gender = fields.gender?.[0] || fields.gender || 'Female';
-    const clothingFile = files.clothing_image?.[0] || files.clothing_image;
+    // Extract gender and clothing image - handle both array and single value formats
+    const gender = Array.isArray(fields.gender) ? fields.gender[0] : fields.gender || 'Female';
+    const clothingFile = Array.isArray(files.clothing_image) ? files.clothing_image[0] : files.clothing_image;
 
-    if (!clothingFile) {
-      throw new Error('No clothing image provided');
+    console.log('Extracted gender:', gender);
+    console.log('Clothing file:', clothingFile ? 'present' : 'missing');
+
+    if (!clothingFile || !clothingFile.filepath) {
+      throw new Error('No clothing image provided or file path missing');
     }
 
     // Read the uploaded file
     const clothingImageBuffer = fs.readFileSync(clothingFile.filepath);
     const clothingImageBase64 = clothingImageBuffer.toString('base64');
+
+    console.log('File read successfully, size:', clothingImageBuffer.length);
 
     // Select model image based on gender
     const modelImageUrl = gender.toLowerCase() === 'male' 
