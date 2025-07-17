@@ -1,83 +1,118 @@
 import type { VercelRequest, VercelResponse } from '@vercel/node';
 import formidable from 'formidable';
 import fs from 'fs';
-import { FormData, Blob } from 'formdata-node';
+import FormData from 'form-data';
+import fetch from 'node-fetch';
 
-export const config = { api: { bodyParser: false } };
+export const config = { 
+  api: { 
+    bodyParser: false 
+  } 
+};
+
+const parseForm = (req: VercelRequest): Promise<{ fields: formidable.Fields; files: formidable.Files }> => {
+  return new Promise((resolve, reject) => {
+    const form = new formidable.IncomingForm({
+      maxFileSize: 10 * 1024 * 1024, // 10MB limit
+      keepExtensions: true,
+    });
+
+    form.parse(req, (err, fields, files) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ fields, files });
+      }
+    });
+  });
+};
 
 export default async function handler(req: VercelRequest, res: VercelResponse) {
+  // Handle CORS
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'POST, OPTIONS');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+  if (req.method === 'OPTIONS') {
+    return res.status(200).end();
+  }
+
   if (req.method !== 'POST') {
+    res.setHeader('Allow', ['POST']);
     return res.status(405).json({ error: 'Method not allowed' });
   }
 
   try {
-    const form = new formidable.IncomingForm();
+    // Check for API key
+    if (!process.env.FASHN_API_KEY) {
+      throw new Error('FASHN_API_KEY environment variable is not set');
+    }
+
+    // Parse the multipart form data
+    const { fields, files } = await parseForm(req);
+
+    // Extract gender field (handle both array and single value)
+    const gender = Array.isArray(fields.gender) ? fields.gender[0] : fields.gender || 'Female';
     
-    form.parse(req, async (err, fields, files) => {
-      if (err) {
-        console.error('Form parsing error:', err);
-        return res.status(500).json({ error: 'Upload error' });
-      }
+    // Extract clothing image file (handle both array and single value)
+    const clothingFile = Array.isArray(files.clothing_image) 
+      ? files.clothing_image[0] 
+      : files.clothing_image;
 
-      const gender = fields.gender as string;
-      const file = files.clothing_image as formidable.File;
+    if (!clothingFile || !clothingFile.filepath) {
+      return res.status(400).json({ error: 'No clothing image provided' });
+    }
 
-      if (!file || !file.filepath) {
-        return res.status(400).json({ error: 'No clothing image provided' });
-      }
+    // Validate gender
+    if (!['Male', 'Female'].includes(gender as string)) {
+      return res.status(400).json({ error: 'Gender must be "Male" or "Female"' });
+    }
 
-      try {
-        const buffer = fs.readFileSync(file.filepath);
-        const clothingImageBlob = new Blob([buffer], { type: file.mimetype || 'image/jpeg' });
+    // Create form data for Fashn.ai API
+    const apiForm = new FormData();
+    const fileStream = fs.createReadStream(clothingFile.filepath);
+    
+    apiForm.append('clothing_image', fileStream, {
+      filename: clothingFile.originalFilename || 'clothing.jpg',
+      contentType: clothingFile.mimetype || 'image/jpeg',
+    });
+    apiForm.append('gender', gender as string);
 
-        const modelImageUrl = gender?.toLowerCase() === 'male' 
-          ? 'https://fashn-ai-models.s3.amazonaws.com/male-model-1.jpg'
-          : 'https://fashn-ai-models.s3.amazonaws.com/female-model-1.jpg';
+    // Call Fashn.ai API
+    const apiResponse = await fetch('https://api.fashn.ai/v1/tryon', {
+      method: 'POST',
+      headers: {
+        'Authorization': `Bearer ${process.env.FASHN_API_KEY}`,
+        ...apiForm.getHeaders(),
+      },
+      body: apiForm,
+    });
 
-        const apiRequestBody = {
-          model_name: "tryon-v1.6", // Using the latest model version
-          inputs: {
-            model_image: modelImageUrl,
-            garment_image: clothingImageBlob
-          }
-        };
+    // Clean up temporary file
+    try {
+      fs.unlinkSync(clothingFile.filepath);
+    } catch (cleanupError) {
+      console.warn('Failed to cleanup temp file:', cleanupError);
+    }
 
-        const fashnResponse = await fetch('https://api.fashn.ai/v1/run', {
-          method: 'POST',
-          headers: {
-            'Authorization': `Bearer ${process.env.FASHN_API_KEY}`,
-            'Content-Type': 'application/json'
-          },
-          body: JSON.stringify(apiRequestBody)
-        });
+    if (!apiResponse.ok) {
+      const errorText = await apiResponse.text();
+      console.error('Fashn.ai API error:', apiResponse.status, errorText);
+      throw new Error(`Fashn.ai API error: ${apiResponse.status} - ${errorText}`);
+    }
 
-        if (!fashnResponse.ok) {
-          const errorText = await fashnResponse.text();
-          console.error('Fashn.ai API error:', fashnResponse.status, errorText);
-          return res.status(fashnResponse.status).json({ 
-            error: `Fashn.ai API Error: ${fashnResponse.statusText}`,
-            details: errorText
-          });
-        }
+    const data = await apiResponse.json();
 
-        const json = await fashnResponse.json();
-
-        if (!json.output) {
-          return res.status(500).json({ error: 'No try-on image URL returned from Fashn.ai' });
-        }
-
-        res.status(200).json({ tryon_image_url: json.output });
-
-      } catch (apiError: any) {
-        console.error('API call error:', apiError);
-        res.status(500).json({ error: 'Failed to generate AI try-on', details: apiError.message });
-      } finally {
-        fs.unlinkSync(file.filepath);
-      }
+    // Return the try-on image URL
+    return res.status(200).json({ 
+      tryon_image_url: data.tryon_image_url || data.url || data.output_url 
     });
 
   } catch (error: any) {
-    console.error('Handler error:', error);
-    res.status(500).json({ error: 'Internal server error', details: error.message });
+    console.error('Try-on API error:', error);
+    return res.status(500).json({ 
+      error: 'Server error', 
+      details: error.message 
+    });
   }
 }
