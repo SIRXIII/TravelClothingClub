@@ -91,7 +91,7 @@ function LenderLandingPage() {
       }
     } catch (err: any) {
       console.error('Fashn.ai API error:', err);
-      setAiError(`AI preview failed: ${err.message}`);
+      setAiError(`AI preview failed: ${err.message || 'Unknown error occurred. Please try again.'}`);
     } finally {
       setAiLoading(false);
     }
