@@ -106,7 +106,24 @@ function LenderLandingPage() {
       }
     } catch (err: any) {
       console.error('Fashn.ai API error:', err);
-      setAiError(`AI preview failed: ${err.message || 'Unknown error occurred. Please try again.'}`);
+      
+      // Extract meaningful error message
+      let errorMessage = 'Unknown error occurred. Please try again.';
+      
+      if (err.message) {
+        errorMessage = err.message;
+      } else if (typeof err === 'string') {
+        errorMessage = err;
+      } else if (err.error) {
+        errorMessage = err.error;
+      }
+      
+      // Ensure we always have a descriptive message
+      if (!errorMessage || errorMessage.trim() === '') {
+        errorMessage = 'AI preview generation failed. Please check your image and try again.';
+      }
+      
+      setAiError(`AI preview failed: ${errorMessage}`);
     } finally {
       setAiLoading(false);
     }
