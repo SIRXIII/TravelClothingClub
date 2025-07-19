@@ -1,4 +1,4 @@
-import fetch from 'node-fetch';
+const fetch = require('node-fetch');
 import formidable from 'formidable';
 import { Readable } from 'stream';
 import fs from 'fs';
@@ -28,7 +28,7 @@ const parseMultipartForm = (event) => {
   });
 };
 
-export const handler = async (event) => {
+exports.handler = async (event) => {
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
