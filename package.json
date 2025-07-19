@@ -12,6 +12,8 @@
   "dependencies": {
     "@supabase/supabase-js": "^2.39.0",
     "@types/formidable": "^3.4.5",
+    "@vercel/node": "^5.3.6",
+    "form-data": "^4.0.4",
     "formidable": "^3.5.4",
     "lucide-react": "^0.344.0",
     "node-fetch": "^2.7.0",
