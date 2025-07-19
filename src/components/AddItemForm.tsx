@@ -129,16 +129,29 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'API request failed');
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch (parseError) {
+          errorData = await response.text();
+        }
+        throw new Error(typeof errorData === 'string' ? errorData : errorData.message || 'API request failed');
       }
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        const responseText = await response.text();
+        throw new Error(`Server returned non-JSON response: ${responseText}`);
+      }
 
-      if (data.tryon_image_url) {
+      if (data.output) {
+        setAiImage(data.output);
+      } else if (data.tryon_image_url) {
         setAiImage(data.tryon_image_url);
       } else {
-        throw new Error('No image URL returned from API');
+        throw new Error(`No image URL returned from API: ${JSON.stringify(data)}`);
       }
     } catch (err: any) {
       setAiError(`AI preview failed: ${err.message}`);

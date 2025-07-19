@@ -71,9 +71,16 @@ function LenderLandingPage() {
       const contentType = response.headers.get('content-type') || '';
 
       if (!response.ok) {
-        const errorText = contentType.includes('application/json')
-          ? await response.json()
-          : await response.text();
+        let errorText;
+        try {
+          if (contentType.includes('application/json')) {
+            errorText = await response.json();
+          } else {
+            errorText = await response.text();
+          }
+        } catch (parseError) {
+          errorText = await response.text();
+        }
 
         throw new Error(
           typeof errorText === 'string'
@@ -82,12 +89,20 @@ function LenderLandingPage() {
         );
       }
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch (jsonError) {
+        const responseText = await response.text();
+        throw new Error(`Server returned non-JSON response: ${responseText}`);
+      }
 
-      if (data.tryon_image_url) {
+      if (data.output) {
+        setAiPreviewUrl(data.output);
+      } else if (data.tryon_image_url) {
         setAiPreviewUrl(data.tryon_image_url);
       } else {
-        throw new Error('No AI preview generated from response');
+        throw new Error(`No AI preview generated from response: ${JSON.stringify(data)}`);
       }
     } catch (err: any) {
       console.error('Fashn.ai API error:', err);
