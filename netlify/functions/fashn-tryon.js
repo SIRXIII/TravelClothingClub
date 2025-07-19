@@ -1,4 +1,32 @@
 import fetch from 'node-fetch';
+import formidable from 'formidable';
+import { Readable } from 'stream';
+import fs from 'fs';
+
+// Helper function to parse multipart form data in Netlify functions
+const parseMultipartForm = (event) => {
+  return new Promise((resolve, reject) => {
+    const form = new formidable.IncomingForm();
+    
+    // Create a readable stream from the event body
+    const stream = new Readable();
+    stream.push(Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8'));
+    stream.push(null);
+    
+    // Set the content type header for formidable
+    stream.headers = {
+      'content-type': event.headers['content-type'] || event.headers['Content-Type']
+    };
+    
+    form.parse(stream, (err, fields, files) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ fields, files });
+      }
+    });
+  });
+};
 
 export const handler = async (event) => {
   // Handle CORS preflight
@@ -31,6 +59,20 @@ export const handler = async (event) => {
       throw new Error('FASHN_API_KEY environment variable is not set');
     }
 
+    // Parse multipart form data
+    const { fields, files } = await parseMultipartForm(event);
+    
+    const gender = Array.isArray(fields.gender) ? fields.gender[0] : fields.gender;
+    const clothingImage = Array.isArray(files.clothing_image) ? files.clothing_image[0] : files.clothing_image;
+    
+    if (!clothingImage) {
+      throw new Error('No clothing image provided');
+    }
+
+    // Read the uploaded file and convert to base64
+    const imageBuffer = fs.readFileSync(clothingImage.filepath);
+    const base64Image = imageBuffer.toString('base64');
+
     // First verify the API key by checking credits
     const creditsResponse = await fetch('https://api.fashn.ai/v1/credits', {
       headers: {
@@ -50,16 +92,7 @@ export const handler = async (event) => {
       throw new Error('No credits available');
     }
 
-    // Parse request body
-    const { image, gender } = JSON.parse(event.body);
-    if (!image) {
-      throw new Error('No image provided');
-    }
-
-    // Extract base64 data from data URL
-    const base64Image = image.split(',')[1];
-
-    // First, submit the prediction job
+    // Submit the prediction job
     const runResponse = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
       headers: {
@@ -109,6 +142,13 @@ export const handler = async (event) => {
       console.log('Status:', statusData.status);
 
       if (statusData.status === 'completed') {
+        // Clean up temporary file
+        try {
+          fs.unlinkSync(clothingImage.filepath);
+        } catch (cleanupError) {
+          console.warn('Failed to clean up temporary file:', cleanupError);
+        }
+
         return {
           statusCode: 200,
           headers: {
@@ -116,12 +156,18 @@ export const handler = async (event) => {
             'Access-Control-Allow-Origin': '*'
           },
           body: JSON.stringify({
-            output: statusData.output[0]
+            tryon_image_url: statusData.output[0]
           })
         };
       }
 
       if (statusData.status === 'failed') {
+        // Clean up temporary file
+        try {
+          fs.unlinkSync(clothingImage.filepath);
+        } catch (cleanupError) {
+          console.warn('Failed to clean up temporary file:', cleanupError);
+        }
         throw new Error(statusData.error || 'Prediction failed');
       }
 
@@ -132,6 +178,13 @@ export const handler = async (event) => {
       }
 
       throw new Error(`Unknown status: ${statusData.status}`);
+    }
+
+    // Clean up temporary file on timeout
+    try {
+      fs.unlinkSync(clothingImage.filepath);
+    } catch (cleanupError) {
+      console.warn('Failed to clean up temporary file:', cleanupError);
     }
 
     throw new Error('Prediction timed out after 90 seconds');
@@ -150,4 +203,4 @@ export const handler = async (event) => {
       })
     };
   }
-}; 
+};
