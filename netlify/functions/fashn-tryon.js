@@ -1,19 +1,16 @@
-const fetch = require('node-fetch');
-const formidable = require('formidable');
-const fs = require('fs');
-const { Readable } = require('stream');
+import fetch from 'node-fetch';
 
-exports.handler = async (event, context) => {
+export const handler = async (event) => {
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
+        'Access-Control-Allow-Headers': 'Content-Type',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
-      },
-      body: '',
+        'Content-Type': 'application/json'
+      }
     };
   }
 
@@ -21,10 +18,10 @@ exports.handler = async (event, context) => {
     return {
       statusCode: 405,
       headers: {
-        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify({ error: 'Method not allowed' }),
+      body: JSON.stringify({ error: 'Method not allowed' })
     };
   }
 
@@ -34,127 +31,77 @@ exports.handler = async (event, context) => {
       throw new Error('FASHN_API_KEY environment variable is not set');
     }
 
-    const BASE_URL = "https://api.fashn.ai/v1";
+    // First verify the API key by checking credits
+    const creditsResponse = await fetch('https://api.fashn.ai/v1/credits', {
+      headers: {
+        'Authorization': `Bearer ${API_KEY}`
+      }
+    });
 
-    // Parse multipart form data using formidable with proper stream handling
-    const parseForm = () => {
-      return new Promise((resolve, reject) => {
-        const form = formidable({
-          maxFileSize: 10 * 1024 * 1024, // 10MB limit
-          keepExtensions: true,
-        });
-
-        // Convert event body to buffer
-        let buffer;
-        if (event.isBase64Encoded) {
-          buffer = Buffer.from(event.body, 'base64');
-        } else {
-          buffer = Buffer.from(event.body);
-        }
-
-        // Create a readable stream from the buffer
-        const stream = new Readable();
-        stream.push(buffer);
-        stream.push(null); // End the stream
-
-        // Create a mock request object with the stream
-        const mockReq = Object.assign(stream, {
-          headers: event.headers,
-          method: 'POST',
-          url: '/',
-        });
-
-        // Parse the form data
-        form.parse(mockReq, (err, fields, files) => {
-          if (err) {
-            console.error('Form parsing error:', err);
-            reject(new Error(`Form parsing failed: ${err.message}`));
-            return;
-          }
-          
-          console.log('Form parsed successfully');
-          console.log('Fields:', Object.keys(fields));
-          console.log('Files:', Object.keys(files));
-          
-          resolve({ fields, files });
-        });
-      });
-    };
-
-    const { fields, files } = await parseForm();
-
-    // Extract gender and clothing image - handle both array and single value formats
-    const gender = Array.isArray(fields.gender) ? fields.gender[0] : fields.gender || 'Female';
-    const clothingFile = Array.isArray(files.clothing_image) ? files.clothing_image[0] : files.clothing_image;
-
-    console.log('Extracted gender:', gender);
-    console.log('Clothing file:', clothingFile ? 'present' : 'missing');
-
-    if (!clothingFile || !clothingFile.filepath) {
-      throw new Error('No clothing image provided or file path missing');
+    if (!creditsResponse.ok) {
+      console.error('Failed to verify API key:', await creditsResponse.text());
+      throw new Error('Invalid API key or API key has expired');
     }
 
-    // Read the uploaded file
-    const clothingImageBuffer = fs.readFileSync(clothingFile.filepath);
-    const clothingImageBase64 = clothingImageBuffer.toString('base64');
+    const credits = await creditsResponse.json();
+    console.log('Available credits:', credits);
 
-    console.log('File read successfully, size:', clothingImageBuffer.length);
+    if (credits.credits.total <= 0) {
+      throw new Error('No credits available');
+    }
 
-    // Select model image based on gender
-    const modelImageUrl = gender.toLowerCase() === 'male' 
-      ? 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg'
-      : 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg';
+    // Parse request body
+    const { image, gender } = JSON.parse(event.body);
+    if (!image) {
+      throw new Error('No image provided');
+    }
 
-    // Step 1: Submit the prediction job
-    const inputData = {
-      model_name: "tryon-v1.6",
-      inputs: {
-        model_image: modelImageUrl,
-        garment_image: `data:image/jpeg;base64,${clothingImageBase64}`
-      }
-    };
+    // Extract base64 data from data URL
+    const base64Image = image.split(',')[1];
 
-    const headers = {
-      'Content-Type': 'application/json',
-      'Authorization': `Bearer ${API_KEY}`
-    };
-
-    console.log('Submitting prediction job...');
-    const runResponse = await fetch(`${BASE_URL}/run`, {
+    // First, submit the prediction job
+    const runResponse = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
-      headers: headers,
-      body: JSON.stringify(inputData)
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${API_KEY}`
+      },
+      body: JSON.stringify({
+        model_name: 'tryon-v1.6',
+        inputs: {
+          model_image: gender === 'Male' 
+            ? 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg'
+            : 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg',
+          garment_image: `data:image/jpeg;base64,${base64Image}`
+        }
+      })
     });
 
     if (!runResponse.ok) {
       const errorText = await runResponse.text();
-      console.error('Run API error:', runResponse.status, errorText);
-      throw new Error(`Fashn.ai run API error: ${runResponse.status} - ${errorText}`);
+      console.error('Fashn.ai run API error:', runResponse.status, errorText);
+      throw new Error(`Failed to start prediction: ${runResponse.status}`);
     }
 
     const runData = await runResponse.json();
     const predictionId = runData.id;
-    
+
     if (!predictionId) {
-      throw new Error('No prediction ID returned from Fashn.ai API');
+      throw new Error('No prediction ID returned');
     }
 
-    console.log('Prediction started, ID:', predictionId);
-
-    // Step 2: Poll for completion
+    // Poll for the result
     let attempts = 0;
     const maxAttempts = 30; // 90 seconds max wait time
     
     while (attempts < maxAttempts) {
-      console.log(`Polling attempt ${attempts + 1}/${maxAttempts}`);
-      
-      const statusResponse = await fetch(`${BASE_URL}/status/${predictionId}`, {
-        headers: { 'Authorization': `Bearer ${API_KEY}` }
+      const statusResponse = await fetch(`https://api.fashn.ai/v1/status/${predictionId}`, {
+        headers: {
+          'Authorization': `Bearer ${API_KEY}`
+        }
       });
 
       if (!statusResponse.ok) {
-        const errorText = await statusResponse.text();
-        console.error('Status API error:', statusResponse.status, errorText);
         throw new Error(`Status check failed: ${statusResponse.status}`);
       }
 
@@ -162,53 +109,45 @@ exports.handler = async (event, context) => {
       console.log('Status:', statusData.status);
 
       if (statusData.status === 'completed') {
-        console.log('Prediction completed successfully');
-        
-        // Clean up temporary file
-        try {
-          fs.unlinkSync(clothingFile.filepath);
-        } catch (cleanupError) {
-          console.warn('Failed to cleanup temp file:', cleanupError);
-        }
-
         return {
           statusCode: 200,
           headers: {
-            'Access-Control-Allow-Origin': '*',
             'Content-Type': 'application/json',
+            'Access-Control-Allow-Origin': '*'
           },
-          body: JSON.stringify({ 
-            tryon_image_url: statusData.output,
-            prediction_id: predictionId 
-          }),
+          body: JSON.stringify({
+            output: statusData.output[0]
+          })
         };
-      } else if (statusData.status === 'failed') {
-        console.error('Prediction failed:', statusData.error);
-        throw new Error(`Prediction failed: ${statusData.error || 'Unknown error'}`);
-      } else if (['starting', 'in_queue', 'processing'].includes(statusData.status)) {
-        // Continue polling
+      }
+
+      if (statusData.status === 'failed') {
+        throw new Error(statusData.error || 'Prediction failed');
+      }
+
+      if (['starting', 'in_queue', 'processing'].includes(statusData.status)) {
         await new Promise(resolve => setTimeout(resolve, 3000)); // Wait 3 seconds
         attempts++;
-      } else {
-        throw new Error(`Unknown status: ${statusData.status}`);
+        continue;
       }
+
+      throw new Error(`Unknown status: ${statusData.status}`);
     }
 
-    // If we get here, we timed out
     throw new Error('Prediction timed out after 90 seconds');
 
   } catch (error) {
-    console.error('Fashn.ai API error:', error);
+    console.error('Error:', error);
     return {
       statusCode: 500,
       headers: {
-        'Access-Control-Allow-Origin': '*',
         'Content-Type': 'application/json',
+        'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify({ 
         error: 'Failed to generate AI try-on',
-        details: error.message 
-      }),
+        details: error.message
+      })
     };
   }
-};
+}; 
