@@ -1,29 +1,80 @@
-import formidable from 'formidable';
-import { Readable } from 'stream';
 import fs from 'fs';
 
-// Helper function to parse multipart form data in Netlify functions
+// Helper function to parse multipart form data without formidable
 const parseMultipartForm = (event) => {
   return new Promise((resolve, reject) => {
-    const form = new formidable.IncomingForm();
-    
-    // Create a readable stream from the event body
-    const stream = new Readable();
-    stream.push(Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8'));
-    stream.push(null);
-    
-    // Set the content type header for formidable
-    stream.headers = {
-      'content-type': event.headers['content-type'] || event.headers['Content-Type']
-    };
-    
-    form.parse(stream, (err, fields, files) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve({ fields, files });
+    try {
+      const contentType = event.headers['content-type'] || event.headers['Content-Type'];
+      
+      if (!contentType || !contentType.includes('multipart/form-data')) {
+        reject(new Error('Invalid content type. Expected multipart/form-data'));
+        return;
       }
-    });
+
+      // Get the boundary from content-type header
+      const boundary = contentType.split('boundary=')[1];
+      if (!boundary) {
+        reject(new Error('No boundary found in content-type header'));
+        return;
+      }
+
+      // Parse the multipart data manually
+      const body = Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8');
+      const parts = body.toString().split(`--${boundary}`);
+      
+      const fields = {};
+      const files = {};
+
+      for (const part of parts) {
+        if (part.includes('Content-Disposition: form-data')) {
+          const lines = part.split('\r\n');
+          let fieldName = null;
+          let fileName = null;
+          let contentType = null;
+          let data = '';
+
+          for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            
+            if (line.startsWith('Content-Disposition: form-data')) {
+              const nameMatch = line.match(/name="([^"]+)"/);
+              const fileMatch = line.match(/filename="([^"]+)"/);
+              
+              if (nameMatch) fieldName = nameMatch[1];
+              if (fileMatch) fileName = fileMatch[1];
+            } else if (line.startsWith('Content-Type:')) {
+              contentType = line.split(': ')[1];
+            } else if (line === '' && i < lines.length - 1) {
+              // This is the start of the data
+              data = lines.slice(i + 1).join('\r\n').trim();
+              break;
+            }
+          }
+
+          if (fieldName) {
+            if (fileName) {
+              // This is a file
+              const tempPath = `/tmp/${Date.now()}_${fileName}`;
+              fs.writeFileSync(tempPath, data);
+              
+              files[fieldName] = {
+                filepath: tempPath,
+                originalname: fileName,
+                mimetype: contentType || 'application/octet-stream',
+                size: fs.statSync(tempPath).size
+              };
+            } else {
+              // This is a field
+              fields[fieldName] = data;
+            }
+          }
+        }
+      }
+
+      resolve({ fields, files });
+    } catch (error) {
+      reject(error);
+    }
   });
 };
 
@@ -53,6 +104,8 @@ export const handler = async (event) => {
     };
   }
 
+  let clothingImage = null;
+
   try {
     const API_KEY = process.env.FASHN_API_KEY;
     if (!API_KEY) {
@@ -63,7 +116,7 @@ export const handler = async (event) => {
     const { fields, files } = await parseMultipartForm(event);
     
     const gender = Array.isArray(fields.gender) ? fields.gender[0] : fields.gender;
-    const clothingImage = Array.isArray(files.clothing_image) ? files.clothing_image[0] : files.clothing_image;
+    clothingImage = Array.isArray(files.clothing_image) ? files.clothing_image[0] : files.clothing_image;
     
     if (!clothingImage) {
       throw new Error('No clothing image provided');

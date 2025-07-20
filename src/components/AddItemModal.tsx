@@ -86,14 +86,23 @@ function AddItemModal({ isOpen, onClose, onSuccess }: AddItemModalProps) {
     setAiError(null);
 
     try {
-      const formData = new FormData();
-      formData.append('clothing_image', image);
-      formData.append('gender', modelGender);
+      // Convert image to base64
+      const imageBase64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(image);
+      });
 
-      // Call our Vercel API endpoint
-      const response = await fetch('/api/fashn-tryon', {
+      // Call our API endpoint
+      const response = await fetch('/api/fashn-tryon-simple', {
         method: 'POST',
-        body: formData
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageBase64,
+          gender: modelGender
+        })
       });
 
       if (!response.ok) {

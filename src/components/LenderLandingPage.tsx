@@ -59,13 +59,22 @@ function LenderLandingPage() {
     setAiError(null);
 
     try {
-      const formData = new FormData();
-      formData.append('clothing_image', uploadedFiles[0]);
-      formData.append('gender', selectedGender);
+      // Convert image to base64
+      const imageBase64 = await new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = () => resolve(reader.result as string);
+        reader.readAsDataURL(uploadedFiles[0]);
+      });
 
-      const response = await fetch('/api/fashn-tryon', {
+      const response = await fetch('/api/fashn-tryon-simple', {
         method: 'POST',
-        body: formData,
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageBase64,
+          gender: selectedGender
+        })
       });
 
       const contentType = response.headers.get('content-type') || '';

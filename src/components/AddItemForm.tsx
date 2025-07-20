@@ -110,22 +110,38 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
         clothingImage = existingImages[0];
       }
 
-      const formData = new FormData();
+      // Convert image to base64
+      let imageBase64: string;
+      
       if (clothingImage instanceof File) {
-        formData.append('clothing_image', clothingImage);
+        imageBase64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.readAsDataURL(clothingImage);
+        });
       } else if (typeof clothingImage === 'string') {
-        // If it's a URL, fetch it and convert to a blob
+        // If it's a URL, fetch it and convert to base64
         const response = await fetch(clothingImage);
         const blob = await response.blob();
-        formData.append('clothing_image', blob, 'clothing_image.jpg');
+        imageBase64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.readAsDataURL(blob);
+        });
+      } else {
+        throw new Error('Invalid image format');
       }
 
-      formData.append('gender', modelGender);
-
-     // Call our proxy API to interact with Fashn.ai
-      const response = await fetch('/api/fashn-tryon', {
+      // Call our proxy API to interact with Fashn.ai
+      const response = await fetch('/api/fashn-tryon-simple', {
         method: 'POST',
-        body: formData
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageBase64,
+          gender: modelGender
+        })
       });
 
       if (!response.ok) {
