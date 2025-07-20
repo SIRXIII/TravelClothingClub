@@ -30,7 +30,7 @@ function LenderDashboard({ onSignOut }: LenderDashboardProps) {
 
   useEffect(() => {
     fetchItems();
-  }, []);
+  }, [user]);
 
   const fetchItems = async () => {
     if (!user) return;

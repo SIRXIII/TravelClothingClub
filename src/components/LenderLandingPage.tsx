@@ -78,7 +78,7 @@ function LenderLandingPage() {
           } else {
             errorText = await response.text();
           }
-        } catch (parseError) {
+        } catch {
           errorText = await response.text();
         }
 
@@ -92,7 +92,7 @@ function LenderLandingPage() {
       let data;
       try {
         data = await response.json();
-      } catch (jsonError) {
+      } catch {
         const responseText = await response.text();
         throw new Error(`Server returned non-JSON response: ${responseText}`);
       }
@@ -104,7 +104,7 @@ function LenderLandingPage() {
       } else {
         throw new Error(`No AI preview generated from response: ${JSON.stringify(data)}`);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Fashn.ai API error:', err);
       
       // Extract meaningful error message
