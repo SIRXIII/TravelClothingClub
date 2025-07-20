@@ -5,6 +5,7 @@ import VirtualTryOn from './components/VirtualTryOn';
 import VirtualTryOnDemo from './components/VirtualTryOnDemo';
 import LenderPortal from './components/LenderPortal';
 import SearchResults from './components/SearchResults';
+import FashnTestPage from './components/FashnTestPage';
 
 function App() {
   return (
@@ -14,6 +15,7 @@ function App() {
       <Route path="/virtual-try-on-demo" element={<VirtualTryOnDemo />} />
       <Route path="/lender-portal" element={<LenderPortal />} />
       <Route path="/search-results" element={<SearchResults />} />
+      <Route path="/test-fashn" element={<FashnTestPage />} />
       <Route path="*" element={<Navigate to="/lender-portal" replace />} />
     </Routes>
   );

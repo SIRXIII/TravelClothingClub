@@ -66,30 +66,53 @@ function VirtualTryOn() {
     setError(null);
 
     try {
-      const selectedGarmentData = garmentOptions.find(g => g.value === selectedGarment);
-      
       const garmentBlob = await urlToBlob(selectedGarment);
       const modelBlob = await urlToBlob(userImage);
       
       const formData = new FormData();
       formData.append('clothing_image', garmentBlob, 'garment.jpg');
       formData.append('model_image', modelBlob, 'model.jpg');
-      formData.append('gender', 'Male'); // Dummy value since model_image is provided
+      formData.append('gender', 'Female'); // Dummy value since model_image is provided
       
-      const response = await fetch('/api/fashn-tryon', {
+      // Try debug endpoint first for better error messages
+      let response = await fetch('/api/fashn-tryon-debug', {
         method: 'POST',
         body: formData
       });
 
+      // If debug endpoint fails, try regular endpoint
       if (!response.ok) {
-        throw new Error('API call failed');
+        console.warn('Debug endpoint failed, trying regular endpoint');
+        response = await fetch('/api/fashn-tryon', {
+          method: 'POST',
+          body: formData
+        });
+      }
+
+      if (!response.ok) {
+        const errorData = await response.json().catch(() => ({ error: 'Unknown error' }));
+        throw new Error(errorData.details || errorData.error || `API call failed with status ${response.status}`);
       }
 
       const data = await response.json();
-      setResult(data.tryon_image_url);
+      
+      if (data.tryon_image_url) {
+        setResult(data.tryon_image_url);
+      } else {
+        throw new Error('No image URL returned from API');
+      }
     } catch (error) {
-      setError('Failed to generate try-on: ' + (error instanceof Error ? error.message : 'Unknown error'));
-      // For demo fallback, uncomment if needed
+      const errorMessage = error instanceof Error ? error.message : 'Unknown error';
+      setError(`Failed to generate try-on: ${errorMessage}`);
+      
+      // Log detailed error for debugging
+      console.error('Try-on error details:', {
+        error: errorMessage,
+        userImage: userImage ? 'present' : 'missing',
+        selectedGarment: selectedGarment ? 'present' : 'missing'
+      });
+      
+      // For demo fallback if needed
       // setResult(selectedGarment);
     } finally {
       setIsLoading(false);
