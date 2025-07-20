@@ -16,15 +16,15 @@ Deno.serve(async (req: Request) => {
   try {
     const { image_url, category }: RequestBody = await req.json();
 
-    // This is where you would integrate with your AI model generation service
-    // For example, using FASHN API, Replicate, or another AI service
-    
-    // Example API call structure:
-    /*
+    const API_KEY = Deno.env.get('FASHN_API_KEY');
+    if (!API_KEY) {
+      throw new Error('FASHN_API_KEY is not set');
+    }
+
     const response = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
       headers: {
-        'Authorization': 'Bearer YOUR_API_KEY',
+        'Authorization': `Bearer ${API_KEY}`,
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
@@ -34,18 +34,18 @@ Deno.serve(async (req: Request) => {
       })
     });
 
-    const result = await response.json();
-    */
+    if (!response.ok) {
+      throw new Error('Fashn.ai API call failed');
+    }
 
-    // For now, return a mock response
-    const mockResponse = {
-      success: true,
-      generated_url: `https://images.unsplash.com/photo-1441984904996-e0b6ba687e04?auto=format&fit=crop&q=80&w=400&h=600`,
-      message: 'AI model generation completed successfully'
-    };
+    const result = await response.json();
 
     return new Response(
-      JSON.stringify(mockResponse),
+      JSON.stringify({
+        success: true,
+        generated_url: result.output_url || result.output[0], // Adjust based on actual response structure
+        message: 'AI model generation completed successfully'
+      }),
       {
         headers: {
           'Content-Type': 'application/json',

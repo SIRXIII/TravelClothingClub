@@ -46,6 +46,11 @@ function VirtualTryOn() {
     }
   };
 
+  async function urlToBlob(url: string): Promise<Blob> {
+    const response = await fetch(url);
+    return response.blob();
+  }
+
   const handleTryOn = async () => {
     if (!userImage) {
       setError('Please upload your photo first');
@@ -61,21 +66,19 @@ function VirtualTryOn() {
     setError(null);
 
     try {
-      // This is where the FASHN API call would go
-      // For now, we'll simulate the API call
       const selectedGarmentData = garmentOptions.find(g => g.value === selectedGarment);
       
-      const response = await fetch('https://api.fashn.ai/v1/run', {
+      const garmentBlob = await urlToBlob(selectedGarment);
+      const modelBlob = await urlToBlob(userImage);
+      
+      const formData = new FormData();
+      formData.append('clothing_image', garmentBlob, 'garment.jpg');
+      formData.append('model_image', modelBlob, 'model.jpg');
+      formData.append('gender', 'Male'); // Dummy value since model_image is provided
+      
+      const response = await fetch('/api/fashn-tryon', {
         method: 'POST',
-        headers: {
-          'Authorization': 'Bearer YOUR_API_KEY', // This will be replaced when API is available
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          model_image: userImage,
-          garment_image: selectedGarment,
-          category: selectedGarmentData?.category || 'tops'
-        })
+        body: formData
       });
 
       if (!response.ok) {
@@ -83,11 +86,10 @@ function VirtualTryOn() {
       }
 
       const data = await response.json();
-      setResult(data.output_url);
-    } catch (err) {
-      // For demo purposes, we'll show a placeholder result
-      setError('API not yet configured. This is a demo interface ready for integration.');
-      // Uncomment the line below to show a demo result
+      setResult(data.tryon_image_url);
+    } catch (error) {
+      setError('Failed to generate try-on: ' + (error instanceof Error ? error.message : 'Unknown error'));
+      // For demo fallback, uncomment if needed
       // setResult(selectedGarment);
     } finally {
       setIsLoading(false);

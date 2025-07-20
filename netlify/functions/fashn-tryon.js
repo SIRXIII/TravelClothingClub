@@ -64,6 +64,7 @@ exports.handler = async (event) => {
     
     const gender = Array.isArray(fields.gender) ? fields.gender[0] : fields.gender;
     const clothingImage = Array.isArray(files.clothing_image) ? files.clothing_image[0] : files.clothing_image;
+    const modelImage = Array.isArray(files.model_image) ? files.model_image[0] : files.model_image;
     
     if (!clothingImage) {
       throw new Error('No clothing image provided');
@@ -72,6 +73,19 @@ exports.handler = async (event) => {
     // Read the uploaded file and convert to base64
     const imageBuffer = fs.readFileSync(clothingImage.filepath);
     const base64Image = imageBuffer.toString('base64');
+
+    let model_image_url;
+    if (modelImage) {
+      const modelBuffer = fs.readFileSync(modelImage.filepath);
+      const modelBase64 = modelBuffer.toString('base64');
+      model_image_url = `data:image/jpeg;base64,${modelBase64}`;
+    } else if (gender) {
+      model_image_url = gender === 'Male' 
+        ? 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg'
+        : 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg';
+    } else {
+      throw new Error('Either model_image or gender must be provided');
+    }
 
     // First verify the API key by checking credits
     const creditsResponse = await fetch('https://api.fashn.ai/v1/credits', {
@@ -102,9 +116,7 @@ exports.handler = async (event) => {
       body: JSON.stringify({
         model_name: 'tryon-v1.6',
         inputs: {
-          model_image: gender === 'Male' 
-            ? 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg'
-            : 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg',
+          model_image: model_image_url,
           garment_image: `data:image/jpeg;base64,${base64Image}`
         }
       })
@@ -145,6 +157,7 @@ exports.handler = async (event) => {
         // Clean up temporary file
         try {
           fs.unlinkSync(clothingImage.filepath);
+          if (modelImage) fs.unlinkSync(modelImage.filepath);
         } catch (cleanupError) {
           console.warn('Failed to clean up temporary file:', cleanupError);
         }
@@ -165,6 +178,7 @@ exports.handler = async (event) => {
         // Clean up temporary file
         try {
           fs.unlinkSync(clothingImage.filepath);
+          if (modelImage) fs.unlinkSync(modelImage.filepath);
         } catch (cleanupError) {
           console.warn('Failed to clean up temporary file:', cleanupError);
         }
@@ -183,6 +197,7 @@ exports.handler = async (event) => {
     // Clean up temporary file on timeout
     try {
       fs.unlinkSync(clothingImage.filepath);
+      if (modelImage) fs.unlinkSync(modelImage.filepath);
     } catch (cleanupError) {
       console.warn('Failed to clean up temporary file:', cleanupError);
     }

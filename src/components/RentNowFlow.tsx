@@ -169,7 +169,7 @@ function RentNowFlow({ onClose, preselectedItem }: RentNowFlowProps) {
     
     const currentPerson = people[currentPersonIndex];
     
-    let filtered = availableItems.filter(item => {
+    const filtered = availableItems.filter(item => {
       // Size filter
       if (currentPerson.size && item.size !== currentPerson.size) return false;
       
