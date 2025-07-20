@@ -108,8 +108,9 @@ function AddItemModal({ isOpen, onClose, onSuccess }: AddItemModalProps) {
       } else {
         throw new Error('No AI preview generated');
       }
-    } catch (err: any) {
-      setAiError(`AI preview failed: ${err.message}`);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setAiError(`AI preview failed: ${errorMessage}`);
       console.error('Fashn.ai API error:', err);
     } finally {
       setAiLoading(false);
@@ -159,8 +160,9 @@ function AddItemModal({ isOpen, onClose, onSuccess }: AddItemModalProps) {
       setImage(null);
       setImagePreview(null);
       setAiPreview(null);
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

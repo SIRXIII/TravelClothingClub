@@ -1,4 +1,3 @@
-const fetch = require('node-fetch');
 import formidable from 'formidable';
 import { Readable } from 'stream';
 import fs from 'fs';
@@ -28,15 +27,16 @@ const parseMultipartForm = (event) => {
   });
 };
 
-exports.handler = async (event) => {
+export const handler = async (event) => {
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
     return {
       statusCode: 200,
       headers: {
         'Access-Control-Allow-Origin': '*',
-        'Access-Control-Allow-Headers': 'Content-Type',
+        'Access-Control-Allow-Headers': 'Content-Type, Authorization',
         'Access-Control-Allow-Methods': 'POST, OPTIONS',
+        'Access-Control-Max-Age': '86400',
         'Content-Type': 'application/json'
       }
     };
@@ -67,6 +67,18 @@ exports.handler = async (event) => {
     
     if (!clothingImage) {
       throw new Error('No clothing image provided');
+    }
+
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(clothingImage.mimetype)) {
+      throw new Error('Invalid file type. Please upload a JPEG, PNG, or WebP image.');
+    }
+
+    // Validate file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (clothingImage.size > maxSize) {
+      throw new Error('File size too large. Please upload an image smaller than 10MB.');
     }
 
     // Read the uploaded file and convert to base64
@@ -103,8 +115,8 @@ exports.handler = async (event) => {
         model_name: 'tryon-v1.6',
         inputs: {
           model_image: gender === 'Male' 
-            ? 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg'
-            : 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg',
+            ? (process.env.MALE_MODEL_URL || 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg')
+            : (process.env.FEMALE_MODEL_URL || 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg'),
           garment_image: `data:image/jpeg;base64,${base64Image}`
         }
       })
@@ -120,8 +132,10 @@ exports.handler = async (event) => {
     const predictionId = runData.id;
 
     if (!predictionId) {
-      throw new Error('No prediction ID returned');
+      throw new Error('No prediction ID returned from Fashn.ai API');
     }
+
+    console.log('Prediction started with ID:', predictionId);
 
     // Poll for the result
     let attempts = 0;
@@ -156,7 +170,8 @@ exports.handler = async (event) => {
             'Access-Control-Allow-Origin': '*'
           },
           body: JSON.stringify({
-            tryon_image_url: statusData.output[0]
+            tryon_image_url: statusData.output[0],
+            output: statusData.output[0] // For backward compatibility
           })
         };
       }
@@ -191,6 +206,16 @@ exports.handler = async (event) => {
 
   } catch (error) {
     console.error('Error:', error);
+    
+    // Clean up temporary file if it exists
+    if (clothingImage && clothingImage.filepath) {
+      try {
+        fs.unlinkSync(clothingImage.filepath);
+      } catch (cleanupError) {
+        console.warn('Failed to clean up temporary file:', cleanupError);
+      }
+    }
+    
     return {
       statusCode: 500,
       headers: {

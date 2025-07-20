@@ -84,7 +84,7 @@ function VirtualTryOn() {
 
       const data = await response.json();
       setResult(data.output_url);
-    } catch (err) {
+    } catch {
       // For demo purposes, we'll show a placeholder result
       setError('API not yet configured. This is a demo interface ready for integration.');
       // Uncomment the line below to show a demo result

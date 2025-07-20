@@ -79,7 +79,7 @@ function AITryOnModal({ isOpen, onClose, clothingItem }: AITryOnModalProps) {
       } else {
         throw new Error(data.message || 'Failed to generate preview');
       }
-    } catch (err: any) {
+    } catch {
       // For demo purposes, show a mock result
       setError('AI try-on service is currently in development. This is a preview of the interface.');
       

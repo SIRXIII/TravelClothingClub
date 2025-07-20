@@ -132,7 +132,7 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
         let errorData;
         try {
           errorData = await response.json();
-        } catch (parseError) {
+        } catch {
           errorData = await response.text();
         }
         throw new Error(typeof errorData === 'string' ? errorData : errorData.message || 'API request failed');
@@ -141,7 +141,7 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
       let data;
       try {
         data = await response.json();
-      } catch (jsonError) {
+      } catch {
         const responseText = await response.text();
         throw new Error(`Server returned non-JSON response: ${responseText}`);
       }
@@ -153,8 +153,9 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
       } else {
         throw new Error(`No image URL returned from API: ${JSON.stringify(data)}`);
       }
-    } catch (err: any) {
-      setAiError(`AI preview failed: ${err.message}`);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setAiError(`AI preview failed: ${errorMessage}`);
       console.error('Fashn.ai API error:', err);
     } finally {
       setAiLoading(false);
@@ -206,8 +207,9 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
       }
 
       onSuccess();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

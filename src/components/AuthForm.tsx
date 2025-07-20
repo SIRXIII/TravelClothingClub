@@ -32,8 +32,9 @@ function AuthForm({ onSuccess }: AuthFormProps) {
         if (error) throw error;
         onSuccess();
       }
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }
