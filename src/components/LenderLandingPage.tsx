@@ -289,19 +289,6 @@ function LenderLandingPage() {
             </div>
           </div>
 
-          {/* Demo Button */}
-          <div className="text-center mb-8">
-            <a
-              href="https://www.google.com/shopping/tryon?gl=us&hl=en&utm_source=searchlabs&udm=28"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="inline-flex items-center gap-3 bg-slate-900 text-white px-8 py-4 rounded-xl font-semibold hover:bg-slate-800 transition shadow-lg"
-            >
-              See Google's Virtual Try-On Demo
-              <ExternalLink className="w-5 h-5" />
-            </a>
-          </div>
-
           {/* Mailchimp Embedded Form */}
           <div className="bg-white rounded-2xl shadow-lg p-8 max-w-2xl mx-auto">
             <div className="text-center mb-6">
