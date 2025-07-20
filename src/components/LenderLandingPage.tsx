@@ -2,6 +2,8 @@ import React, { useState } from 'react';
 import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { Upload, DollarSign, Package, TrendingUp, ArrowRight, Star, Users, Calculator, Sparkles, ExternalLink, Check, Mail } from 'lucide-react';
+import '../styles/slider.css';
+import '../styles/mailchimp.css';
 
 function LenderLandingPage() {
   const [items, setItems] = useState(5);
@@ -59,39 +61,58 @@ function LenderLandingPage() {
     setAiError(null);
 
     try {
-      const formData = new FormData();
-      formData.append('clothing_image', uploadedFiles[0]);
-      formData.append('gender', selectedGender);
-
-      const response = await fetch('/api/fashn-tryon', {
-        method: 'POST',
-        body: formData,
+      // Convert image to base64
+      const file = uploadedFiles[0];
+      const reader = new FileReader();
+      
+      const base64Image = await new Promise((resolve, reject) => {
+        reader.onload = () => resolve(reader.result);
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
       });
 
-      const contentType = response.headers.get('content-type') || '';
+      // Send JSON data instead of form data
+      const response = await fetch('/api/fashn-tryon.mjs', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Accept': 'application/json'
+        },
+        body: JSON.stringify({
+          imageBase64: base64Image,
+          gender: selectedGender
+        })
+      });
 
       if (!response.ok) {
-        const errorText = contentType.includes('application/json')
-          ? await response.json()
-          : await response.text();
-
-        throw new Error(
-          typeof errorText === 'string'
-            ? errorText
-            : errorText.error || JSON.stringify(errorText)
-        );
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = await response.text();
+        }
+        throw new Error(typeof errorData === 'string' ? errorData : errorData.message || 'API request failed');
       }
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        const responseText = await response.text();
+        throw new Error(`Server returned non-JSON response: ${responseText}`);
+      }
 
       if (data.tryon_image_url) {
         setAiPreviewUrl(data.tryon_image_url);
+      } else if (data.output) {
+        setAiPreviewUrl(data.output);
       } else {
-        throw new Error('No AI preview generated from response');
+        throw new Error(`No image URL returned from API: ${JSON.stringify(data)}`);
       }
-    } catch (err: any) {
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
       console.error('Fashn.ai API error:', err);
-      setAiError(`AI preview failed: ${err.message || 'Unknown error occurred. Please try again.'}`);
+      setAiError(`AI preview failed: ${errorMessage}`);
     } finally {
       setAiLoading(false);
     }
@@ -283,78 +304,6 @@ function LenderLandingPage() {
 
             {/* Mailchimp Embedded Form with Custom Styling */}
             <div id="mc_embed_shell">
-              <style type="text/css">
-                {`
-                  #mc_embed_signup {
-                    background: transparent !important;
-                    clear: left;
-                    font: 14px Helvetica,Arial,sans-serif;
-                    width: 100% !important;
-                  }
-                  #mc_embed_signup h2 {
-                    display: none !important;
-                  }
-                  #mc_embed_signup .indicates-required {
-                    display: none !important;
-                  }
-                  #mc_embed_signup .mc-field-group {
-                    margin-bottom: 1rem;
-                  }
-                  #mc_embed_signup .mc-field-group label {
-                    display: none !important;
-                  }
-                  #mc_embed_signup input[type="email"] {
-                    width: 100% !important;
-                    padding: 0.75rem 1rem !important;
-                    border: 1px solid #cbd5e1 !important;
-                    border-radius: 0.5rem !important;
-                    font-size: 1rem !important;
-                    outline: none !important;
-                    transition: all 0.2s !important;
-                  }
-                  #mc_embed_signup input[type="email"]:focus {
-                    border-color: #3b82f6 !important;
-                    box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
-                  }
-                  #mc_embed_signup .button {
-                    background-color: #3b82f6 !important;
-                    color: white !important;
-                    padding: 0.75rem 1.5rem !important;
-                    border: none !important;
-                    border-radius: 0.5rem !important;
-                    font-weight: 500 !important;
-                    cursor: pointer !important;
-                    transition: background-color 0.2s !important;
-                    display: inline-flex !important;
-                    align-items: center !important;
-                    gap: 0.5rem !important;
-                  }
-                  #mc_embed_signup .button:hover {
-                    background-color: #2563eb !important;
-                  }
-                  #mc_embed_signup .optionalParent {
-                    margin-top: 1rem;
-                  }
-                  #mc_embed_signup .clear.foot {
-                    display: flex !important;
-                    flex-direction: column !important;
-                    gap: 1rem !important;
-                    align-items: center !important;
-                  }
-                  #mc_embed_signup .refferal_badge {
-                    display: none !important;
-                  }
-                  #mc_embed_signup p {
-                    display: none !important;
-                  }
-                  @media (min-width: 640px) {
-                    #mc_embed_signup .clear.foot {
-                      flex-direction: row !important;
-                      justify-content: center !important;
-                    }
-                  }
-                `}
-              </style>
               <div id="mc_embed_signup">
                 <form 
                   action="https://travelclothingclub.us9.list-manage.com/subscribe/post?u=76ec7acb17d86542fbeae7fae&id=451cee46ca&f_id=00321ae1f0" 
@@ -800,26 +749,6 @@ function LenderLandingPage() {
           </div>
         </div>
       </footer>
-
-      <style jsx>{`
-        .slider::-webkit-slider-thumb {
-          appearance: none;
-          height: 20px;
-          width: 20px;
-          border-radius: 50%;
-          background: #3b82f6;
-          cursor: pointer;
-        }
-        
-        .slider::-moz-range-thumb {
-          height: 20px;
-          width: 20px;
-          border-radius: 50%;
-          background: #3b82f6;
-          cursor: pointer;
-          border: none;
-        }
-      `}</style>
     </div>
   );
 }

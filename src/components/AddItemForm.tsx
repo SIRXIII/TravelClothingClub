@@ -110,38 +110,68 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
         clothingImage = existingImages[0];
       }
 
-      const formData = new FormData();
+      // Convert image to base64
+      let imageBase64: string;
+      
       if (clothingImage instanceof File) {
-        formData.append('clothing_image', clothingImage);
+        imageBase64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.readAsDataURL(clothingImage);
+        });
       } else if (typeof clothingImage === 'string') {
-        // If it's a URL, fetch it and convert to a blob
+        // If it's a URL, fetch it and convert to base64
         const response = await fetch(clothingImage);
         const blob = await response.blob();
-        formData.append('clothing_image', blob, 'clothing_image.jpg');
+        imageBase64 = await new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onload = () => resolve(reader.result as string);
+          reader.readAsDataURL(blob);
+        });
+      } else {
+        throw new Error('Invalid image format');
       }
 
-      formData.append('gender', modelGender);
-
-     // Call our proxy API to interact with Fashn.ai
+      // Call our proxy API to interact with Fashn.ai
       const response = await fetch('/api/fashn-tryon', {
         method: 'POST',
-        body: formData
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          imageBase64,
+          gender: modelGender
+        })
       });
 
       if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || 'API request failed');
+        let errorData;
+        try {
+          errorData = await response.json();
+        } catch {
+          errorData = await response.text();
+        }
+        throw new Error(typeof errorData === 'string' ? errorData : errorData.message || 'API request failed');
       }
 
-      const data = await response.json();
+      let data;
+      try {
+        data = await response.json();
+      } catch {
+        const responseText = await response.text();
+        throw new Error(`Server returned non-JSON response: ${responseText}`);
+      }
 
       if (data.tryon_image_url) {
         setAiImage(data.tryon_image_url);
+      } else if (data.output) {
+        setAiImage(data.output);
       } else {
-        throw new Error('No image URL returned from API');
+        throw new Error(`No image URL returned from API: ${JSON.stringify(data)}`);
       }
-    } catch (err: any) {
-      setAiError(`AI preview failed: ${err.message}`);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setAiError(`AI preview failed: ${errorMessage}`);
       console.error('Fashn.ai API error:', err);
     } finally {
       setAiLoading(false);
@@ -193,8 +223,9 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
       }
 
       onSuccess();
-    } catch (err: any) {
-      setError(err.message);
+    } catch (err: unknown) {
+      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+      setError(errorMessage);
     } finally {
       setLoading(false);
     }

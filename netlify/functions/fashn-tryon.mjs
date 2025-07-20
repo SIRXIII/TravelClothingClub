@@ -1,4 +1,6 @@
-// Using ES modules
+// Using .mjs extension to ensure ES modules are used
+import { Buffer } from 'buffer';
+
 export const handler = async (event) => {
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {

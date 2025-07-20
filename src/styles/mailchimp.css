@@ -1,0 +1,81 @@
+#mc_embed_signup {
+  background: transparent !important;
+  clear: left;
+  font: 14px Helvetica,Arial,sans-serif;
+  width: 100% !important;
+}
+
+#mc_embed_signup h2 {
+  display: none !important;
+}
+
+#mc_embed_signup .indicates-required {
+  display: none !important;
+}
+
+#mc_embed_signup .mc-field-group {
+  margin-bottom: 1rem;
+}
+
+#mc_embed_signup .mc-field-group label {
+  display: none !important;
+}
+
+#mc_embed_signup input[type="email"] {
+  width: 100% !important;
+  padding: 0.75rem 1rem !important;
+  border: 1px solid #cbd5e1 !important;
+  border-radius: 0.5rem !important;
+  font-size: 1rem !important;
+  outline: none !important;
+  transition: all 0.2s !important;
+}
+
+#mc_embed_signup input[type="email"]:focus {
+  border-color: #3b82f6 !important;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1) !important;
+}
+
+#mc_embed_signup .button {
+  background-color: #3b82f6 !important;
+  color: white !important;
+  padding: 0.75rem 1.5rem !important;
+  border: none !important;
+  border-radius: 0.5rem !important;
+  font-weight: 500 !important;
+  cursor: pointer !important;
+  transition: background-color 0.2s !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 0.5rem !important;
+}
+
+#mc_embed_signup .button:hover {
+  background-color: #2563eb !important;
+}
+
+#mc_embed_signup .optionalParent {
+  margin-top: 1rem;
+}
+
+#mc_embed_signup .clear.foot {
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 1rem !important;
+  align-items: center !important;
+}
+
+#mc_embed_signup .refferal_badge {
+  display: none !important;
+}
+
+#mc_embed_signup p {
+  display: none !important;
+}
+
+@media (min-width: 640px) {
+  #mc_embed_signup .clear.foot {
+    flex-direction: row !important;
+    justify-content: center !important;
+  }
+} 

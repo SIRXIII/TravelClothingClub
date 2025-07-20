@@ -1,4 +1,3 @@
-// Using ES modules
 export const handler = async (event) => {
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
@@ -31,22 +30,12 @@ export const handler = async (event) => {
       throw new Error('FASHN_API_KEY environment variable is not set');
     }
 
-    // Parse request body
-    let requestData;
-    try {
-      requestData = JSON.parse(event.body);
-    } catch (e) {
-      throw new Error('Invalid request body. Expected JSON.');
-    }
-
-    const { imageBase64, gender } = requestData;
+    // Parse JSON body
+    const body = JSON.parse(event.body);
+    const { imageBase64, gender } = body;
     
     if (!imageBase64) {
       throw new Error('No image data provided');
-    }
-
-    if (!gender) {
-      throw new Error('No gender specified');
     }
 
     // Validate base64 data
@@ -168,4 +157,4 @@ export const handler = async (event) => {
       })
     };
   }
-}; 
+};
