@@ -1,4 +1,3 @@
-import fetch from 'node-fetch';
 import formidable from 'formidable';
 import { Readable } from 'stream';
 import fs from 'fs';
