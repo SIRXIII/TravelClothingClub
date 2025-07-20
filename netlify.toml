@@ -2,15 +2,6 @@
   command = "vite build"
   publish = "dist"
 
-[functions]
-  directory = "netlify/functions"
-
-[dev]
-  command = "vite"
-  targetPort = 5173
-  port = 3000
-  publish = "dist"
-
 [[redirects]]
   from = "/api/*"
   to = "/.netlify/functions/:splat"
@@ -20,6 +11,3 @@
   from = "/*"
   to = "/index.html"
   status = 200
-
-[build.environment]
-  FASHN_API_KEY = "fa-jHlfZcnq5Ien-ng3zIDy95f6Zd6eDwE-rbytv8"
