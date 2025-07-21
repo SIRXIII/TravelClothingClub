@@ -9,6 +9,7 @@ function HomePage() {
   const [showRentFlow, setShowRentFlow] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const navigate = useNavigate();
+  const [showOnboarding, setShowOnboarding] = useState(false);
 
   // Search form state
   const [searchDates, setSearchDates] = useState({ start: '', end: '' });
@@ -178,7 +179,7 @@ function HomePage() {
                 </div>
                 
                 <button
-                  onClick={handleRentNowClick}
+                  onClick={() => setShowOnboarding(true)}
                   className="bg-white text-slate-900 px-10 py-5 rounded-2xl font-semibold text-xl hover:bg-white/95 transition shadow-2xl hover:shadow-3xl transform hover:scale-105"
                 >
                   Get Started →
@@ -718,6 +719,21 @@ function HomePage() {
         <RentNowFlow 
           onClose={() => setShowRentFlow(false)}
         />
+      )}
+      {showOnboarding && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50">
+          {/* Onboarding modal will go here (step 2) */}
+          <div className="bg-white rounded-2xl p-8 max-w-lg w-full">
+            <h2 className="text-2xl font-bold mb-4">Get Started</h2>
+            <p className="text-gray-700">Onboarding flow coming soon...</p>
+            <button
+              className="mt-6 px-4 py-2 bg-slate-900 text-white rounded-lg hover:bg-slate-800"
+              onClick={() => setShowOnboarding(false)}
+            >
+              Close
+            </button>
+          </div>
+        </div>
       )}
     </div>
   );
