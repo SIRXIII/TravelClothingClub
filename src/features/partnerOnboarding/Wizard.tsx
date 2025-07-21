@@ -1,4 +1,4 @@
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useEffect, useState, startTransition } from "react";
 import { usePartnerWizard } from "./hooks/usePartnerWizard";
 import WelcomeStep from "./steps/WelcomeStep";
 import BusinessDetailsStep from "./steps/BusinessDetailsStep";
@@ -59,12 +59,12 @@ export default function PartnerWizard() {
         <Button
           variant="ghost"
           disabled={step === 0}
-          onClick={() => setStep(step - 1)}
+          onClick={() => startTransition(() => setStep(step - 1))}
         >
           Back
         </Button>
         <Button
-          onClick={() => setStep(step + 1)}
+          onClick={() => startTransition(() => setStep(step + 1))}
           disabled={step >= steps.length - 1}
         >
           Next

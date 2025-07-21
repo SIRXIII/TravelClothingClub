@@ -1,4 +1,5 @@
-// import { Button } from "../../../components/ui/button";
+import { startTransition } from "react";
+import { Button } from "../../../components/ui/button";
 import { usePartnerWizard } from "../hooks/usePartnerWizard";
 
 export default function WelcomeStep() {
@@ -11,9 +12,9 @@ export default function WelcomeStep() {
           Earn passive income by renting out clothing to verified travelers.
           We’ll walk you through a few quick steps.
         </p>
-        <button className="w-full bg-black text-white p-4 rounded-xl" onClick={() => setStep(1)}>
+        <Button className="w-full" onClick={() => startTransition(() => setStep(1))}>
           Get Started
-        </button>
+        </Button>
       </div>
     </section>
   );
