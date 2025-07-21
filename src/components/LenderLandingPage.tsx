@@ -85,34 +85,29 @@ function LenderLandingPage() {
       });
 
       if (!response.ok) {
-        let errorData;
-        try {
-          errorData = await response.json();
-        } catch {
-          errorData = await response.text();
-        }
-        throw new Error(typeof errorData === 'string' ? errorData : errorData.message || 'API request failed');
+        const errorText = contentType.includes('application/json')
+          ? await response.json()
+          : await response.text();
+
+        throw new Error(
+          typeof errorText === 'string'
+            ? errorText
+            : errorText.error || JSON.stringify(errorText)
+        );
       }
 
-      let data;
-      try {
-        data = await response.json();
-      } catch {
-        const responseText = await response.text();
-        throw new Error(`Server returned non-JSON response: ${responseText}`);
-      }
+      const data = await response.json();
 
       if (data.tryon_image_url) {
         setAiPreviewUrl(data.tryon_image_url);
       } else if (data.output) {
         setAiPreviewUrl(data.output);
       } else {
-        throw new Error(`No image URL returned from API: ${JSON.stringify(data)}`);
+        throw new Error('No AI preview generated from response');
       }
-    } catch (err: unknown) {
-      const errorMessage = err instanceof Error ? err.message : 'Unknown error occurred';
+    } catch (err: any) {
       console.error('Fashn.ai API error:', err);
-      setAiError(`AI preview failed: ${errorMessage}`);
+      setAiError(`AI preview failed: ${err.message || 'Unknown error occurred. Please try again.'}`);
     } finally {
       setAiLoading(false);
     }

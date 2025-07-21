@@ -162,7 +162,9 @@ function AddItemForm({ item, onSuccess, onCancel }: AddItemFormProps) {
         throw new Error(`Server returned non-JSON response: ${responseText}`);
       }
 
-      if (data.tryon_image_url) {
+      if (data.output) {
+        setAiImage(data.output);
+      } else if (data.tryon_image_url) {
         setAiImage(data.tryon_image_url);
       } else if (data.output) {
         setAiImage(data.output);

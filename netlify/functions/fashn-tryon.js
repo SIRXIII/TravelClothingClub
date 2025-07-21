@@ -1,4 +1,32 @@
-// Using ES modules
+import formidable from 'formidable';
+import { Readable } from 'stream';
+import fs from 'fs';
+
+// Helper function to parse multipart form data in Netlify functions
+const parseMultipartForm = (event) => {
+  return new Promise((resolve, reject) => {
+    const form = new formidable.IncomingForm();
+    
+    // Create a readable stream from the event body
+    const stream = new Readable();
+    stream.push(Buffer.from(event.body, event.isBase64Encoded ? 'base64' : 'utf8'));
+    stream.push(null);
+    
+    // Set the content type header for formidable
+    stream.headers = {
+      'content-type': event.headers['content-type'] || event.headers['Content-Type']
+    };
+    
+    form.parse(stream, (err, fields, files) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve({ fields, files });
+      }
+    });
+  });
+};
+
 export const handler = async (event) => {
   // Handle CORS preflight
   if (event.httpMethod === 'OPTIONS') {
@@ -25,34 +53,38 @@ export const handler = async (event) => {
     };
   }
 
+  let clothingImage;
   try {
     const API_KEY = process.env.FASHN_API_KEY;
     if (!API_KEY) {
       throw new Error('FASHN_API_KEY environment variable is not set');
     }
 
-    // Parse request body
-    let requestData;
-    try {
-      requestData = JSON.parse(event.body);
-    } catch (e) {
-      throw new Error('Invalid request body. Expected JSON.');
-    }
-
-    const { imageBase64, gender } = requestData;
+    // Parse multipart form data
+    const { fields, files } = await parseMultipartForm(event);
     
-    if (!imageBase64) {
-      throw new Error('No image data provided');
+    const gender = Array.isArray(fields.gender) ? fields.gender[0] : fields.gender;
+    clothingImage = Array.isArray(files.clothing_image) ? files.clothing_image[0] : files.clothing_image;
+    
+    if (!clothingImage) {
+      throw new Error('No clothing image provided');
     }
 
-    if (!gender) {
-      throw new Error('No gender specified');
+    // Validate file type
+    const allowedTypes = ['image/jpeg', 'image/jpg', 'image/png', 'image/webp'];
+    if (!allowedTypes.includes(clothingImage.mimetype)) {
+      throw new Error('Invalid file type. Please upload a JPEG, PNG, or WebP image.');
     }
 
-    // Validate base64 data
-    if (!imageBase64.startsWith('data:image/')) {
-      throw new Error('Invalid image format. Expected base64 data URL.');
+    // Validate file size (max 10MB)
+    const maxSize = 10 * 1024 * 1024; // 10MB
+    if (clothingImage.size > maxSize) {
+      throw new Error('File size too large. Please upload an image smaller than 10MB.');
     }
+
+    // Read the uploaded file and convert to base64
+    const imageBuffer = fs.readFileSync(clothingImage.filepath);
+    const base64Image = imageBuffer.toString('base64');
 
     // First verify the API key by checking credits
     const creditsResponse = await fetch('https://api.fashn.ai/v1/credits', {
@@ -86,7 +118,7 @@ export const handler = async (event) => {
           model_image: gender === 'Male' 
             ? (process.env.MALE_MODEL_URL || 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg')
             : (process.env.FEMALE_MODEL_URL || 'https://v3.fal.media/files/panda/jRavCEb1D4OpZBjZKxaH7_image_2024-12-08_18-37-27%20Large.jpeg'),
-          garment_image: imageBase64
+          garment_image: `data:image/jpeg;base64,${base64Image}`
         }
       })
     });
@@ -125,6 +157,13 @@ export const handler = async (event) => {
       console.log('Status:', statusData.status);
 
       if (statusData.status === 'completed') {
+        // Clean up temporary file
+        try {
+          fs.unlinkSync(clothingImage.filepath);
+        } catch (cleanupError) {
+          console.warn('Failed to clean up temporary file:', cleanupError);
+        }
+
         return {
           statusCode: 200,
           headers: {
@@ -139,6 +178,12 @@ export const handler = async (event) => {
       }
 
       if (statusData.status === 'failed') {
+        // Clean up temporary file
+        try {
+          fs.unlinkSync(clothingImage.filepath);
+        } catch (cleanupError) {
+          console.warn('Failed to clean up temporary file:', cleanupError);
+        }
         throw new Error(statusData.error || 'Prediction failed');
       }
 
@@ -151,10 +196,26 @@ export const handler = async (event) => {
       throw new Error(`Unknown status: ${statusData.status}`);
     }
 
+    // Clean up temporary file on timeout
+    try {
+      fs.unlinkSync(clothingImage.filepath);
+    } catch (cleanupError) {
+      console.warn('Failed to clean up temporary file:', cleanupError);
+    }
+
     throw new Error('Prediction timed out after 90 seconds');
 
   } catch (error) {
     console.error('Error:', error);
+    
+    // Clean up temporary file if it exists
+    if (clothingImage && clothingImage.filepath) {
+      try {
+        fs.unlinkSync(clothingImage.filepath);
+      } catch (cleanupError) {
+        console.warn('Failed to clean up temporary file:', cleanupError);
+      }
+    }
     
     return {
       statusCode: 500,
