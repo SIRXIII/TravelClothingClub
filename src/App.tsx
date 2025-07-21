@@ -6,7 +6,7 @@ import VirtualTryOnDemo from './components/VirtualTryOnDemo';
 import LenderPortal from './components/LenderPortal';
 import SearchResults from './components/SearchResults';
 
-const PartnerOnboardingLazy = lazy(() => import('@/features/partnerOnboarding'));
+const PartnerOnboardingLazy = lazy(() => import('./features/partnerOnboarding'));
 
 function App() {
   return (
