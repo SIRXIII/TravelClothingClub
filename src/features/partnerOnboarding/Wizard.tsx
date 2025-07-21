@@ -7,7 +7,7 @@ import InventoryStep from "./steps/InventoryStep";
 import LogisticsStep from "./steps/LogisticsStep";
 import PayoutStep from "./steps/PayoutStep";
 import ReviewStep from "./steps/ReviewStep";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../components/ui/button";
 import { useEffect as useAuthEffect } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 

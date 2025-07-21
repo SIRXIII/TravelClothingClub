@@ -2,8 +2,8 @@ import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import * as yup from "yup";
 import { usePartnerWizard } from "../hooks/usePartnerWizard";
-import { TextInput } from "@/components/ui/text-input";
-import { Button } from "@/components/ui/button";
+import { TextInput } from "../../../components/ui/text-input";
+import { Button } from "../../../components/ui/button";
 
 const schema = yup.object({
   itemCount: yup.number().required().min(1),

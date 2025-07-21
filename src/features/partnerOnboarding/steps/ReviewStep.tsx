@@ -1,5 +1,5 @@
 import { usePartnerWizard } from "../hooks/usePartnerWizard";
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 
 export default function ReviewStep() {
   const { data } = usePartnerWizard();

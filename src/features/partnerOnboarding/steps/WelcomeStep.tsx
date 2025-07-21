@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button";
+import { Button } from "../../../components/ui/button";
 import { usePartnerWizard } from "../hooks/usePartnerWizard";
 
 export default function WelcomeStep() {
