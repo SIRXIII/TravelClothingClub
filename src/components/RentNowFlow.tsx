@@ -38,13 +38,13 @@ function RentNowFlow() {
     setStep(4);
   };
 
-  return (
+    return (
     <div className="fixed inset-0 bg-black/50 flex items-center justify-center z-50">
       <div className="bg-white rounded-2xl p-8 max-w-2xl w-full max-h-[90vh] overflow-y-auto">
         {/* Add your existing UI components here */}
+        </div>
       </div>
-    </div>
-  );
+    );
 }
 
 export default RentNowFlow;

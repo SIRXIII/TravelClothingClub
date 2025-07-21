@@ -20,14 +20,14 @@ function AddItemModal({ onClose }: AddItemModalProps) {
     console.log('Item added:', {
       itemName,
       brand,
-      category,
-      size,
-      condition,
+        category,
+        size,
+        condition,
       price,
-      description,
+        description,
       uploadedFiles
-    });
-    onClose();
+      });
+      onClose();
   };
 
   return (
@@ -38,7 +38,7 @@ function AddItemModal({ onClose }: AddItemModalProps) {
           <button type="submit" className="bg-blue-600 text-white px-4 py-2 rounded">
             Add Item
           </button>
-        </form>
+          </form>
       </div>
     </div>
   );

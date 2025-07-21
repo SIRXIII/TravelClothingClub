@@ -167,3 +167,48 @@ LEFT JOIN stripe_orders o ON c.customer_id = o.customer_id
 WHERE c.user_id = auth.uid()
 AND c.deleted_at IS NULL
 AND o.deleted_at IS NULL;
+
+-- Create partner_profiles table
+CREATE TABLE IF NOT EXISTS partner_profiles (
+  id UUID PRIMARY KEY DEFAULT uuid_generate_v4(),
+  user_id UUID REFERENCES auth.users(id) ON DELETE CASCADE,
+  store_name TEXT NOT NULL,
+  address TEXT NOT NULL,
+  city TEXT NOT NULL,
+  state TEXT NOT NULL,
+  zip_code TEXT NOT NULL,
+  phone TEXT,
+  email TEXT,
+  website TEXT,
+  logo_url TEXT,
+  created_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW()),
+  updated_at TIMESTAMP WITH TIME ZONE DEFAULT TIMEZONE('utc'::text, NOW())
+);
+
+-- Create RLS policies for partner_profiles
+ALTER TABLE partner_profiles ENABLE ROW LEVEL SECURITY;
+
+-- Allow users to read their own profile
+CREATE POLICY "Users can read own profile"
+  ON partner_profiles
+  FOR SELECT
+  USING (auth.uid() = user_id);
+
+-- Allow users to insert their own profile
+CREATE POLICY "Users can insert own profile"
+  ON partner_profiles
+  FOR INSERT
+  WITH CHECK (auth.uid() = user_id);
+
+-- Allow users to update their own profile
+CREATE POLICY "Users can update own profile"
+  ON partner_profiles
+  FOR UPDATE
+  USING (auth.uid() = user_id)
+  WITH CHECK (auth.uid() = user_id);
+
+-- Allow users to delete their own profile
+CREATE POLICY "Users can delete own profile"
+  ON partner_profiles
+  FOR DELETE
+  USING (auth.uid() = user_id);

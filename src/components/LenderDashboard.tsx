@@ -9,12 +9,12 @@ function LenderDashboard() {
       <div className="max-w-7xl mx-auto">
         <h1 className="text-3xl font-light mb-8">Lender Dashboard</h1>
         
-        <button
-          onClick={() => setShowAddModal(true)}
+          <button
+            onClick={() => setShowAddModal(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded"
-        >
-          Add New Item
-        </button>
+          >
+            Add New Item
+          </button>
 
         {showAddModal && (
           <AddItemModal onClose={() => setShowAddModal(false)} />

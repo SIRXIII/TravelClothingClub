@@ -1,4 +1,5 @@
 // Using .mjs extension to ensure ES modules are used
+import fetch from 'node-fetch';
 import { Buffer } from 'buffer';
 
 export const handler = async (event) => {
@@ -57,6 +58,7 @@ export const handler = async (event) => {
     }
 
     // First verify the API key by checking credits
+    console.log('Verifying API key and checking credits...');
     const creditsResponse = await fetch('https://api.fashn.ai/v1/credits', {
       headers: {
         'Authorization': `Bearer ${API_KEY}`
@@ -64,7 +66,8 @@ export const handler = async (event) => {
     });
 
     if (!creditsResponse.ok) {
-      console.error('Failed to verify API key:', await creditsResponse.text());
+      const errorText = await creditsResponse.text();
+      console.error('Failed to verify API key:', errorText);
       throw new Error('Invalid API key or API key has expired');
     }
 
@@ -76,6 +79,7 @@ export const handler = async (event) => {
     }
 
     // Submit the prediction job
+    console.log('Submitting prediction job...');
     const runResponse = await fetch('https://api.fashn.ai/v1/run', {
       method: 'POST',
       headers: {
@@ -96,7 +100,7 @@ export const handler = async (event) => {
     if (!runResponse.ok) {
       const errorText = await runResponse.text();
       console.error('Fashn.ai run API error:', runResponse.status, errorText);
-      throw new Error(`Failed to start prediction: ${runResponse.status}`);
+      throw new Error(`Failed to start prediction: ${errorText}`);
     }
 
     const runData = await runResponse.json();
@@ -120,7 +124,7 @@ export const handler = async (event) => {
       });
 
       if (!statusResponse.ok) {
-        throw new Error(`Status check failed: ${statusResponse.status}`);
+        throw new Error(`Status check failed: ${await statusResponse.text()}`);
       }
 
       const statusData = await statusResponse.json();
@@ -157,9 +161,8 @@ export const handler = async (event) => {
 
   } catch (error) {
     console.error('Error:', error);
-    
     return {
-      statusCode: 500,
+      statusCode: error.message.includes('Invalid request') ? 400 : 500,
       headers: {
         'Content-Type': 'application/json',
         'Access-Control-Allow-Origin': '*'
