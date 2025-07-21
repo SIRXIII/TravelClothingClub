@@ -161,10 +161,16 @@ function LenderLandingPage() {
           </p>
           <button 
             onClick={handleScrollToSignup}
-            className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-semibold text-xl hover:bg-blue-700 transition shadow-lg hover:shadow-xl transform hover:scale-105 mb-12"
+            className="bg-blue-600 text-white px-10 py-5 rounded-2xl font-semibold text-xl hover:bg-blue-700 transition shadow-lg hover:shadow-xl transform hover:scale-105 mb-6"
           >
             Start Partnering Today
           </button>
+          <Link 
+            to="/partner-onboarding"
+            className="inline-block bg-black text-white px-10 py-5 rounded-2xl font-semibold text-xl hover:bg-gray-900 transition shadow-lg hover:shadow-xl transform hover:scale-105 mb-12 ml-4"
+          >
+            Partner Onboarding
+          </Link>
           
           {/* Trust Indicators */}
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">

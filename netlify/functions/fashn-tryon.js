@@ -1,6 +1,8 @@
 import formidable from 'formidable';
 import { Readable } from 'stream';
 import fs from 'fs';
+import { lazy } from 'react';
+const PartnerOnboardingLazy = lazy(() => import('@/features/partnerOnboarding'));
 
 // Helper function to parse multipart form data in Netlify functions
 const parseMultipartForm = (event) => {
