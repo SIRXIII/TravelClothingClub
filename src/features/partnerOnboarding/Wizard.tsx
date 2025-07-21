@@ -1,24 +1,24 @@
 import { Suspense, useEffect, useState, startTransition } from "react";
 import { usePartnerWizard } from "./hooks/usePartnerWizard";
 import WelcomeStep from "./steps/WelcomeStep";
-import BusinessDetailsStep from "./steps/BusinessDetailsStep";
-import IdentityStep from "./steps/IdentityStep";
-import InventoryStep from "./steps/InventoryStep";
-import LogisticsStep from "./steps/LogisticsStep";
-import PayoutStep from "./steps/PayoutStep";
-import ReviewStep from "./steps/ReviewStep";
+// import BusinessDetailsStep from "./steps/BusinessDetailsStep";
+// import IdentityStep from "./steps/IdentityStep";
+// import InventoryStep from "./steps/InventoryStep";
+// import LogisticsStep from "./steps/LogisticsStep";
+// import PayoutStep from "./steps/PayoutStep";
+// import ReviewStep from "./steps/ReviewStep";
 import { Button } from "../../components/ui/button";
 import { useEffect as useAuthEffect } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 
 const steps = [
   { id: 0, label: "Welcome", Component: WelcomeStep },
-  { id: 1, label: "Business", Component: BusinessDetailsStep },
-  { id: 2, label: "Identity", Component: IdentityStep },
-  { id: 3, label: "Inventory", Component: InventoryStep },
-  { id: 4, label: "Logistics", Component: LogisticsStep },
-  { id: 5, label: "Payout", Component: PayoutStep },
-  { id: 99, label: "Review", Component: ReviewStep },
+  // { id: 1, label: "Business", Component: BusinessDetailsStep },
+  // { id: 2, label: "Identity", Component: IdentityStep },
+  // { id: 3, label: "Inventory", Component: InventoryStep },
+  // { id: 4, label: "Logistics", Component: LogisticsStep },
+  // { id: 5, label: "Payout", Component: PayoutStep },
+  // { id: 99, label: "Review", Component: ReviewStep },
 ] as const;
 
 export default function PartnerWizard() {
