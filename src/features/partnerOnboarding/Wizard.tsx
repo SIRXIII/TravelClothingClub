@@ -8,7 +8,6 @@ import WelcomeStep from "./steps/WelcomeStep";
 // import PayoutStep from "./steps/PayoutStep";
 // import ReviewStep from "./steps/ReviewStep";
 import { Button } from "../../components/ui/button";
-import { useEffect as useAuthEffect } from "react";
 import { useUser } from "@supabase/auth-helpers-react";
 
 const steps = [
@@ -33,9 +32,11 @@ export default function PartnerWizard() {
 
   useEffect(() => {
     if (user) {
-      loadDraft(user).then(() => setLoading(false));
+      startTransition(() => {
+        loadDraft(user).then(() => setLoading(false));
+      });
     }
-  }, [user]);
+  }, [user, loadDraft]);
 
   if (loading) return <div className="flex-1 flex items-center justify-center">Loading onboarding…</div>;
 
