@@ -80,6 +80,21 @@ export const useOnboardingStore = create<OnboardingStore>()(
     }),
     {
       name: 'onboarding-storage',
+      serialize: (state) => {
+        return JSON.stringify({
+          ...state,
+          startDate: state.startDate?.toISOString() || null,
+          endDate: state.endDate?.toISOString() || null,
+        });
+      },
+      deserialize: (str) => {
+        const parsed = JSON.parse(str);
+        return {
+          ...parsed,
+          startDate: parsed.startDate ? new Date(parsed.startDate) : null,
+          endDate: parsed.endDate ? new Date(parsed.endDate) : null,
+        };
+      },
     }
   )
 );
