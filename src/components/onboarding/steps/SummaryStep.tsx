@@ -11,13 +11,17 @@ function SummaryStep({ onClose }: SummaryStepProps) {
   const { startDate, endDate, users, reset } = useOnboardingStore();
   const navigate = useNavigate();
 
+  // Ensure dates are proper Date objects
+  const startDateObj = startDate ? (startDate instanceof Date ? startDate : new Date(startDate)) : null;
+  const endDateObj = endDate ? (endDate instanceof Date ? endDate : new Date(endDate)) : null;
+
   const handleStartBrowsing = () => {
     // Navigate to search results with the onboarding data
     navigate('/search-results', {
       state: {
         dates: {
-          start: startDate?.toISOString().split('T')[0],
-          end: endDate?.toISOString().split('T')[0]
+          start: startDateObj?.toISOString().split('T')[0],
+          end: endDateObj?.toISOString().split('T')[0]
         },
         users: users
       }
@@ -27,8 +31,8 @@ function SummaryStep({ onClose }: SummaryStepProps) {
   };
 
   const getTripDuration = () => {
-    if (!startDate || !endDate) return 0;
-    return Math.ceil((endDate.getTime() - startDate.getTime()) / (1000 * 60 * 60 * 24));
+    if (!startDateObj || !endDateObj) return 0;
+    return Math.ceil((endDateObj.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24));
   };
 
   return (
@@ -57,7 +61,7 @@ function SummaryStep({ onClose }: SummaryStepProps) {
               <div>
                 <p className="text-sm text-slate-600">Start Date</p>
                 <p className="font-medium text-slate-900">
-                  {startDate ? startDate.toLocaleDateString('en-US', { 
+                  {startDateObj ? startDateObj.toLocaleDateString('en-US', { 
                     weekday: 'long', 
                     year: 'numeric', 
                     month: 'long', 
@@ -68,7 +72,7 @@ function SummaryStep({ onClose }: SummaryStepProps) {
               <div>
                 <p className="text-sm text-slate-600">End Date</p>
                 <p className="font-medium text-slate-900">
-                  {endDate ? endDate.toLocaleDateString('en-US', { 
+                  {endDateObj ? endDateObj.toLocaleDateString('en-US', { 
                     weekday: 'long', 
                     year: 'numeric', 
                     month: 'long', 
