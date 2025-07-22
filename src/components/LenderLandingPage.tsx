@@ -72,7 +72,7 @@ function LenderLandingPage() {
       });
 
       // Send JSON data instead of form data
-      const response = await fetch('/api/fashn-tryon.mjs', {
+      const response = await fetch('/.netlify/functions/fashn-tryon-simple', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -85,14 +85,13 @@ function LenderLandingPage() {
       });
 
       if (!response.ok) {
-        const errorText = contentType.includes('application/json')
-          ? await response.json()
+        const contentType = response.headers.get('content-type');
+        const errorText = contentType && contentType.includes('application/json')
+          ? (await response.json()).details || 'API request failed'
           : await response.text();
 
         throw new Error(
-          typeof errorText === 'string'
-            ? errorText
-            : errorText.error || JSON.stringify(errorText)
+          `API Error: ${errorText}`
         );
       }
 
