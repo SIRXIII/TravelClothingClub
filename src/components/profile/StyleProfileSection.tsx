@@ -14,7 +14,7 @@ function StyleProfileSection({ profile, isOwner }: StyleProfileSectionProps) {
     setExpandedSections(prev =>
       prev.includes(sectionId)
         ? prev.filter(id => id !== sectionId)
-        : [...prev, s'sectionId]
+        : [...prev, sectionId]
     );
   };
 
