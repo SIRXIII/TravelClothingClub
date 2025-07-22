@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { User } from 'lucide-react';
 import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, UserCheck, Calendar, Search, Star, Heart, Shield, Leaf, Headphones, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import RentNowFlow from './RentNowFlow';
 import OnboardingModal from './onboarding/OnboardingModal';
@@ -138,6 +139,13 @@ function HomePage() {
             <div className="flex items-center gap-4">
               <Link 
                 to="/lender-portal"
+                className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
+              >
+                <UserCheck className="w-5 h-5" />
+                Partner Portal
+              </Link>
+              <Link 
+                to="/profile/1"
                 className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
               >
                 <UserCheck className="w-5 h-5" />
