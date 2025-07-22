@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, Filter, Grid, List, Star, MapPin, Phone, Mail, Globe, ChevronLeft, ChevronRight } from 'lucide-react';
+import { X, Filter, Grid, List, Star, MapPin, Phone, Mail, Globe, ChevronLeft, ChevronRight, Building2 } from 'lucide-react';
 
 interface Partner {
   id: string;
