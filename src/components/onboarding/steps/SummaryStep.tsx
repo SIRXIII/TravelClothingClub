@@ -57,23 +57,23 @@ function SummaryStep({ onClose }: SummaryStepProps) {
               <div>
                 <p className="text-sm text-slate-600">Start Date</p>
                 <p className="font-medium text-slate-900">
-                  {startDate?.toLocaleDateString('en-US', { 
+                  {startDate ? startDate.toLocaleDateString('en-US', { 
                     weekday: 'long', 
                     year: 'numeric', 
                     month: 'long', 
                     day: 'numeric' 
-                  })}
+                  }) : 'Not selected'}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-slate-600">End Date</p>
                 <p className="font-medium text-slate-900">
-                  {endDate?.toLocaleDateString('en-US', { 
+                  {endDate ? endDate.toLocaleDateString('en-US', { 
                     weekday: 'long', 
                     year: 'numeric', 
                     month: 'long', 
                     day: 'numeric' 
-                  })}
+                  }) : 'Not selected'}
                 </p>
               </div>
               <div>
