@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 import { supabase } from "../../../lib/supabase";
-import { User } from "@supabase/supabase-js";
+import type { User } from "@supabase/supabase-js";
 
 interface WizardStore {
   step: number;
@@ -39,41 +39,66 @@ export const usePartnerWizard = create<WizardStore>()(
       data: {},
       partnerId: undefined,
       loadDraft: async (user) => {
-        // Try to fetch existing draft
-        const { data, error } = await supabase
-          .from("partners")
-          .select("*")
-          .eq("user_id", user.id)
-          .eq("status", "draft")
-          .single();
-        if (data) {
-          set({ data, partnerId: data.id });
-        } else {
-          // Create new draft
-          const { data: newDraft, error: insertError } = await supabase
+        try {
+          // Try to fetch existing draft
+          const { data, error } = await supabase
             .from("partners")
-            .insert([{ user_id: user.id, status: "draft" }])
-            .select()
+            .select("*")
+            .eq("user_id", user.id)
+            .eq("status", "draft")
             .single();
-          if (newDraft) {
-            set({ data: newDraft, partnerId: newDraft.id });
+          
+          if (data && !error) {
+            set({ data, partnerId: data.id });
+          } else {
+            // Create new draft
+            const { data: newDraft, error: insertError } = await supabase
+              .from("partners")
+              .insert([{ user_id: user.id, status: "draft" }])
+              .select()
+              .single();
+            
+            if (newDraft && !insertError) {
+              set({ data: newDraft, partnerId: newDraft.id });
+            } else {
+              console.error('Failed to create draft:', insertError);
+              throw new Error('Failed to create partner draft');
+            }
           }
+        } catch (error) {
+          console.error('Error in loadDraft:', error);
+          throw error;
         }
       },
       upsert: async (patch) => {
-        const { partnerId, data } = get();
-        if (!partnerId) return;
-        const { data: updated, error } = await supabase
-          .from("partners")
-          .update({ ...data, ...patch })
-          .eq("id", partnerId)
-          .select()
-          .single();
-        if (updated) {
-          set({ data: updated });
+        try {
+          const { partnerId, data } = get();
+          if (!partnerId) {
+            throw new Error('No partner ID available');
+          }
+          
+          const { data: updated, error } = await supabase
+            .from("partners")
+            .update({ ...data, ...patch, updated_at: new Date().toISOString() })
+            .eq("id", partnerId)
+            .select()
+            .single();
+          
+          if (updated && !error) {
+            set({ data: updated });
+          } else {
+            console.error('Failed to update partner:', error);
+            throw new Error('Failed to update partner data');
+          }
+        } catch (error) {
+          console.error('Error in upsert:', error);
+          throw error;
         }
       },
     }),
-    { name: "tcc-partner-wizard" }
+    { 
+      name: "tcc-partner-wizard",
+      version: 1,
+    }
   )
-); 
+);
