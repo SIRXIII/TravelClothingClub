@@ -1,9 +1,10 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { User } from 'lucide-react';
+import { User, Building2 } from 'lucide-react';
 import { Plane, ShoppingBag, DollarSign, Clock, MapPin, Users, Check, Send, Upload, Ruler, UserCheck, Calendar, Search, Star, Heart, Shield, Leaf, Headphones, ChevronDown, ChevronUp, Sparkles } from 'lucide-react';
 import RentNowFlow from './RentNowFlow';
 import OnboardingModal from './onboarding/OnboardingModal';
+import PartnersShowcase from './PartnersShowcase';
 
 function HomePage() {
   const [email, setEmail] = useState('');
@@ -11,6 +12,7 @@ function HomePage() {
   const [showRentFlow, setShowRentFlow] = useState(false);
   const [expandedFaq, setExpandedFaq] = useState<number | null>(null);
   const [showOnboarding, setShowOnboarding] = useState(false);
+  const [showPartnersShowcase, setShowPartnersShowcase] = useState(false);
   const navigate = useNavigate();
 
   // Search form state
@@ -137,16 +139,16 @@ function HomePage() {
               <span className="text-2xl md:text-3xl font-light text-white drop-shadow-lg">Travel Clothing Club</span>
             </div>
             <div className="flex items-center gap-4">
-              <Link 
-                to="/lender-portal"
+              <button
+                onClick={() => setShowPartnersShowcase(true)}
                 className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
               >
-                <UserCheck className="w-5 h-5" />
-                Partner Portal
-              </Link>
+                <Building2 className="w-5 h-5" />
+                Partners Showcase
+              </button>
               <Link 
-                to="/profile/1"
-                className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
+                to="/lender-portal"
+                className="bg-slate-900/80 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-slate-900 transition flex items-center gap-2 border border-slate-700"
               >
                 <UserCheck className="w-5 h-5" />
                 Partner Portal
@@ -735,6 +737,12 @@ function HomePage() {
         isOpen={showOnboarding}
         onClose={() => setShowOnboarding(false)}
       />
+     
+     {/* Partners Showcase Modal */}
+     <PartnersShowcase 
+       isOpen={showPartnersShowcase}
+       onClose={() => setShowPartnersShowcase(false)}
+     />
     </div>
   );
 }
