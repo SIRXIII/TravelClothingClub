@@ -134,9 +134,8 @@ function HomePage() {
               <img 
                 src="/TCC Cursive.png"
                 alt="Travel Clothing Club"
-                className="w-20 h-20 md:w-24 md:h-24 object-contain"
+                className="w-32 h-32 md:w-40 md:h-40 object-contain"
               />
-              <span className="text-2xl md:text-3xl font-light text-white drop-shadow-lg">Travel Clothing Club</span>
             </div>
             <div className="flex items-center gap-4">
               <button
