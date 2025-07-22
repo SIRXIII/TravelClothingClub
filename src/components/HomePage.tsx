@@ -316,7 +316,7 @@ function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="group cursor-pointer" onClick={handleRentNowClick}>
+            <div className="group cursor-pointer" onClick={() => setShowOnboarding(true)}>
               <div className="relative overflow-hidden rounded-2xl shadow-lg">
                 <img 
                   src="https://images.unsplash.com/photo-1595777457583-95e059d581b8?auto=format&fit=crop&q=80"
@@ -332,7 +332,7 @@ function HomePage() {
                 </div>
               </div>
             </div>
-            <div className="group cursor-pointer" onClick={handleRentNowClick}>
+            <div className="group cursor-pointer" onClick={() => setShowOnboarding(true)}>
               <div className="relative overflow-hidden rounded-2xl shadow-lg">
                 <img 
                   src="https://images.unsplash.com/photo-1622290291468-a28f7a7dc6a8?auto=format&fit=crop&q=80"
