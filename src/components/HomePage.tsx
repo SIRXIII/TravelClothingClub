@@ -300,7 +300,7 @@ function HomePage() {
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-4xl font-light text-center mb-16 text-slate-900">Shop by Collection</h2>
           <div className="grid md:grid-cols-3 gap-8">
-            <div className="group cursor-pointer" onClick={handleRentNowClick}>
+            <div className="group cursor-pointer" onClick={() => setShowOnboarding(true)}>
               <div className="relative overflow-hidden rounded-2xl shadow-lg">
                 <img 
                   src="https://images.unsplash.com/photo-1594938298603-c8148c4dae35?auto=format&fit=crop&q=80"
