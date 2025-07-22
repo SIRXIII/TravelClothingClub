@@ -141,17 +141,19 @@ function HomePage() {
             <div className="flex items-center gap-4">
               <button
                 onClick={() => setShowPartnersShowcase(true)}
-                className="bg-white/10 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-white/20 transition flex items-center gap-2 border border-white/20"
+                className="bg-white/10 backdrop-blur-sm text-white px-3 py-2 sm:px-6 sm:py-3 rounded-xl font-semibold hover:bg-white/20 transition flex items-center gap-2 border border-white/20 text-sm sm:text-base"
               >
                 <Building2 className="w-5 h-5" />
-                Partners Showcase
+                <span className="hidden sm:inline">Partners Showcase</span>
+                <span className="sm:hidden">Partners</span>
               </button>
               <Link 
                 to="/lender-portal"
-                className="bg-slate-900/80 backdrop-blur-sm text-white px-6 py-3 rounded-xl font-semibold hover:bg-slate-900 transition flex items-center gap-2 border border-slate-700"
+                className="bg-slate-900/80 backdrop-blur-sm text-white px-3 py-2 sm:px-6 sm:py-3 rounded-xl font-semibold hover:bg-slate-900 transition flex items-center gap-2 border border-slate-700 text-sm sm:text-base"
               >
                 <UserCheck className="w-5 h-5" />
-                Partner Portal
+                <span className="hidden sm:inline">Partner Portal</span>
+                <span className="sm:hidden">Portal</span>
               </Link>
             </div>
           </nav>
