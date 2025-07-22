@@ -11,17 +11,27 @@ function SummaryStep({ onClose }: SummaryStepProps) {
   const { startDate, endDate, users, reset } = useOnboardingStore();
   const navigate = useNavigate();
 
-  // Ensure dates are proper Date objects
-  const startDateObj = startDate ? (startDate instanceof Date ? startDate : new Date(startDate)) : null;
-  const endDateObj = endDate ? (endDate instanceof Date ? endDate : new Date(endDate)) : null;
+  // Ensure dates are proper Date objects with comprehensive validation
+  const getValidDate = (date: any): Date | null => {
+    if (!date) return null;
+    if (date instanceof Date && !isNaN(date.getTime())) return date;
+    if (typeof date === 'string') {
+      const parsed = new Date(date);
+      return !isNaN(parsed.getTime()) ? parsed : null;
+    }
+    return null;
+  };
+
+  const startDateObj = getValidDate(startDate);
+  const endDateObj = getValidDate(endDate);
 
   const handleStartBrowsing = () => {
     // Navigate to search results with the onboarding data
     navigate('/search-results', {
       state: {
         dates: {
-          start: startDateObj?.toISOString().split('T')[0],
-          end: endDateObj?.toISOString().split('T')[0]
+          start: startDateObj?.toISOString().split('T')[0] || '',
+          end: endDateObj?.toISOString().split('T')[0] || ''
         },
         users: users
       }
@@ -30,9 +40,24 @@ function SummaryStep({ onClose }: SummaryStepProps) {
     onClose();
   };
 
-  const getTripDuration = () => {
+  const getTripDuration = (): number => {
     if (!startDateObj || !endDateObj) return 0;
-    return Math.ceil((endDateObj.getTime() - startDateObj.getTime()) / (1000 * 60 * 60 * 24));
+    const diffTime = endDateObj.getTime() - startDateObj.getTime();
+    return Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+  };
+
+  const formatDate = (date: Date | null): string => {
+    if (!date) return 'Not selected';
+    try {
+      return date.toLocaleDateString('en-US', { 
+        weekday: 'long', 
+        year: 'numeric', 
+        month: 'long', 
+        day: 'numeric' 
+      });
+    } catch (error) {
+      return 'Invalid date';
+    }
   };
 
   return (
@@ -61,23 +86,13 @@ function SummaryStep({ onClose }: SummaryStepProps) {
               <div>
                 <p className="text-sm text-slate-600">Start Date</p>
                 <p className="font-medium text-slate-900">
-                  {startDateObj ? startDateObj.toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  }) : 'Not selected'}
+                  {formatDate(startDateObj)}
                 </p>
               </div>
               <div>
                 <p className="text-sm text-slate-600">End Date</p>
                 <p className="font-medium text-slate-900">
-                  {endDateObj ? endDateObj.toLocaleDateString('en-US', { 
-                    weekday: 'long', 
-                    year: 'numeric', 
-                    month: 'long', 
-                    day: 'numeric' 
-                  }) : 'Not selected'}
+                  {formatDate(endDateObj)}
                 </p>
               </div>
               <div>
