@@ -4,6 +4,7 @@ import WelcomeStep from "./steps/WelcomeStep";
 import BusinessDetailsStep from "./steps/BusinessDetailsStep";
 import IdentityStep from "./steps/IdentityStep";
 import InventoryStep from "./steps/InventoryStep";
+import RevenueStep from "./steps/RevenueStep";
 import LogisticsStep from "./steps/LogisticsStep";
 import PayoutStep from "./steps/PayoutStep";
 import ReviewStep from "./steps/ReviewStep";
@@ -15,8 +16,9 @@ const steps = [
   { id: 1, label: "Business", Component: BusinessDetailsStep },
   { id: 2, label: "Identity", Component: IdentityStep },
   { id: 3, label: "Inventory", Component: InventoryStep },
-  { id: 4, label: "Logistics", Component: LogisticsStep },
-  { id: 5, label: "Payout", Component: PayoutStep },
+  { id: 4, label: "Revenue", Component: RevenueStep },
+  { id: 5, label: "Logistics", Component: LogisticsStep },
+  { id: 6, label: "Payout", Component: PayoutStep },
   { id: 99, label: "Review", Component: ReviewStep },
 ] as const;
 
