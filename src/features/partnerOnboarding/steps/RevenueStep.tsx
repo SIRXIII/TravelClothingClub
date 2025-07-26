@@ -44,7 +44,7 @@ export default function RevenueStep() {
   // watch form values for live estimate
   const dailyRate = watch("dailyRate");
   const rentalDays = watch("rentalDays");
-  const itemCount = data.itemCount ?? 1;
+  const itemCount = Number(data.itemCount) || 1;
 
   const estimated = Number(itemCount) * Number(dailyRate) * Number(rentalDays);
 
@@ -59,7 +59,7 @@ export default function RevenueStep() {
         <h2 className="text-2xl font-semibold mb-2">Estimate your earnings</h2>
         <p className="text-gray-600 mb-4">
           Adjust the daily rate and typical rental duration to see how much you could
-          earn. This estimate uses your current item count ({itemCount}).
+          earn. This estimate uses your current item count ({String(itemCount)}).
         </p>
       </div>
 
