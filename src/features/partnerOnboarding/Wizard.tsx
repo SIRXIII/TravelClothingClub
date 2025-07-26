@@ -94,7 +94,7 @@ export default function PartnerWizard() {
       <div className="h-1 bg-gray-200">
         <div
           className="h-full bg-black transition-all duration-300"
-          style={{ width: `${(step / (steps.length - 1)) * 100}%` }}
+          style={{ width: `${(step / 6) * 100}%` }}
         />
       </div>
 
