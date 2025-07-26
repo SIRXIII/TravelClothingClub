@@ -49,8 +49,8 @@ export default function RevenueStep() {
   const estimated = Number(itemCount) * Number(dailyRate) * Number(rentalDays);
 
   const onSubmit = () => {
-    // Proceed to inventory upload step
-    setStep(3);
+    // Proceed to logistics step
+    setStep(5);
   };
 
   return (
@@ -86,7 +86,7 @@ export default function RevenueStep() {
       <div className="flex justify-between pt-4">
         <Button
           type="button"
-          onClick={() => setStep(1)}
+          onClick={() => setStep(3)}
           className="bg-gray-200 hover:bg-gray-300 text-gray-800 px-6 py-3"
         >
           Back
